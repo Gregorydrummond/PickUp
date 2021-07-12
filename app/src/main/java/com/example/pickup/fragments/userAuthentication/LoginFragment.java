@@ -1,14 +1,21 @@
 package com.example.pickup.fragments.userAuthentication;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +23,12 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
+
+    private static final String TAG = "LoginFragment";
+
+    EditText etUsername;
+    EditText etPassword;
+    Button btnLogin;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +75,26 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find Components
+        etUsername = view.findViewById(R.id.etUsername);
+        etPassword = view.findViewById(R.id.etPassword);
+        btnLogin = view.findViewById(R.id.btnLogin);
+
+        //Set onclick listener for login button (Skeleton phase)
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Go to mainActivity Screen
+                Log.i(TAG, "onClick: Logging in");
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
