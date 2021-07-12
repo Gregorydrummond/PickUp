@@ -2,9 +2,15 @@ package com.example.pickup.fragments.mainActivity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +22,10 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    private static final String TAG = "HomeFragment";
+
+    Toolbar toolbar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +65,9 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //For toolbar
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -62,5 +75,26 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find components
+        toolbar = view.findViewById(R.id.toolbar_home);
+
+        //Remove title from toolbar
+        toolbar.setTitle("");
+
+        //Set toolbar as actionbar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+
+    //Inflate menu icons
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.toolbar_home, menu);
     }
 }
