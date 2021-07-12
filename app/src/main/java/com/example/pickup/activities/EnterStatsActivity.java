@@ -1,14 +1,16 @@
-package com.example.pickup;
+package com.example.pickup.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.pickup.R;
+
+public class EnterStatsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_enter_stats);
     }
 }
