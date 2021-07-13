@@ -6,5 +6,121 @@
     android:layout_height="match_parent"
     tools:context=".activities.Creation">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbCreation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:background="#E18804"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" >
+
+        <TextView
+            android:id="@+id/tvTitleCreation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/creation_title"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/etLocationCreation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tbCreation"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:ems="10"
+        android:hint="Enter Location"
+        android:inputType="textPersonName"
+        android:singleLine="true" />
+
+    <AutoCompleteTextView
+        android:id="@+id/actvGameTypeCreation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etLocationCreation"
+        android:layout_alignStart="@+id/etLocationCreation"
+        android:layout_alignEnd="@+id/etLocationCreation"
+        android:layout_marginTop="40dp"
+        android:ellipsize="end"
+        android:hint="Select Game Type"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/etPlayerLimitCreation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actvGameTypeCreation"
+        android:layout_alignStart="@+id/actvGameTypeCreation"
+        android:layout_alignEnd="@+id/actvGameTypeCreation"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="Set Player Limit"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/etScoreLimitCreation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etPlayerLimitCreation"
+        android:layout_alignStart="@+id/etPlayerLimitCreation"
+        android:layout_alignEnd="@+id/etPlayerLimitCreation"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="Set Score Limit"
+        android:inputType="number" />
+
+    <CheckBox
+        android:id="@+id/cbWinBy2Creation"
+        android:layout_width="46dp"
+        android:layout_height="32dp"
+        android:layout_alignTop="@+id/tvWinBy2TextCreation"
+        android:layout_alignEnd="@+id/etScoreLimitCreation"
+        android:layout_alignBottom="@+id/tvWinBy2TextCreation"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@+id/tvWinBy2TextCreation" />
+
+    <TextView
+        android:id="@+id/tvWinBy2TextCreation"
+        android:layout_width="326dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etScoreLimitCreation"
+        android:layout_alignStart="@+id/etScoreLimitCreation"
+        android:layout_marginTop="40dp"
+        android:text="Win By 2"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/btnCancelCreation"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvWinBy2TextCreation"
+        android:layout_alignStart="@+id/tvWinBy2TextCreation"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#E18804"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/btnCreateCreation"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnCancelCreation"
+        android:layout_alignEnd="@+id/cbWinBy2Creation"
+        android:backgroundTint="#E18804"
+        android:text="Create Game" />
 
 </RelativeLayout>
