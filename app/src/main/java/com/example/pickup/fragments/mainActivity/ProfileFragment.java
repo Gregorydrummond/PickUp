@@ -2,13 +2,24 @@ package com.example.pickup.fragments.mainActivity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.pickup.R;
+import com.example.pickup.adapters.ProfileFragmentViewPageAdapter;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +27,14 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
+    private static final String TAG = "ProfileFragment";
+
+    ImageView ivProfilePicture;
+    TextView tvUsername;
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    ProfileFragmentViewPageAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +81,41 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find components
+        ivProfilePicture = view.findViewById(R.id.ivProfilePictureProfile);
+        tvUsername = view.findViewById(R.id.tvUsernameProfile);
+        tabLayout = view.findViewById(R.id.tabLayout_profile);
+        viewPager2 = view.findViewById(R.id.viewPager2_profile);
+
+        //Initialize adapter
+        adapter = new ProfileFragmentViewPageAdapter(getActivity());
+
+        //Set adapter
+        viewPager2.setAdapter(adapter);
+
+        //Tab Layout Mediator
+        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                switch (position) {
+                    case 0:
+                        tab.setText("Games");
+                        break;
+                    case 1:
+                        tab.setText("Stats");
+                        break;
+                    default:
+                        tab.setText("Settings");
+                }
+            }
+        }).attach();
+
+        ivProfilePicture.bringToFront();
     }
 }
