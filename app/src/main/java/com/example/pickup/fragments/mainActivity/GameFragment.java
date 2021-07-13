@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pickup.R;
+import com.example.pickup.adapters.GameFragmentViewPagerAdapter;
 import com.example.pickup.fragments.games.CurrentGameFragment;
 import com.example.pickup.fragments.games.RecentGamesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +32,9 @@ public class GameFragment extends Fragment {
 
     private static final String TAG = "GameFragment";
 
-    FragmentManager fragmentManager;
-    BottomNavigationView bottomNavigationView;
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    GameFragmentViewPagerAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,37 +88,27 @@ public class GameFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Find components
-        fragmentManager = getParentFragmentManager();
-        bottomNavigationView = view.findViewById(R.id.bottom_navigation_Game);
+        tabLayout = view.findViewById(R.id.tabLayout_game);
+        viewPager2 = view.findViewById(R.id.viewPager2_game);
 
-        //Define fragments
-        final Fragment fragment1 = new CurrentGameFragment();
-        final Fragment fragment2 = new RecentGamesFragment();
+        //Initialize adapter
+        adapter = new GameFragmentViewPagerAdapter(getActivity());
 
-        //Handle navigation selection
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        //Set viewPager2's adapter
+        viewPager2.setAdapter(adapter);
+
+        //Tab Layout Mediator
+        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
-                switch (item.getItemId()) {
-                    case R.id.action_currentGames:
-                        fragment = fragment1;
-                        Log.i(TAG, "onNavigationItemSelected: Current Games");
-                        break;
-                    case R.id.action_recentGames:
-                        fragment = fragment2;
-                        Log.i(TAG, "onNavigationItemSelected: Recent Games");
-                        break;
-                    default:
-                        fragment = fragment1;
-                        break;
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                if(position == 0) {
+                    tab.setText("Current Game");
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainerGame, fragment).commit();
-                return true;
+                else {
+                    tab.setText("Recent Games");
+                }
             }
-        });
+        }).attach();
 
-        // Set default selection
-        bottomNavigationView.setSelectedItemId(R.id.action_currentGames);
     }
 }

@@ -6,18 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".fragments.mainActivity.GameFragment">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_Game"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        app:elevation="0dp"
-        app:menu="@menu/menu_top_navigation_game" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp">
+    </com.google.android.material.tabs.TabLayout>
 
-    <FrameLayout
-        android:id="@+id/flContainerGame"
-        android:layout_below="@id/bottom_navigation_Game"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager2_game"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabLayout_game"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
