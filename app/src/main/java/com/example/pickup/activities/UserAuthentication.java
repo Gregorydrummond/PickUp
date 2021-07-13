@@ -4,56 +4,56 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.pickup.R;
+import com.example.pickup.adapters.UserAuthenticationViewPagerAdapter;
 import com.example.pickup.fragments.userAuthentication.LoginFragment;
 import com.example.pickup.fragments.userAuthentication.SignupFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 
 public class UserAuthentication extends AppCompatActivity {
 
-    FragmentManager fragmentManager;
-    BottomNavigationView bottomNavigationView;
+    private static final String TAG = "UserAuthentication";
+
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    UserAuthenticationViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_authentication);
 
-        fragmentManager = getSupportFragmentManager();
-        bottomNavigationView = findViewById(R.id.bottom_navigation_UA);
+        //Find components
+        tabLayout = findViewById(R.id.tabLayout_UserAuthentication);
+        viewPager2 = findViewById(R.id.viewPager2_UserAuthentication);
 
-        //Define fragments
-        final Fragment fragment1 = new LoginFragment();
-        final Fragment fragment2 = new SignupFragment();
+        //Declare adapter
+        adapter = new UserAuthenticationViewPagerAdapter(this);
 
-        //Handle navigation selection
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
-                switch (item.getItemId()) {
-                    case R.id.action_login:
-                        fragment = fragment1;
-                        break;
-                    case R.id.action_signup:
-                        fragment = fragment2;
-                        break;
-                    default:
-                        fragment = fragment1;
-                        break;
-                }
-                fragmentManager.beginTransaction().replace(R.id.flContainerUA, fragment).commit();
-                return true;
-            }
-        });
+        //Set adapter
+        viewPager2.setAdapter(adapter);
 
-        // Set default selection
-        bottomNavigationView.setSelectedItemId(R.id.action_login);
+        //Tab Layout Mediator. A mediator to link a TabLayout with a ViewPager2.
+        new TabLayoutMediator(tabLayout, viewPager2,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        if(position == 0) {
+                            tab.setText("Log In");
+                        }
+                        else {
+                            tab.setText("Sign up");
+                        }
+                    }
+                }).attach();
     }
 }
