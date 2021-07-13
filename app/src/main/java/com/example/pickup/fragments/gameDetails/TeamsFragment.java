@@ -2,11 +2,15 @@ package com.example.pickup.fragments.gameDetails;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.pickup.R;
 
@@ -16,6 +20,13 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class TeamsFragment extends Fragment {
+
+    private static final String TAG = "TeamsFragment";
+
+    TextView tvTeamA;
+    TextView tvTeamB;
+    RecyclerView rvTeamA;
+    RecyclerView rvTeamB;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +73,16 @@ public class TeamsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_teams, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        tvTeamA = view.findViewById(R.id.tvTeamA);
+        tvTeamB = view.findViewById(R.id.tvTeamB);
+        rvTeamA = view.findViewById(R.id.rvTeamA);
+        rvTeamB = view.findViewById(R.id.rvTeamB);
+
     }
 }
