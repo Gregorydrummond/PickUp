@@ -23,15 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ivProfilePictureESA"
-        android:layout_marginStart="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         android:layout_toEndOf="@+id/ivProfilePictureESA"
         android:singleLine="true"
         android:text="Username's Game"
         android:textColor="#000000"
         android:textSize="24sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="189dp" />
 
     <TextView
@@ -39,15 +40,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/tvUsernameESA"
+        android:layout_alignEnd="@+id/tvUsernameESA"
         android:layout_alignBottom="@+id/ivProfilePictureESA"
-        android:layout_alignParentEnd="true"
         android:layout_marginBottom="15dp"
         android:singleLine="true"
         android:text="@ Location's Name"
         android:textColor="#000000"
         android:textSize="16sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="189dp" />
 
     <TextView
