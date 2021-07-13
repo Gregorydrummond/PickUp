@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.pickup.R;
 
@@ -16,6 +19,14 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class CurrentGameFragment extends Fragment {
+
+    private static final String TAG = "CurrentGameFragment";
+
+    ImageView ivProfilePicture;
+    TextView tvParkName;
+    TextView tvGameType;
+    TextView tvTeams;
+    Button btnCurrentGameCreate;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +73,23 @@ public class CurrentGameFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_current_game, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find components
+        ivProfilePicture = view.findViewById(R.id.ivCurrentGameProfilePicture);
+        tvParkName = view.findViewById(R.id.tvCurrentGameParkName);
+        tvGameType = view.findViewById(R.id.tvCurrentGameGameType);
+        tvTeams = view.findViewById(R.id.tvCurrentGameTeams);
+        btnCurrentGameCreate = view.findViewById(R.id.btnCurrentGameStart);
+
+        //Set data
+        tvParkName.setText("Park Name");
+        tvGameType.setText("4v4");
+        tvTeams.setText("Heats vs. Bucks");
+        ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
     }
 }
