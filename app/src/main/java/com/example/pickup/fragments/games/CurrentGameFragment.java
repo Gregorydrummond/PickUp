@@ -1,5 +1,6 @@
 package com.example.pickup.fragments.games;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.EnterStatsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,5 +93,14 @@ public class CurrentGameFragment extends Fragment {
         tvGameType.setText("4v4");
         tvTeams.setText("Heats vs. Bucks");
         ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
+
+        //Start/Finish/EnterStats Button
+        btnCurrentGameCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

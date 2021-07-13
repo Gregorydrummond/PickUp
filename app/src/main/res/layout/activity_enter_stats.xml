@@ -1,9 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.EnterStatsActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/ivProfilePictureESA"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <TextView
+        android:id="@+id/tvUsernameESA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivProfilePictureESA"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/ivProfilePictureESA"
+        android:singleLine="true"
+        android:text="Username's Game"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="189dp" />
+
+    <TextView
+        android:id="@+id/tvLocationESA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvUsernameESA"
+        android:layout_alignBottom="@+id/ivProfilePictureESA"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"
+        android:singleLine="true"
+        android:text="@ Location's Name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="189dp" />
+
+    <TextView
+        android:id="@+id/tvEnterStatsTextESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfilePictureESA"
+        android:layout_alignStart="@+id/ivProfilePictureESA"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="Enter Stats"
+        android:textSize="34sp"
+        tools:layout_editor_absoluteX="165dp"
+        tools:layout_editor_absoluteY="201dp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvEnterStatsTextESA"
+        android:layout_alignStart="@+id/tvEnterStatsTextESA"
+        android:layout_alignEnd="@+id/tvEnterStatsTextESA"
+        android:layout_marginTop="10dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/tvPointsScoredTextESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_alignStart="@+id/view"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:text="Points Scored:"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="287dp" />
+
+    <EditText
+        android:id="@+id/etPointsScoredESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/view"
+        android:layout_alignTop="@+id/tvPointsScoredTextESA"
+        android:layout_alignEnd="@+id/view"
+        android:layout_marginStart="230dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="189dp"
+        tools:layout_editor_absoluteY="285dp" />
+
+    <TextView
+        android:id="@+id/tvTeamScoreESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPointsScoredTextESA"
+        android:layout_alignStart="@+id/tvPointsScoredTextESA"
+        android:layout_marginTop="35dp"
+        android:text="Team's Score:"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="287dp" />
+
+    <EditText
+        android:id="@+id/etTeamScoreESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/etPointsScoredESA"
+        android:layout_alignTop="@+id/tvTeamScoreESA"
+        android:layout_alignEnd="@+id/etPointsScoredESA"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="189dp"
+        tools:layout_editor_absoluteY="442dp" />
+
+    <TextView
+        android:id="@+id/tvOpponentScoreESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTeamScoreESA"
+        android:layout_alignStart="@+id/tvTeamScoreESA"
+        android:layout_marginTop="35dp"
+        android:text="Opponent's Score:"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="287dp" />
+
+    <EditText
+        android:id="@+id/etOpponentScoreESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/etTeamScoreESA"
+        android:layout_alignTop="@+id/tvOpponentScoreESA"
+        android:layout_alignEnd="@+id/etTeamScoreESA"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="189dp"
+        tools:layout_editor_absoluteY="442dp" />
+
+    <Button
+        android:id="@+id/btnFinishESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/view"
+        android:layout_alignEnd="@+id/view"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="#E18804"
+        android:text="Finish" />
+</RelativeLayout>
