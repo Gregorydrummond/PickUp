@@ -2,19 +2,12 @@ package com.example.pickup.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.example.pickup.R;
 import com.example.pickup.adapters.UserAuthenticationViewPagerAdapter;
-import com.example.pickup.fragments.userAuthentication.LoginFragment;
-import com.example.pickup.fragments.userAuthentication.SignupFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -33,10 +26,10 @@ public class UserAuthentication extends AppCompatActivity {
         setContentView(R.layout.activity_user_authentication);
 
         //Find components
-        tabLayout = findViewById(R.id.tabLayout_UserAuthentication);
-        viewPager2 = findViewById(R.id.viewPager2_UserAuthentication);
+        tabLayout = findViewById(R.id.tabLayout_userAuthentication);
+        viewPager2 = findViewById(R.id.viewPager2_userAuthentication);
 
-        //Declare adapter
+        //Initialize adapter
         adapter = new UserAuthenticationViewPagerAdapter(this);
 
         //Set adapter

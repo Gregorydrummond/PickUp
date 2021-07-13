@@ -21,7 +21,7 @@
         android:textStyle="bold|italic" />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout_UserAuthentication"
+        android:id="@+id/tabLayout_userAuthentication"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -34,7 +34,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2_UserAuthentication"
+        android:id="@+id/viewPager2_userAuthentication"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvAppName"
