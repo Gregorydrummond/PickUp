@@ -17,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseUser;
 
 public class MapsFragment extends Fragment {
     
@@ -36,9 +37,18 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             Log.d(TAG, "onMapReady: Map is loaded");
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            //Getting user's location
+            LatLng userLocation = new LatLng(ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").getLatitude(), ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").getLongitude());
+
+            //Adding a marker at user's location
+            googleMap.addMarker(new MarkerOptions().position(userLocation).title("Marker on user"));
+
+            //Moving camera onto user's location
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+
+            //Zooming in camera
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
         }
     };
 
