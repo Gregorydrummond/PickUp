@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
+    
+    private static final String TAG = "MapsFragment";
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -32,6 +35,7 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            Log.d(TAG, "onMapReady: Map is loaded");
             LatLng sydney = new LatLng(-34, 151);
             googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -50,7 +54,7 @@ public class MapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
