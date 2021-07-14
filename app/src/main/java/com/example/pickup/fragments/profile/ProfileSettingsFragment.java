@@ -1,14 +1,21 @@
 package com.example.pickup.fragments.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.UserAuthentication;
+import com.parse.ParseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +23,10 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class ProfileSettingsFragment extends Fragment {
+
+    private static final String TAG = "ProfileSettingsFragment";
+
+    Button btnSignout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +73,28 @@ public class ProfileSettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile_settings, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find components
+        btnSignout = view.findViewById(R.id.btnSignout);
+
+        //On sign out button click
+        btnSignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Log user out
+                ParseUser.logOutInBackground();
+                Log.i(TAG, "onClick: User logged out");
+
+                //Go to login page
+                Log.i(TAG, "onClick: Back to login page");
+                Intent intent = new Intent(getActivity(), UserAuthentication.class);
+                startActivity(intent);
+            }
+        });
     }
 }
