@@ -32,7 +32,6 @@ public class SignupFragment extends Fragment {
     private static final String TAG = "SignupFragment";
 
     EditText etUsername;
-    EditText etEmail;
     EditText etPassword;
     Button btnSignup;
 
@@ -90,7 +89,6 @@ public class SignupFragment extends Fragment {
 
         //Find components
         etUsername = view.findViewById(R.id.etUsername);
-        etEmail = view.findViewById(R.id.etEmail);
         etPassword = view.findViewById(R.id.etPassword);
         btnSignup = view.findViewById(R.id.btnSignup);
 
@@ -99,37 +97,24 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String username = etUsername.getText().toString();
-                String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                //Error handler
-                if(username.isEmpty()) {
-                    Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "onClick: Username is empty");
-                    return;
-                }
                 if(password.isEmpty()) {
                     Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "onClick: Password is empty");
                     return;
                 }
-                if(email.isEmpty()) {
-                    Toast.makeText(getContext(), "Email required", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "onClick: Email is empty");
-                    return;
-                }
 
-                signupUser(username, email, password);
+                signupUser(username, password);
 
             }
         });
     }
 
-    private void signupUser(String username, String email, String password) {
+    private void signupUser(String username, String password) {
         //Create the ParseUser & set properties
         ParseUser user = new ParseUser();
         user.setUsername(username);
-        user.setEmail(email);
         user.setPassword(password);
 
         //Sign in background
