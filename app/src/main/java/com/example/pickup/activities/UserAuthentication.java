@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.pickup.R;
 import com.example.pickup.adapters.UserAuthenticationViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.parse.ParseUser;
 
 
 public class UserAuthentication extends AppCompatActivity {
@@ -24,6 +26,13 @@ public class UserAuthentication extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_authentication);
+
+        //If user is already signed in
+        if (ParseUser.getCurrentUser() != null) {
+            Intent intent = new Intent(UserAuthentication.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         //Find components
         tabLayout = findViewById(R.id.tabLayout_userAuthentication);
