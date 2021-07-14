@@ -1,14 +1,26 @@
 package com.example.pickup.fragments.userAuthentication;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.MainActivity;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +28,14 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class SignupFragment extends Fragment {
+
+    private static final String TAG = "SignupFragment";
+
+    EditText etUsername;
+    EditText etEmail;
+    EditText etPassword;
+    Button btnSignup;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +82,87 @@ public class SignupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_signup, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Find components
+        etUsername = view.findViewById(R.id.etUsername);
+        etEmail = view.findViewById(R.id.etEmail);
+        etPassword = view.findViewById(R.id.etPassword);
+        btnSignup = view.findViewById(R.id.btnSignup);
+
+        //Sign user up
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = etUsername.getText().toString();
+                String email = etEmail.getText().toString();
+                String password = etPassword.getText().toString();
+
+                //Error handler
+                if(username.isEmpty()) {
+                    Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onClick: Username is empty");
+                    return;
+                }
+                if(password.isEmpty()) {
+                    Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onClick: Password is empty");
+                    return;
+                }
+                if(email.isEmpty()) {
+                    Toast.makeText(getContext(), "Email required", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onClick: Email is empty");
+                    return;
+                }
+
+                signupUser(username, email, password);
+
+            }
+        });
+    }
+
+    private void signupUser(String username, String email, String password) {
+        //Create the ParseUser & set properties
+        ParseUser user = new ParseUser();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+
+        //Sign in background
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.e(TAG, "done: Issue with signup", e);
+                }
+                else {
+                    Log.i(TAG, "done: User signed up!");
+                    loginUser(username, password);
+                }
+            }
+        });
+    }
+
+    private void loginUser(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                //If there's an error with the user login
+                if(e != null) {
+                    Log.e(TAG, "done: Issue with login", e);
+                }
+                else {
+                    //Else navigate to the main activity if the user has signed in properly
+                    Log.i(TAG, "done: User logged in");
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 }

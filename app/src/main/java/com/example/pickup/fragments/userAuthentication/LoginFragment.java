@@ -13,9 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.pickup.R;
 import com.example.pickup.activities.MainActivity;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,10 +94,38 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Go to mainActivity Screen
-                Log.i(TAG, "onClick: Logging in");
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+
+                //Error handler
+                if(username.isEmpty()) {
+                    Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(password.isEmpty()) {
+                    Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                loginUser(username, password);
+            }
+        });
+    }
+
+    private void loginUser(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                //If there's an error with the user login
+                if(e != null) {
+                    Log.e(TAG, "done: Issue with login", e);
+                }
+                else {
+                    //Else navigate to the main activity if the user has signed in properly
+                    Log.i(TAG, "done: User logged in");
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
