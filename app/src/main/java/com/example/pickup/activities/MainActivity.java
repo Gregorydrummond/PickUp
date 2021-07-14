@@ -16,6 +16,7 @@ import com.example.pickup.fragments.mainActivity.MapsFragment;
 import com.example.pickup.fragments.mainActivity.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "onCreate: User: " + ParseUser.getCurrentUser().getUsername() + " Games won: " + ParseUser.getCurrentUser().getNumber("gamesWon"));
 
         //Find components
         fragmentManager = getSupportFragmentManager();
