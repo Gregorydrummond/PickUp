@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             // getting gps status
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(isGPSEnabled) {
-                Log.d(TAG, "saveCurrentUserLocation: Network enabled");
+                Log.d(TAG, "saveCurrentUserLocation: GPS enabled");
                 //Update location
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                     @Override

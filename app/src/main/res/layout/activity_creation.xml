@@ -33,14 +33,12 @@
 
     <EditText
         android:id="@+id/etLocationCreation"
-        android:layout_width="wrap_content"
+        android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tbCreation"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:ems="10"
         android:hint="Enter Location"
@@ -53,8 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etLocationCreation"
         android:layout_alignStart="@+id/etLocationCreation"
-        android:layout_alignEnd="@+id/etLocationCreation"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:hint="Select Game Type"
         android:singleLine="true" />
@@ -125,11 +124,13 @@
 
     <ImageView
         android:id="@+id/ivSelectLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="46dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/etLocationCreation"
-        android:layout_alignEnd="@+id/etLocationCreation"
         android:layout_alignBottom="@+id/etLocationCreation"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="2dp"
         android:clickable="true"
         app:srcCompat="@android:drawable/ic_menu_mylocation" />
 

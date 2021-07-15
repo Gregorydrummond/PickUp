@@ -1,11 +1,17 @@
 package com.example.pickup.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +36,8 @@ import com.google.android.material.navigation.NavigationBarView;
 public class Creation extends AppCompatActivity {
 
     private static final String TAG = "Creation";
+    public static final int REQUEST_CODE = 1;
+    public static final String KEY_LOCATION = "location";
 
     Toolbar toolbar;
     EditText etLocation;
@@ -41,6 +49,7 @@ public class Creation extends AppCompatActivity {
     Button btnCancel;
     Button btnCreate;
     ImageView ivSelectLocation;
+    ActivityResultLauncher<Intent> autoCompleteResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +93,56 @@ public class Creation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Go to map activity
+                Log.d(TAG, "onClick: Started map");
                 Intent intent = new Intent(Creation.this, MapsActivity.class);
-                startActivity(intent);
+                intent.putExtra(KEY_LOCATION, etLocation.getText());
+
+                autoCompleteResultLauncher.launch(intent);
             }
         });
+
+        //Create launcher (startActivityForResult is deprecated)
+        autoCompleteResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Intent data = result.getData();
+                        //Log.d(TAG, "onActivityResult: " + data.getStringExtra(KEY_LOCATION));
+                        if(result.getResultCode() == RESULT_OK) {
+                            //Set text
+                            Log.d(TAG, "onActivityResult: Recieved data");
+                            etLocation.setText(data.getStringExtra(KEY_LOCATION));
+
+                        }
+                        else {
+                            //Error handling
+                            Log.d(TAG, "onActivityResult: Error getting place. " + result.getResultCode());
+                        }
+                        Creation.super.onActivityResult(REQUEST_CODE, result.getResultCode(), data);
+                    }
+                }
+        );
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.creation, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult: got data from map");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String location = data.getExtras().getString(KEY_LOCATION);
+            etLocation.setText(location);
+        }
+        else {
+            Log.d(TAG, "onActivityResult: Error");
+        }
+
     }
 }

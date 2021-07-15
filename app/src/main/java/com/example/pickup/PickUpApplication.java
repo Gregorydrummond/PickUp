@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
 import com.example.pickup.models.Team;
+import com.google.android.libraries.places.api.Places;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -22,10 +23,13 @@ public class PickUpApplication extends Application {
                 .build()
         );
 
-        //Register classes
+        //Register Parse classes
         ParseObject.registerSubclass(Game.class);
         ParseObject.registerSubclass(GameStat.class);
         ParseObject.registerSubclass(Team.class);
 
+        //Initialize the Places SDK
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), String.valueOf(R.string.api_key));
     }
 }
