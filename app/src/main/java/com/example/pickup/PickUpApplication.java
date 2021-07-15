@@ -2,7 +2,11 @@ package com.example.pickup;
 
 import android.app.Application;
 
+import com.example.pickup.models.Game;
+import com.example.pickup.models.GameStat;
+import com.example.pickup.models.Team;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class PickUpApplication extends Application {
 
@@ -17,5 +21,11 @@ public class PickUpApplication extends Application {
                 .server("https://parseapi.back4app.com")
                 .build()
         );
+
+        //Register classes
+        ParseObject.registerSubclass(Game.class);
+        ParseObject.registerSubclass(GameStat.class);
+        ParseObject.registerSubclass(Team.class);
+
     }
 }
