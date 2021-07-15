@@ -123,4 +123,14 @@
         android:backgroundTint="#E18804"
         android:text="Create Game" />
 
+    <ImageView
+        android:id="@+id/ivSelectLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/etLocationCreation"
+        android:layout_alignEnd="@+id/etLocationCreation"
+        android:layout_alignBottom="@+id/etLocationCreation"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
 </RelativeLayout>

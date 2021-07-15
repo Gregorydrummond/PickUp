@@ -16,6 +16,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pickup.R;
@@ -39,6 +40,7 @@ public class Creation extends AppCompatActivity {
     TextView tvWinBy2Text;
     Button btnCancel;
     Button btnCreate;
+    ImageView ivSelectLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class Creation extends AppCompatActivity {
         tvWinBy2Text = findViewById(R.id.tvWinBy2TextCreation);
         btnCancel = findViewById(R.id.btnCancelCreation);
         btnCreate = findViewById(R.id.btnCreateCreation);
+        ivSelectLocation = findViewById(R.id.ivSelectLocation);
 
         //Toolbar
         toolbar.setTitle("");
@@ -73,6 +76,16 @@ public class Creation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        //Select location button
+        ivSelectLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Go to map activity
+                Intent intent = new Intent(Creation.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
     }

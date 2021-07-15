@@ -2,7 +2,9 @@ package com.example.pickup.activities;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.pickup.R;
 import com.example.pickup.databinding.ActivityMapsBinding;
@@ -12,12 +14,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 //import com.example.pickup.activities.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "MapsActivity";
+
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    LatLng location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +51,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Log.d(TAG, "onMapReady: Map is loaded");
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //Getting user's location
+        ParseUser user = ParseUser.getCurrentUser();
+        ParseGeoPoint userParseGeoPoint = user.getParseGeoPoint("playerLocation");
+        if (userParseGeoPoint != null) {
+            location = new LatLng(userParseGeoPoint.getLatitude(), userParseGeoPoint.getLongitude());
+            Log.i(TAG, "onMapReady: Retrieved user's location");
+        }
+        else {
+            Log.i(TAG, "onMapReady: Error getting user's geo point");
+        }
+
+        // Go to user's location
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+
+        //Zooming in camera
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
     }
 }
