@@ -18,6 +18,7 @@ public class Game extends ParseObject {
     public static final String KEY_LOCATION_NAME = "locationName";
     public static final String KEY_CREATOR = "creator";
     public static final String KEY_GAME_TYPE = "gameType";
+    public static final String KEY_PLAYER_COUNT = "playerCount";
     public static final String KEY_PLAYER_LIMIT = "playerLimit";
     public static final String KEY_SCORE_LIMIT = "scoreLimit";
     public static final String KEY_WIN_BY_TWO = "winByTwo";
@@ -70,6 +71,17 @@ public class Game extends ParseObject {
     //Set game type
     public void setGameType(String gameType) {
         put(KEY_GAME_TYPE, gameType);
+    }
+
+    //Get player count
+    public int getPlayerCount() {
+        return getInt(KEY_PLAYER_COUNT);
+    }
+
+    //Set player count
+    public void setPlayerCount(int playerCount) {
+        //Add a player
+        put(KEY_PLAYER_COUNT, playerCount + 1);
     }
 
     //Get player limit
