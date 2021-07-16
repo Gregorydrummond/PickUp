@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".activities.Creation">
 
+    <EditText
+        android:id="@+id/etLocationNameCreation"
+        android:layout_width="353dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tbCreation"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:ems="10"
+        android:hint="Enter Location Name"
+        android:inputType="textPersonName"
+        android:singleLine="true" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbCreation"
         android:layout_width="match_parent"
@@ -35,10 +51,9 @@
         android:id="@+id/etLocationCreation"
         android:layout_width="353dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tbCreation"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="60dp"
+        android:layout_below="@+id/etLocationNameCreation"
+        android:layout_alignStart="@+id/etLocationNameCreation"
+        android:layout_marginTop="40dp"
         android:ellipsize="end"
         android:ems="10"
         android:hint="Enter Location"
@@ -46,25 +61,25 @@
         android:singleLine="true" />
 
     <AutoCompleteTextView
-        android:id="@+id/actvGameTypeCreation"
-        android:layout_width="wrap_content"
+        android:id="@+id/atvGameTypesCreation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etLocationCreation"
         android:layout_alignStart="@+id/etLocationCreation"
-        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@+id/etLocationNameCreation"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="10dp"
-        android:ellipsize="end"
         android:hint="Select Game Type"
-        android:singleLine="true" />
+        android:singleLine="true">
+
+    </AutoCompleteTextView>
 
     <EditText
         android:id="@+id/etPlayerLimitCreation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/actvGameTypeCreation"
-        android:layout_alignStart="@+id/actvGameTypeCreation"
-        android:layout_alignEnd="@+id/actvGameTypeCreation"
+        android:layout_below="@+id/atvGameTypesCreation"
+        android:layout_alignStart="@+id/atvGameTypesCreation"
+        android:layout_alignEnd="@+id/atvGameTypesCreation"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Set Player Limit"
@@ -109,7 +124,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvWinBy2TextCreation"
         android:layout_alignStart="@+id/tvWinBy2TextCreation"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:backgroundTint="#E18804"
         android:text="Cancel" />
 

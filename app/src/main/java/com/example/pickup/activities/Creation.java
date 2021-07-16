@@ -13,11 +13,15 @@ import androidx.fragment.app.FragmentManager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,7 +43,10 @@ public class Creation extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     public static final String KEY_LOCATION = "location";
 
+    String[] gameType = new String[]{"1v1", "2v2", "3v3", "4v4", "5v5", "21"};
+
     Toolbar toolbar;
+    EditText etLocationName;
     EditText etLocation;
     AutoCompleteTextView actvGameType;
     EditText etPlayerLimit;
@@ -58,8 +65,9 @@ public class Creation extends AppCompatActivity {
 
         //Find components
         toolbar = findViewById(R.id.tbCreation);
+        etLocationName = findViewById(R.id.etLocationNameCreation);
         etLocation = findViewById(R.id.etLocationCreation);
-        actvGameType = findViewById(R.id.actvGameTypeCreation);
+        actvGameType = findViewById(R.id.atvGameTypesCreation);
         etPlayerLimit = findViewById(R.id.etPlayerLimitCreation);
         etScoreLimit = findViewById(R.id.etScoreLimitCreation);
         cbWinBy2 = findViewById(R.id.cbWinBy2Creation);
@@ -67,6 +75,7 @@ public class Creation extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancelCreation);
         btnCreate = findViewById(R.id.btnCreateCreation);
         ivSelectLocation = findViewById(R.id.ivSelectLocation);
+        ArrayAdapter<String> adapter;
 
         //Toolbar
         toolbar.setTitle("");
@@ -123,6 +132,22 @@ public class Creation extends AppCompatActivity {
                     }
                 }
         );
+
+        //Autocomplete text view
+        //Create an array adapter
+        adapter = new ArrayAdapter<String>(Creation.this, R.layout.support_simple_spinner_dropdown_item, gameType);
+
+        //Show dropdown when selected
+        actvGameType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                actvGameType.showDropDown();
+            }
+        });
+        //Set adapter
+        actvGameType.setAdapter(adapter);
+        //Hide keyboard for autocomplete text view
+        actvGameType.setInputType(InputType.TYPE_NULL);
     }
 
     @Override
