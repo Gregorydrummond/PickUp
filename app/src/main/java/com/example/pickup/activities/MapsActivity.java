@@ -39,6 +39,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -241,8 +243,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = new Intent();
 
                 //Pass the data (results of editing)
-                String location = "Lat: " + gameLocation.latitude + ", Long: " + gameLocation.longitude;
-                intent.putExtra(Creation.KEY_LOCATION, location);
+                intent.putExtra(Creation.KEY_LOCATION_LAT, gameLocation.latitude);
+                intent.putExtra(Creation.KEY_LOCATION_LONG, gameLocation.longitude);
 
                 //Set the result of the intent
                 setResult(RESULT_OK, intent);

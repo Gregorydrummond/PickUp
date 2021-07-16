@@ -41,23 +41,13 @@ public class Team extends ParseObject {
         put(KEY_SIZE, size);
     }
 
-    //Get max size of team
-    public int getMaxSize() {
-        return getInt(KEY_MAX_SIZE);
-    }
-
-    //Set max size of team
-    public void setMaxSize(int maxSize) {
-        put(KEY_MAX_SIZE, maxSize);
-    }
-
     //Get name of team
     public String getName() {
         return getString(KEY_NAME);
     }
 
     //Set name of team
-    public void setMaxSize(String name) {
+    public void setName(String name) {
         put(KEY_NAME, name);
     }
 

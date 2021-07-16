@@ -58,7 +58,7 @@ public class Game extends ParseObject {
     }
 
     //Set creator
-    public void setLocation(ParseUser parseUser) {
+    public void setCreator(ParseUser parseUser) {
         put(KEY_CREATOR, parseUser);
     }
 
@@ -123,7 +123,7 @@ public class Game extends ParseObject {
     }
 
     //Get has teams boolean
-    public boolean hasTeams() {
+    public boolean getHasTeams() {
         return getBoolean(KEY_HAS_TEAMS);
     }
 
