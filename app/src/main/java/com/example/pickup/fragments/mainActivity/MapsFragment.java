@@ -11,17 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pickup.R;
+import com.example.pickup.models.Game;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class MapsFragment extends Fragment {
     
     private static final String TAG = "MapsFragment";
+
+    List<Game> gameList;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -47,6 +53,13 @@ public class MapsFragment extends Fragment {
             //Moving camera onto user's location
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
 
+            //Add markers on game locations
+            for(Game game : gameList) {
+                ParseGeoPoint gameLocationPGP = game.getLocation();
+                LatLng gameLocation = new LatLng(gameLocationPGP.getLatitude(), gameLocationPGP.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(gameLocation).title(game.getLocationName()));
+            }
+
             //Zooming in camera
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
         }
@@ -65,8 +78,12 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
+
+        gameList = HomeFragment.gamesFeed;
+
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
     }
 }

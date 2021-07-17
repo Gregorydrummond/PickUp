@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
 
     Toolbar toolbar;
-    List<Game> gamesFeed;
+    static List<Game> gamesFeed;
     RecyclerView rvHome;
     HomeFragmentAdapter adapter;
     Button button;
