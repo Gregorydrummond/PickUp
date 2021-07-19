@@ -164,7 +164,7 @@ public class Creation extends AppCompatActivity {
                 }
                 game.setGameStarted(false);
                 game.setGameEnded(false);
-                game.setPlayerCount(0);
+                game.setPlayerCount();
 
                 //Save game in background
                 game.saveInBackground(e -> {

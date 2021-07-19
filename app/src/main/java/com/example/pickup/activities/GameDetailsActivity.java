@@ -6,6 +6,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,9 +14,14 @@ import android.widget.TextView;
 import com.example.pickup.R;
 import com.example.pickup.adapters.GameDetailsActivityViewPagerAdapter;
 import com.example.pickup.models.Game;
+import com.example.pickup.models.Team;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import org.json.JSONException;
 import org.parceler.Parcels;
 
 public class GameDetailsActivity extends AppCompatActivity {
@@ -37,7 +43,7 @@ public class GameDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_details);
 
         game = Parcels.unwrap(getIntent().getParcelableExtra(Game.class.getSimpleName()));
-        Log.i(TAG, "onCreate: Location Name: " + game.getLocationName());
+        //Log.i(TAG, "onCreate: Location Name: " + game.getLocationName());
 
         //Find components
         ivProfilePicture = findViewById(R.id.ivProfilePictureGD);
@@ -71,8 +77,61 @@ public class GameDetailsActivity extends AppCompatActivity {
         tvLocationName.setText(textLocationName);
 
         //Join button
+        ParseUser creator = game.getCreator();
+        ParseUser user = ParseUser.getCurrentUser();
+        if(user.getObjectId().equals(creator.getObjectId())) {
+            btnJoin.setVisibility(View.GONE);
+        }
 
+        btnJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Team teamA = (Team) game.getTeamA();
+                Team teamB = (Team) game.getTeamB();
 
+                //If team B has less players in it than team A, add player to team B
+                if(teamB.getSize() < teamA.getSize()) {
+                    try {
+                        teamB.setPlayers(user);
+                        teamB.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e == null) {
+                                    Log.i(TAG, "done: Added player to team B");
+                                    game.setPlayerCount();
+                                    game.saveInBackground();
+                                }
+                                else {
+                                    Log.e(TAG, "done: Backend error saving player to team B", e);
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onCreate: Error adding player to teamB", e);
+                    }
+                }
+                else {
+                    try {
+                        teamA.setPlayers(user);
+                        teamA.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e == null) {
+                                    Log.i(TAG, "done: Added player to team A");
+                                    game.setPlayerCount();
+                                    game.saveInBackground();
+                                }
+                                else {
+                                    Log.e(TAG, "done: Backend error saving player to team A", e);
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onCreate: Error adding player to teamA", e);
+                    }
+                }
+            }
+        });
     }
 
     public Game getGame() {

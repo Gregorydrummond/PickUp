@@ -20,6 +20,9 @@ import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileFragmentViewPageAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,6 +90,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivProfilePictureProfile);
         tvUsername = view.findViewById(R.id.tvUsernameProfile);
@@ -117,5 +122,6 @@ public class ProfileFragment extends Fragment {
         }).attach();
 
         ivProfilePicture.bringToFront();
+        tvUsername.setText(currentUser.getUsername());
     }
 }

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +38,8 @@ public class TeamsFragment extends Fragment {
 
     private static final String TAG = "TeamsFragment";
 
-    List<JSONArray> teamListA;
-    List<JSONArray> teamListB;
+    List<JSONObject> teamListA;
+    List<JSONObject> teamListB;
     TextView tvTeamA;
     TextView tvTeamB;
     RecyclerView rvTeamA;
@@ -125,18 +128,51 @@ public class TeamsFragment extends Fragment {
 
         //Query teams
         if(game.getHasTeams()) {
-            setTeams();
+            try {
+                setTeams();
+            } catch (JSONException e) {
+                Log.e(TAG, "onViewCreated: Error setting teams", e);
+            }
         }
     }
 
-    private void setTeams() {
+    private void setTeams() throws JSONException {
+        Log.i(TAG, "setTeams: Setting teams");
 //        //Which class we are querying
 //        ParseQuery<Team> query = ParseQuery.getQuery(Team.class);
 
+        //Clear team lists and adapter lists
+        teamListA.clear();
+        teamListB.clear();
+        adapterA.clear();
+        adapterB.clear();
+
         //Find teams that belong to the game;
-        teamListA.add(game.getTeamA().getJSONArray("players"));
-        teamListB.add(game.getTeamB().getJSONArray("players"));
-        adapterA.notifyDataSetChanged();
-        adapterB.notifyDataSetChanged();
+        //Get array
+        JSONArray jsonPlayerArrayA = game.getTeamA().getJSONArray("players");
+        //Add each player object
+        for(int i = 0; i < jsonPlayerArrayA.length(); i++) {
+            teamListA.add(jsonPlayerArrayA.getJSONObject(i));
+            Log.i(TAG, "setTeams: Players for Team A" + i);
+        }
+
+        JSONArray jsonPlayerArrayB = game.getTeamB().getJSONArray("players");
+        for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
+            teamListB.add(jsonPlayerArrayB.getJSONObject(i));
+        }
+
+//        //Update adapter
+//        adapterA.addAll(teamListA);
+//        adapterB.addAll(teamListB);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            setTeams();
+        } catch (JSONException e) {
+            Log.e(TAG, "onResume: Error setting teams on onResume", e);
+        }
     }
 }

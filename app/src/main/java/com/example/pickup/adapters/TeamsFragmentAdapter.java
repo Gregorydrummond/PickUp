@@ -24,11 +24,11 @@ public class TeamsFragmentAdapter extends RecyclerView.Adapter<TeamsFragmentAdap
 
     private static final String TAG = "TeamsFragmentAdapter";
 
-    List<JSONArray> teams;
+    List<JSONObject> players;
     Context context;
 
-    public TeamsFragmentAdapter(List<JSONArray> teams, Context context) {
-        this.teams = teams;
+    public TeamsFragmentAdapter(List<JSONObject> players, Context context) {
+        this.players = players;
         this.context = context;
     }
 
@@ -42,10 +42,10 @@ public class TeamsFragmentAdapter extends RecyclerView.Adapter<TeamsFragmentAdap
 
     @Override
     public void onBindViewHolder(@NonNull TeamsFragmentAdapter.ViewHolder holder, int position) {
-        JSONArray team = teams.get(position);
+        JSONObject player = players.get(position);
 
         try {
-            holder.bind(team);
+            holder.bind(player);
         } catch (JSONException e) {
             Log.e(TAG, "onBindViewHolder: Error binding view holder", e);
         }
@@ -53,7 +53,17 @@ public class TeamsFragmentAdapter extends RecyclerView.Adapter<TeamsFragmentAdap
 
     @Override
     public int getItemCount() {
-        return teams.size();
+        return players.size();
+    }
+
+    public void clear() {
+        players.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<JSONObject> players) {
+        this.players.addAll(players);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -69,14 +79,13 @@ public class TeamsFragmentAdapter extends RecyclerView.Adapter<TeamsFragmentAdap
             itemView.setOnClickListener(this);
         }
 
-        public void bind(JSONArray players) throws JSONException {
-            int position = getAdapterPosition();
+        public void bind(JSONObject player) throws JSONException {
+            //int position = getAdapterPosition();
 //            JSONArray jsonPlayerArray = team.getPlayers();
 //            JSONObject jsonPlayerObject = jsonPlayerArray.getJSONObject(position);
 //            tvPlayerName.setText(jsonPlayerObject.getString("name"));
 
-            JSONObject jsonPlayerObject = players.getJSONObject(position);
-            tvPlayerName.setText(jsonPlayerObject.getString("name"));
+            tvPlayerName.setText(player.getString("name"));
         }
 
         @Override

@@ -79,9 +79,9 @@ public class Game extends ParseObject {
     }
 
     //Set player count
-    public void setPlayerCount(int playerCount) {
+    public void setPlayerCount() {
         //Add a player
-        put(KEY_PLAYER_COUNT, playerCount + 1);
+        put(KEY_PLAYER_COUNT, getPlayerCount() + 1);
     }
 
     //Get player limit

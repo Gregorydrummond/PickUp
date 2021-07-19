@@ -40,8 +40,8 @@ public class Team extends ParseObject {
     }
 
     //Set size of team
-    public void setSize(int size) {
-        put(KEY_SIZE, size);
+    public void setSize() {
+        put(KEY_SIZE, getSize() + 1);
     }
 
     //Get name of team
@@ -84,5 +84,8 @@ public class Team extends ParseObject {
 
         //Save to backend
         put(KEY_PLAYERS, jsonPlayerArray);
+
+        //Update size
+        setSize();
     }
 }
