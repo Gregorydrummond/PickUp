@@ -78,8 +78,8 @@ public class Creation extends AppCompatActivity {
     static double latitude;
     static double longitude;
     Game game;
-    Team teamA, teamB;
-    boolean gameCreated = false, teamACreated = false, teamBCreated = false;
+    Team teamA, teamB, teamC;
+    boolean gameCreated = false, teamACreated = false, teamBCreated = false, teamCCreated = false;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +174,12 @@ public class Creation extends AppCompatActivity {
                         Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
                         gameCreated = true;
                         setTeams(teamACreated, teamBCreated);
-                        
+                        try {
+                            setTeam(teamCCreated);
+                        } catch (JSONException jsonException) {
+                            Log.e(TAG, "onClick: Error setting single team", e);
+                        }
+
                     }
                     else {
                         Log.e(TAG, "done: Error saving game", e);
@@ -192,7 +197,6 @@ public class Creation extends AppCompatActivity {
                             Log.i(TAG, "done: Team A created");
                             teamACreated = true;
                             setTeams(gameCreated, teamBCreated);
-                            //teamA.setGame(game);
                         }
                         else {
                             Log.e(TAG, "done: Error creating Team A", e);
@@ -204,10 +208,27 @@ public class Creation extends AppCompatActivity {
                             Log.i(TAG, "done: Team B created");
                             teamBCreated = true;
                             setTeams(teamACreated, gameCreated);
-                            //teamB.setGame(game);
                         }
                         else {
                             Log.e(TAG, "done: Error creating Team B", e);
+                        }
+                    });
+                }
+                else {
+                    Log.i(TAG, "onClick: Generating single team object");
+                    teamC = new Team();
+                    teamC.saveInBackground(e -> {
+                        if(e == null) {
+                            Log.i(TAG, "done: Team C created");
+                            teamCCreated = true;
+                            try {
+                                setTeam(gameCreated);
+                            } catch (JSONException jsonException) {
+                                Log.e(TAG, "onClick: Error setting single team", jsonException);
+                            }
+                        }
+                        else {
+                            Log.e(TAG, "done: Error creating Team A", e);
                         }
                     });
                 }
@@ -279,6 +300,18 @@ public class Creation extends AppCompatActivity {
         actvGameType.setAdapter(adapter);
         //Hide keyboard for autocomplete text view
         actvGameType.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void setTeam(boolean object1) throws JSONException {
+        if(object1) {
+            Log.i(TAG, "setTeam: Setting single team");
+            game.setTeamA(teamC);
+            game.saveInBackground();
+            teamC.setGame(game);
+            //Save current player
+            teamC.setPlayers(ParseUser.getCurrentUser());
+            teamC.saveInBackground();
+        }
     }
 
     private void setTeams(boolean object1, boolean object2) {

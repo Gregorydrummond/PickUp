@@ -110,42 +110,43 @@ public class TeamsFragment extends Fragment {
 
         //Initialize team array
         teamListA = new ArrayList<>();
-        teamListB = new ArrayList<>();
 
         //Initialize adapter
         adapterA = new TeamsFragmentAdapter(teamListA, getContext());
-        adapterB = new TeamsFragmentAdapter(teamListB, getContext());
 
         //Set layout managers
         LinearLayoutManager linearLayoutManagerA = new LinearLayoutManager(getContext());
-        LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext());
         rvTeamA.setLayoutManager(linearLayoutManagerA);
-        rvTeamB.setLayoutManager(linearLayoutManagerB);
 
         //Set adapters
         rvTeamA.setAdapter(adapterA);
-        rvTeamB.setAdapter(adapterB);
+
+        if(game.getHasTeams()) {
+            teamListB = new ArrayList<>();
+            adapterB = new TeamsFragmentAdapter(teamListB, getContext());
+            LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext());
+            rvTeamB.setLayoutManager(linearLayoutManagerB);
+            rvTeamB.setAdapter(adapterB);
+        }
+        else {
+            tvTeamB.setVisibility(View.GONE);
+            rvTeamB.setVisibility(View.GONE);
+        }
 
         //Query teams
-        if(game.getHasTeams()) {
-            try {
-                setTeams();
-            } catch (JSONException e) {
-                Log.e(TAG, "onViewCreated: Error setting teams", e);
-            }
+        try {
+            setTeams();
+        } catch (JSONException e) {
+            Log.e(TAG, "onViewCreated: Error setting teams", e);
         }
     }
 
     private void setTeams() throws JSONException {
         Log.i(TAG, "setTeams: Setting teams");
-//        //Which class we are querying
-//        ParseQuery<Team> query = ParseQuery.getQuery(Team.class);
 
         //Clear team lists and adapter lists
         teamListA.clear();
-        teamListB.clear();
         adapterA.clear();
-        adapterB.clear();
 
         //Find teams that belong to the game;
         //Get array
@@ -156,14 +157,14 @@ public class TeamsFragment extends Fragment {
             Log.i(TAG, "setTeams: Players for Team A" + i);
         }
 
-        JSONArray jsonPlayerArrayB = game.getTeamB().getJSONArray("players");
-        for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
-            teamListB.add(jsonPlayerArrayB.getJSONObject(i));
+        if(game.getHasTeams()) {
+            teamListB.clear();
+            adapterB.clear();
+            JSONArray jsonPlayerArrayB = game.getTeamB().getJSONArray("players");
+            for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
+                teamListB.add(jsonPlayerArrayB.getJSONObject(i));
+            }
         }
-
-//        //Update adapter
-//        adapterA.addAll(teamListA);
-//        adapterB.addAll(teamListB);
     }
 
     @Override
