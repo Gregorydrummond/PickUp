@@ -8,12 +8,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.pickup.fragments.gameDetails.DetailsFragment;
 import com.example.pickup.fragments.gameDetails.TeamsFragment;
 
-public class GameDetailsFragmentViewPagerAdapter extends FragmentStateAdapter {
+public class GameDetailsActivityViewPagerAdapter extends FragmentStateAdapter {
 
-    private static final String TAG = "GameDetailsFragmentView";
+    private static final String TAG = "GameDetailsActivityView";
     public static final int TAB_COUNT = 2;
 
-    public GameDetailsFragmentViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public GameDetailsActivityViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 

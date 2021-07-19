@@ -3,8 +3,6 @@ package com.example.pickup.fragments.mainActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -144,6 +142,7 @@ public class HomeFragment extends Fragment {
 
         //Set adapter
         rvHome.setAdapter(adapter);
+        
 
         //Query Games
         queryGames();
@@ -155,6 +154,8 @@ public class HomeFragment extends Fragment {
 
         //Include creator info
         query.include(Game.KEY_CREATOR);
+        query.include(Game.KEY_TEAM_A);
+        query.include(Game.KEY_TEAM_B);
 
         //Order from closest to farthest
         query.whereNear("location", ParseUser.getCurrentUser().getParseGeoPoint("playerLocation"));
@@ -176,8 +177,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
     //Inflate menu icons

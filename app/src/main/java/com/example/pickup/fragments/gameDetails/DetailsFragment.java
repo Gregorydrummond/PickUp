@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.GameDetailsActivity;
+import com.example.pickup.models.Game;
+import com.example.pickup.models.Team;
+import com.parse.ParseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +30,7 @@ public class DetailsFragment extends Fragment {
     TextView tvStarted;
     TextView tvPlayerCount;
     TextView tvWinBy2;
+    TextView tvDistance;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,6 +88,25 @@ public class DetailsFragment extends Fragment {
         tvStarted = view.findViewById(R.id.tvStartedDetails);
         tvPlayerCount = view.findViewById(R.id.tvPlayerCountDetails);
         tvWinBy2 = view.findViewById(R.id.tvWinBy2Details);
+        tvDistance = view.findViewById(R.id.tvDistanceDetails);
 
+        //Get data from activity
+        GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
+        Game game = gameDetailsActivity.getGame();
+
+        if(game != null) {
+            String textGameType = "Game Type: " + game.getGameType();
+            tvGameType.setText(textGameType);
+            String textGameStatus = "Status: " + (game.getGameStarted() ? "Started" : "Not started");
+            tvStarted.setText(textGameStatus);
+            int numOfPlayers = (int) game.getPlayerCount();
+            int maxPlayers = (int) game.getPlayerLimit();
+            String textPlayerCount = "Players: " + numOfPlayers + "/" + maxPlayers;
+            tvPlayerCount.setText(textPlayerCount);
+            String textWinBy2 = "Win By 2: " + (game.getWinByTwo() ? "Yes" : "No");
+            tvWinBy2.setText(textWinBy2);
+            String textDistance = String.format("%.2f", ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation())) + " miles away";
+            tvDistance.setText(textDistance);
+        }
     }
 }

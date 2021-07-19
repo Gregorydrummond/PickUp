@@ -1,7 +1,7 @@
 package com.example.pickup.adapters;
 
 import android.content.Context;
-import android.location.Location;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
-import com.example.pickup.models.Team;
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseUser;
 
-import org.w3c.dom.Text;
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -96,7 +95,13 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
         @Override
         public void onClick(View v) {
-
+            int position = getAdapterPosition();
+            if(position != RecyclerView.NO_POSITION) {
+                Game game = games.get(position);
+                Intent intent = new Intent(context, GameDetailsActivity.class);
+                intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(game));
+                context.startActivity(intent);
+            }
         }
     }
 

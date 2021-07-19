@@ -7,13 +7,15 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
 import java.util.Date;
 
-//@Parcel(analyze=Game.class)
+@Parcel(analyze=Game.class)
 @ParseClassName("Game")
 public class Game extends ParseObject {
 
-    private static final String TAG = "Game";
+    public static final String TAG = "Game";
     public static final String KEY_LOCATION = "location";
     public static final String KEY_LOCATION_NAME = "locationName";
     public static final String KEY_CREATOR = "creator";
@@ -29,9 +31,7 @@ public class Game extends ParseObject {
     public static final String KEY_TEAM_B = "teamB";
 
     //Constructor
-    public Game() {
-        super();
-    }
+    public Game() {}
 
     //Get location
     public ParseGeoPoint getLocation() {
