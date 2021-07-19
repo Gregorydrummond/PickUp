@@ -5,4 +5,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="pickup">PickUp</string>
     <string name="creation_title">Create A Game</string>
+    <string name="endGameButtonText">End Game</string>
+    <string name="enterStatsButtonText">Enter Stats</string>
+    <string name="startGameButtonText">Start Game</string>
+    <string name="cannotFindUserErrorMessage">Cannot find user</string>
 </resources>

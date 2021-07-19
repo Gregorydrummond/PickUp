@@ -7,6 +7,69 @@
     tools:context=".fragments.games.CurrentGameFragment">
 
 
+    <TextView
+        android:id="@+id/tvWinBy2CG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPlayerCountCG"
+        android:layout_alignStart="@+id/tvPlayerCountCG"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:text="Win By 2: Yes" />
+
+    <TextView
+        android:id="@+id/tvPlayerCountCG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCurrentGameTeams"
+        android:layout_alignStart="@+id/tvCurrentGameTeams"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:text="Players: 4/10" />
+
+    <TextView
+        android:id="@+id/tvStartedCG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvWinBy2CG"
+        android:layout_alignStart="@+id/tvWinBy2CG"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:text="Game Started" />
+
+    <TextView
+        android:id="@+id/tvLocationNameCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvUsernameCG"
+        android:layout_alignStart="@+id/tvUsernameCG"
+        android:layout_alignEnd="@+id/tvUsernameCG"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:textColor="#7C7C7C"
+        android:textSize="16sp"
+        app:autoSizeTextType="uniform"
+        tools:text="@Location Name" />
+
+    <TextView
+        android:id="@+id/tvUsernameCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivCurrentGameProfilePicture"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/ivCurrentGameProfilePicture"
+        android:ellipsize="end"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:autoSizeTextType="uniform"
+        tools:text="Creator's Game" />
+
     <ImageView
         android:id="@+id/ivCurrentGameProfilePicture"
         android:layout_width="150dp"
@@ -19,23 +82,13 @@
         tools:srcCompat="@drawable/ic_baseline_person_24" />
 
     <TextView
-        android:id="@+id/tvCurrentGameParkName"
+        android:id="@+id/tvCurrentGameGameType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivCurrentGameProfilePicture"
         android:layout_alignStart="@+id/ivCurrentGameProfilePicture"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="60dp"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        tools:text="Park Name" />
-
-    <TextView
-        android:id="@+id/tvCurrentGameGameType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvCurrentGameParkName"
-        android:layout_alignStart="@+id/tvCurrentGameParkName"
-        android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textSize="24sp"
         tools:text="Game Type" />
@@ -49,18 +102,19 @@
         android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textSize="24sp"
-        tools:text="Teams" />
+        tools:text="TeamA vs TeamB" />
 
     <Button
-        android:id="@+id/btnCurrentGameStart"
+        android:id="@+id/btnCG"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvCurrentGameTeams"
+        android:layout_below="@+id/tvStartedCG"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="100dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="45dp"
         android:backgroundTint="#E18804"
         android:text="Start Game" />
 

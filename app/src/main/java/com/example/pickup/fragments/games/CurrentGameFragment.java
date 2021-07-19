@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,10 @@ import android.widget.TextView;
 
 import com.example.pickup.R;
 import com.example.pickup.activities.EnterStatsActivity;
+import com.example.pickup.models.Game;
+import com.example.pickup.models.Team;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,10 +30,18 @@ public class CurrentGameFragment extends Fragment {
     private static final String TAG = "CurrentGameFragment";
 
     ImageView ivProfilePicture;
-    TextView tvParkName;
+    TextView tvLocationName;
     TextView tvGameType;
     TextView tvTeams;
-    Button btnCurrentGameCreate;
+    TextView tvUsername;
+    TextView tvPlayerCount;
+    TextView tvWinBy2;
+    TextView tvStatus;
+    Button btnCurrentGame;
+    ParseUser user;
+    Game game;
+    Team teamA;
+    Team teamB;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,26 +94,85 @@ public class CurrentGameFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Get current user
+        user = ParseUser.getCurrentUser();
+
+        try {
+            getGameData();
+        } catch (ParseException e) {
+            Log.e(TAG, "onViewCreated: Error getting game data", e);
+        }
+
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivCurrentGameProfilePicture);
-        tvParkName = view.findViewById(R.id.tvCurrentGameParkName);
+        tvUsername = view.findViewById(R.id.tvUsernameCG);
+        tvLocationName = view.findViewById(R.id.tvLocationNameCG);
         tvGameType = view.findViewById(R.id.tvCurrentGameGameType);
         tvTeams = view.findViewById(R.id.tvCurrentGameTeams);
-        btnCurrentGameCreate = view.findViewById(R.id.btnCurrentGameStart);
+        tvPlayerCount = view.findViewById(R.id.tvPlayerCountCG);
+        tvWinBy2 = view.findViewById(R.id.tvWinBy2CG);
+        tvStatus = view.findViewById(R.id.tvStartedCG);
+        btnCurrentGame = view.findViewById(R.id.btnCG);
 
         //Set data
-        tvParkName.setText("Park Name");
-        tvGameType.setText("4v4");
-        tvTeams.setText("Heats vs. Bucks");
+        try {
+            ParseUser creator = game.getCreator().fetchIfNeeded();
+            String textName = creator.getUsername() + "'s Game";
+            tvUsername.setText(textName);
+        } catch (ParseException e) {
+            tvUsername.setText(R.string.cannotFindUserErrorMessage);
+            Log.e(TAG, "onViewCreated: Error fetching creator data", e);
+        }
+        String textLocationName = "@" + game.getLocationName();
+        tvLocationName.setText(textLocationName);
+        String textGameType = "Game Type: " + game.getGameType();
+        tvGameType.setText(textGameType);
+        if(game.getHasTeams()) {
+            String teamsText = teamA.getName() + " vs. " + teamB.getName();
+            tvTeams.setText(teamsText);
+        }
+        else {
+            tvTeams.setVisibility(View.GONE);
+        }
+        int playerCount = game.getPlayerCount();
+        String textGameCapacity = "Capacity: " + playerCount + "/" + game.getPlayerLimit();
+        tvPlayerCount.setText(textGameCapacity);
+        String textWinBy2 = "Win By 2: " + (game.getWinByTwo() ? "Yes" : "No");
+        tvWinBy2.setText(textWinBy2);
+        String textStatus;
+        if(game.getGameStarted()) {
+            textStatus = "Game in progress";
+            btnCurrentGame.setText(R.string.endGameButtonText);
+        }
+        else if(game.getGameEnded()) {
+            textStatus = "Game ended";
+            btnCurrentGame.setText(R.string.enterStatsButtonText);
+        }
+        else {
+            textStatus = "Game not started";
+            btnCurrentGame.setText(R.string.startGameButtonText);
+        }
+        tvStatus.setText(textStatus);
         ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
 
         //Start/Finish/EnterStats Button
-        btnCurrentGameCreate.setOnClickListener(new View.OnClickListener() {
+        btnCurrentGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
                 startActivity(intent);
             }
         });
+
+
+    }
+
+    private void getGameData() throws ParseException {
+        game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
+        teamA = (Team) game.getTeamA().fetchIfNeeded();
+        if(game.getHasTeams()) {
+            teamB = game.getTeamB().fetchIfNeeded();
+        }
+        //Log.i(TAG, "getGameData: Location name: " + game.getLocationName());
     }
 }
