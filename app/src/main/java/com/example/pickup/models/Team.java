@@ -2,8 +2,11 @@ package com.example.pickup.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @ParseClassName("Team")
 public class Team extends ParseObject {
@@ -67,7 +70,19 @@ public class Team extends ParseObject {
     }
 
     //Set array of players
-    public void setPlayers(JSONArray players) {
-        put(KEY_PLAYERS, players);
+    public void setPlayers(ParseUser parseUser) throws JSONException {
+        //Get original array
+        JSONArray jsonPlayerArray = getJSONArray(KEY_PLAYERS);
+
+        //Create new player object to add to array
+        JSONObject jsonPlayerObject = new JSONObject();
+        jsonPlayerObject.put("userID", parseUser.getObjectId());
+        jsonPlayerObject.put("name", parseUser.getUsername());
+
+        //Put object in array
+        jsonPlayerArray.put(jsonPlayerObject);
+
+        //Save to backend
+        put(KEY_PLAYERS, jsonPlayerArray);
     }
 }

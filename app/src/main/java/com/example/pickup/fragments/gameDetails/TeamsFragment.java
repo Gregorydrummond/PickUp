@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -13,6 +14,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.GameDetailsActivity;
+import com.example.pickup.adapters.TeamsFragmentAdapter;
+import com.example.pickup.models.Game;
+import com.example.pickup.models.Team;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,10 +35,14 @@ public class TeamsFragment extends Fragment {
 
     private static final String TAG = "TeamsFragment";
 
+    List<JSONArray> teamListA;
+    List<JSONArray> teamListB;
     TextView tvTeamA;
     TextView tvTeamB;
     RecyclerView rvTeamA;
     RecyclerView rvTeamB;
+    TeamsFragmentAdapter adapterA, adapterB;
+    Game game;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,10 +95,48 @@ public class TeamsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Find components
         tvTeamA = view.findViewById(R.id.tvTeamA);
         tvTeamB = view.findViewById(R.id.tvTeamB);
         rvTeamA = view.findViewById(R.id.rvTeamA);
         rvTeamB = view.findViewById(R.id.rvTeamB);
 
+        //Get data from activity
+        GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
+        game = gameDetailsActivity.getGame();
+
+        //Initialize team array
+        teamListA = new ArrayList<>();
+        teamListB = new ArrayList<>();
+
+        //Initialize adapter
+        adapterA = new TeamsFragmentAdapter(teamListA, getContext());
+        adapterB = new TeamsFragmentAdapter(teamListB, getContext());
+
+        //Set layout managers
+        LinearLayoutManager linearLayoutManagerA = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext());
+        rvTeamA.setLayoutManager(linearLayoutManagerA);
+        rvTeamB.setLayoutManager(linearLayoutManagerB);
+
+        //Set adapters
+        rvTeamA.setAdapter(adapterA);
+        rvTeamB.setAdapter(adapterB);
+
+        //Query teams
+        if(game.getHasTeams()) {
+            setTeams();
+        }
+    }
+
+    private void setTeams() {
+//        //Which class we are querying
+//        ParseQuery<Team> query = ParseQuery.getQuery(Team.class);
+
+        //Find teams that belong to the game;
+        teamListA.add(game.getTeamA().getJSONArray("players"));
+        teamListB.add(game.getTeamB().getJSONArray("players"));
+        adapterA.notifyDataSetChanged();
+        adapterB.notifyDataSetChanged();
     }
 }

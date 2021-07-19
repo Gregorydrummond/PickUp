@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.example.pickup.R;
 import com.example.pickup.fragments.games.CurrentGameFragment;
 import com.example.pickup.fragments.games.RecentGamesFragment;
+import com.example.pickup.fragments.mainActivity.HomeFragment;
 import com.example.pickup.fragments.userAuthentication.LoginFragment;
 import com.example.pickup.fragments.userAuthentication.SignupFragment;
 import com.example.pickup.models.Game;
@@ -47,6 +48,9 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 public class Creation extends AppCompatActivity {
@@ -284,9 +288,17 @@ public class Creation extends AppCompatActivity {
             game.setTeamB(teamB);
             game.saveInBackground();
             teamA.setGame(game);
-            teamA.saveInBackground();
+
             teamB.setGame(game);
             teamB.saveInBackground();
+
+            //save current user to team A
+            try {
+                teamA.setPlayers(ParseUser.getCurrentUser());
+            } catch (JSONException e) {
+                Log.e(TAG, "onClick: Error saving player to team", e);
+            }
+            teamA.saveInBackground();
         }
     }
 
