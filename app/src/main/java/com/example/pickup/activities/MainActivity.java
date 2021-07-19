@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = fragment1;
+                        //Get user's location
+                        saveCurrentUserLocation();
                         Log.i(TAG, "onNavigationItemSelected: Home");
                         break;
                     case R.id.action_games:
