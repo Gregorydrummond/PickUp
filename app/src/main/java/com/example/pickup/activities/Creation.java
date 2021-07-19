@@ -173,6 +173,11 @@ public class Creation extends AppCompatActivity {
                         Log.i(TAG, "done: Game created");
                         Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
                         gameCreated = true;
+                        try {
+                            setUsersGameProperties();
+                        } catch (JSONException jsonException) {
+                            Log.e(TAG, "onClick: Error setting game properties", jsonException);
+                        }
                         setTeams(teamACreated, teamBCreated);
                         try {
                             setTeam(teamCCreated);
@@ -300,6 +305,24 @@ public class Creation extends AppCompatActivity {
         actvGameType.setAdapter(adapter);
         //Hide keyboard for autocomplete text view
         actvGameType.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void setUsersGameProperties() throws JSONException {
+        //Get current user
+        ParseUser user = ParseUser.getCurrentUser();
+        //Set this game as current game
+        user.put("currentGame", game);
+        //Get gameList array
+        JSONArray jsonGamesArray = user.getJSONArray("gameList");
+        //Create json game object
+        JSONObject jsonGameObject = new JSONObject();
+        jsonGameObject.put("game", game.getObjectId());
+        //Add to array
+        jsonGamesArray.put(jsonGameObject);
+        //Save array
+        user.put("gameList", jsonGamesArray);
+        //Save user in backend
+        user.saveInBackground();
     }
 
     private void setTeam(boolean object1) throws JSONException {
