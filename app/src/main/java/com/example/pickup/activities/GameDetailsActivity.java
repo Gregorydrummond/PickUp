@@ -87,40 +87,17 @@ public class GameDetailsActivity extends AppCompatActivity {
             btnJoin.setVisibility(View.GONE);
         }
 
-        //Hide join button if user is already on the team
-        Team teamA = (Team) game.getTeamA();
-        JSONArray jsonArray = teamA.getPlayers();
-        for(int i = 0; i < jsonArray.length(); i++) {
-            try {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String objectID = jsonObject.getString("userID");
-                if(user.getObjectId().equals(objectID)) {
-                    btnJoin.setVisibility(View.GONE);
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "onCreate: Error getting json object", e);
-            }
-        }
-
-        if(game.getHasTeams()) {
-            Team teamB = (Team) game.getTeamB();
-            JSONArray jsonArrayB = teamB.getPlayers();
-            for (int i = 0; i < jsonArrayB.length(); i++) {
-                try {
-                    JSONObject jsonObject = jsonArrayB.getJSONObject(i);
-                    String objectID = jsonObject.getString("userID");
-                    if (user.getObjectId().equals(objectID)) {
-                        btnJoin.setVisibility(View.GONE);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "onCreate: Error getting json object", e);
-                }
-            }
+        //Hide join button if user is already in a game
+        if(user.getParseObject("currentGame") != null) {
+            btnJoin.setVisibility(View.GONE);
         }
 
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(user.getParseObject("currentGame") != null) {
+                    return;
+                }
                 Team teamA = (Team) game.getTeamA();
                 if(game.getHasTeams()) {
                     Team teamB = (Team) game.getTeamB();
@@ -180,6 +157,24 @@ public class GameDetailsActivity extends AppCompatActivity {
                         Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
                     }
                 }
+
+                //Set this game as current game
+                user.put("currentGame", game);
+                //Get gameList array
+                JSONArray jsonGamesArray = user.getJSONArray("gameList");
+                //Create json game object
+                JSONObject jsonGameObject = new JSONObject();
+                try {
+                    jsonGameObject.put("game", game.getObjectId());
+                } catch (JSONException e) {
+                    Log.e(TAG, "onClick: Error setting game id for game list", e);
+                }
+                //Add to array
+                jsonGamesArray.put(jsonGameObject);
+                //Save array
+                user.put("gameList", jsonGamesArray);
+                //Save user in backend
+                user.saveInBackground();
             }
         });
     }
