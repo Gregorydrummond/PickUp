@@ -39,6 +39,7 @@ public class CurrentGameFragment extends Fragment {
     TextView tvStatus;
     Button btnCurrentGame;
     ParseUser user;
+    ParseUser creator;
     Game game;
     Team teamA;
     Team teamB;
@@ -116,7 +117,7 @@ public class CurrentGameFragment extends Fragment {
 
         //Set data
         try {
-            ParseUser creator = game.getCreator().fetchIfNeeded();
+            creator = game.getCreator().fetchIfNeeded();
             String textName = creator.getUsername() + "'s Game";
             tvUsername.setText(textName);
         } catch (ParseException e) {
@@ -143,6 +144,10 @@ public class CurrentGameFragment extends Fragment {
         if(game.getGameStarted()) {
             textStatus = "Game in progress";
             btnCurrentGame.setText(R.string.endGameButtonText);
+            //If user isn't the creator of the game, user cannot end game
+            if(!user.getObjectId().equals(creator.getObjectId())) {
+                btnCurrentGame.setEnabled(false);
+            }
         }
         else if(game.getGameEnded()) {
             textStatus = "Game ended";
@@ -151,6 +156,11 @@ public class CurrentGameFragment extends Fragment {
         else {
             textStatus = "Game not started";
             btnCurrentGame.setText(R.string.startGameButtonText);
+            //If user isn't the creator of the game, user cannot start game
+            if(!user.getObjectId().equals(creator.getObjectId())) {
+                Log.d(TAG, "onViewCreated: User isn't creator");
+                btnCurrentGame.setEnabled(false);
+            }
         }
         tvStatus.setText(textStatus);
         ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
