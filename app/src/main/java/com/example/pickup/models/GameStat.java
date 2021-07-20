@@ -8,6 +8,7 @@ public class GameStat extends ParseObject {
 
     private static final String TAG = "GameStat";
     public static final String KEY_GAME = "game";
+    public static final String KEY_PLAYER = "player";
     public static final String KEY_POINTS = "points";
     public static final String KEY_GAME_WON = "gameWon";
     public static final String KEY_TEAM = "team";
@@ -25,6 +26,16 @@ public class GameStat extends ParseObject {
     //Set game object
     public void setGame(ParseObject game) {
         put(KEY_GAME, game);
+    }
+
+    //Get player object
+    public ParseObject getPlayer() {
+        return getParseObject(KEY_PLAYER);
+    }
+
+    //Set player object
+    public void setPlayer(ParseObject player) {
+        put(KEY_PLAYER, player);
     }
 
     //Get points user scored in the game

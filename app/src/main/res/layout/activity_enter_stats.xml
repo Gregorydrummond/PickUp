@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".activities.EnterStatsActivity">
 
+    <TextView
+        android:id="@+id/tvGameWonESA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvOpponentScoreESA"
+        android:layout_alignStart="@+id/tvPointsScoredTextESA"
+        android:layout_marginTop="35dp"
+        android:text="Game Won: "
+        android:textColor="#000000"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="287dp" />
+
     <ImageView
         android:id="@+id/ivProfilePictureESA"
         android:layout_width="125dp"
@@ -163,7 +176,17 @@
         android:layout_alignStart="@+id/view"
         android:layout_alignEnd="@+id/view"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="70dp"
         android:backgroundTint="#E18804"
         android:text="Finish" />
+
+    <CheckBox
+        android:id="@+id/cbGameWonESA"
+        android:layout_width="92dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/etPointsScoredESA"
+        android:layout_alignTop="@+id/tvGameWonESA"
+        android:layout_alignEnd="@+id/etPointsScoredESA"
+        android:layout_marginStart="49dp"
+        android:layout_marginTop="-5dp" />
 </RelativeLayout>
