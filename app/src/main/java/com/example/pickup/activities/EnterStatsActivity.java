@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.pickup.R;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
+import com.example.pickup.models.Team;
 import com.google.android.gms.maps.GoogleMap;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -91,12 +92,17 @@ public class EnterStatsActivity extends AppCompatActivity {
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Get team user is on
+                Team team = null;
+                try {
+                    team = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
+                } catch (ParseException e) {
+                    Log.e(TAG, "onClick: Error fetching team data", e);
+                }
+
                 //New GameStat object
                 GameStat gameStat = new GameStat();
                 gameStat.setGame(game);
-
-                //Remove the current game
-                user.remove("currentGame");
 
                 //Add points to users total points
                 int totalPoints = user.getInt("totalPoints");
@@ -119,11 +125,24 @@ public class EnterStatsActivity extends AppCompatActivity {
                     gameStat.setGameWon(false);
                 }
 
+                //Team stats
+                if(game.getHasTeams() && userIsCreator) {
+                    int teamScore = Integer.parseInt(etTeamScore.getText().toString());
+                    team.setScore(teamScore);
+                }
+
+                //Add team to game stat
+                gameStat.setTeam(team);
+
                 //Add user to game stat
                 gameStat.setPlayer(user);
 
                 //Save game stat object
                 gameStat.saveInBackground();
+
+                //Remove the current game & team
+                user.remove("currentGame");
+                user.remove("currentTeam");
 
                 //Save user
                 user.saveInBackground();

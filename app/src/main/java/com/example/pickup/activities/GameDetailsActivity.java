@@ -118,6 +118,8 @@ public class GameDetailsActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                            user.put("currentTeam", teamB);
+                            user.saveInBackground();
                         } catch (JSONException e) {
                             Log.e(TAG, "onCreate: Error adding player to teamB", e);
                         }
@@ -136,6 +138,8 @@ public class GameDetailsActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                            user.put("currentTeam", teamB);
+                            user.saveInBackground();
                         } catch (JSONException e) {
                             Log.e(TAG, "onCreate: Error adding player to teamA", e);
                         }

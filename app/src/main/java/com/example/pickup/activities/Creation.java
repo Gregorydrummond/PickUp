@@ -326,6 +326,7 @@ public class Creation extends AppCompatActivity {
     }
 
     private void setTeam(boolean object1) throws JSONException {
+        ParseUser user = ParseUser.getCurrentUser();
         if(object1) {
             Log.i(TAG, "setTeam: Setting single team");
             game.setTeamA(teamC);
@@ -334,10 +335,14 @@ public class Creation extends AppCompatActivity {
             //Save current player
             teamC.setPlayers(ParseUser.getCurrentUser());
             teamC.saveInBackground();
+
+            user.put("currentTeam", teamC);
+            user.saveInBackground();
         }
     }
 
     private void setTeams(boolean object1, boolean object2) {
+        ParseUser user = ParseUser.getCurrentUser();
         if(object1 && object2) {
             Log.i(TAG, "setTeams: Setting teams");
             game.setTeamA(teamA);
@@ -355,6 +360,9 @@ public class Creation extends AppCompatActivity {
                 Log.e(TAG, "onClick: Error saving player to team", e);
             }
             teamA.saveInBackground();
+
+            user.put("currentTeam", teamA);
+            user.saveInBackground();
         }
     }
 
