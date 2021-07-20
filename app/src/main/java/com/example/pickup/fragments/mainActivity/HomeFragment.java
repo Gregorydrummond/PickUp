@@ -156,6 +156,7 @@ public class HomeFragment extends Fragment {
         query.include(Game.KEY_CREATOR);
         query.include(Game.KEY_TEAM_A);
         query.include(Game.KEY_TEAM_B);
+        query.whereEqualTo("gameEnded", false);
 
         //Order from closest to farthest
         query.whereNear("location", ParseUser.getCurrentUser().getParseGeoPoint("playerLocation"));
