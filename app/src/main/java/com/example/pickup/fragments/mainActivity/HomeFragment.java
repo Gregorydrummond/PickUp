@@ -142,7 +142,7 @@ public class HomeFragment extends Fragment {
 
         //Set adapter
         rvHome.setAdapter(adapter);
-        
+
 
         //Query Games
         queryGames();

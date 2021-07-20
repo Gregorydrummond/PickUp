@@ -9,4 +9,6 @@
     <string name="enterStatsButtonText">Enter Stats</string>
     <string name="startGameButtonText">Start Game</string>
     <string name="cannotFindUserErrorMessage">Cannot find user</string>
+    <string name="gameInProgressMessage">Game in progress</string>
+    <string name="gameEndedMessage">Game ended</string>
 </resources>

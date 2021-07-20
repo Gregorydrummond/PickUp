@@ -87,7 +87,16 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             int playerCount = game.getPlayerCount();
             String textGameCapacity = "Capacity: " + playerCount + "/" + game.getPlayerLimit();
             tvGameCapacity.setText(textGameCapacity);
-            String textGameStatus = "Status: " + (game.getGameStarted() ? "Started" : "Not started");
+            String textGameStatus = "Status: ";
+            if(game.getGameStarted()) {
+                textGameStatus = textGameStatus.concat("Game in progress");
+            }
+            else if(game.getGameEnded()) {
+                textGameStatus = textGameStatus.concat("Game ended");
+            }
+            else {
+                textGameStatus = textGameStatus.concat("Game not started");
+            }
             tvGameStatus.setText(textGameStatus);
             String textDistance = String.format("%.2f", user.getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation())) + " miles away";
             tvDistance.setText(textDistance);

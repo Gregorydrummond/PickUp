@@ -97,7 +97,16 @@ public class DetailsFragment extends Fragment {
         if(game != null) {
             String textGameType = "Game Type: " + game.getGameType();
             tvGameType.setText(textGameType);
-            String textGameStatus = "Status: " + (game.getGameStarted() ? "Started" : "Not started");
+            String textGameStatus = "Status: ";
+            if(game.getGameStarted()) {
+                textGameStatus = textGameStatus.concat("Game in progress");
+            }
+            else if(game.getGameEnded()) {
+                textGameStatus = textGameStatus.concat("Game ended");
+            }
+            else {
+                textGameStatus = textGameStatus.concat("Game not started");
+            }
             tvStarted.setText(textGameStatus);
             int numOfPlayers = (int) game.getPlayerCount();
             int maxPlayers = (int) game.getPlayerLimit();
