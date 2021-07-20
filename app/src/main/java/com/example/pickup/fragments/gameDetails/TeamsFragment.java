@@ -19,6 +19,7 @@ import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.adapters.TeamsFragmentAdapter;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -136,12 +137,12 @@ public class TeamsFragment extends Fragment {
         //Query teams
         try {
             setTeams();
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             Log.e(TAG, "onViewCreated: Error setting teams", e);
         }
     }
 
-    private void setTeams() throws JSONException {
+    private void setTeams() throws JSONException, ParseException {
         Log.i(TAG, "setTeams: Setting teams");
 
         //Clear team lists and adapter lists
@@ -149,8 +150,9 @@ public class TeamsFragment extends Fragment {
         adapterA.clear();
 
         //Find teams that belong to the game;
+        Team teamA = game.getTeamA().fetchIfNeeded();
         //Get array
-        JSONArray jsonPlayerArrayA = game.getTeamA().getJSONArray("players");
+        JSONArray jsonPlayerArrayA = teamA.getJSONArray("players");
         //Add each player object
         for(int i = 0; i < jsonPlayerArrayA.length(); i++) {
             teamListA.add(jsonPlayerArrayA.getJSONObject(i));
@@ -160,7 +162,8 @@ public class TeamsFragment extends Fragment {
         if(game.getHasTeams()) {
             teamListB.clear();
             adapterB.clear();
-            JSONArray jsonPlayerArrayB = game.getTeamB().getJSONArray("players");
+            Team teamB = game.getTeamB().fetchIfNeeded();
+            JSONArray jsonPlayerArrayB = teamB.getJSONArray("players");
             for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
                 teamListB.add(jsonPlayerArrayB.getJSONObject(i));
             }
@@ -172,7 +175,7 @@ public class TeamsFragment extends Fragment {
         super.onResume();
         try {
             setTeams();
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             Log.e(TAG, "onResume: Error setting teams on onResume", e);
         }
     }

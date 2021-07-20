@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvPointsPG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvScorePG"
+        android:layout_alignStart="@+id/tvScorePG"
+        android:layout_alignEnd="@+id/tvScorePG"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="6dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="You scored 15 points" />
+
+    <TextView
+        android:id="@+id/tvWinLossPG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPointsPG"
+        android:layout_alignStart="@+id/tvPointsPG"
+        android:layout_alignEnd="@+id/tvPointsPG"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="Won" />
+
+    <TextView
+        android:id="@+id/tvLocationNamePG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvUsernamePG"
+        android:layout_alignStart="@+id/tvUsernamePG"
+        android:layout_alignEnd="@+id/tvUsernamePG"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="@Roosevelt Gardens" />
+
+    <TextView
+        android:id="@+id/tvScorePG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvGameTypePG"
+        android:layout_alignStart="@+id/tvGameTypePG"
+        android:layout_alignEnd="@+id/tvGameTypePG"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="Final Score: 21 - 6" />
+
+    <TextView
+        android:id="@+id/tvGameTypePG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLocationNamePG"
+        android:layout_alignStart="@+id/tvLocationNamePG"
+        android:layout_alignEnd="@+id/tvLocationNamePG"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="Game: King of the Court" />
+
+    <ImageView
+        android:id="@+id/ivProfilePicturePG"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <TextView
+        android:id="@+id/tvUsernamePG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivProfilePicturePG"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/ivProfilePicturePG"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
+        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
+        tools:text="Greg's Game" />
+
+    <View
+        android:id="@+id/viewPG"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvWinLossPG"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp"
+        android:background="#686868" />
+</RelativeLayout>

@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class EnterStatsActivity extends AppCompatActivity {
 
     private static final String TAG = "EnterStatsActivity";
@@ -45,6 +47,8 @@ public class EnterStatsActivity extends AppCompatActivity {
     ParseUser user, creator;
     Game game;
     boolean userIsCreator;
+    Team teamA;
+    Team teamB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,8 @@ public class EnterStatsActivity extends AppCompatActivity {
         user = ParseUser.getCurrentUser();
         try {
             game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
+            teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
+            //teamA = (Team) game.getTeamA().fetchIfNeeded();
             creator = game.getCreator().fetchIfNeeded();
             userIsCreator = user.getObjectId().equals(creator.getObjectId());
             Log.i(TAG, "onCreate: Fetched game");
@@ -92,13 +98,17 @@ public class EnterStatsActivity extends AppCompatActivity {
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Get team user is on
-                Team team = null;
-                try {
-                    team = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
-                } catch (ParseException e) {
-                    Log.e(TAG, "onClick: Error fetching team data", e);
-                }
+//                try {
+//                    //teamA = (Team) game.getTeamA().fetchIfNeeded();
+//                    //teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "onClick: Error fetching team data", e);
+//                }
+//                try {
+//                    teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "onClick: Error fetching team data", e);
+//                }
 
                 //New GameStat object
                 GameStat gameStat = new GameStat();
@@ -126,13 +136,22 @@ public class EnterStatsActivity extends AppCompatActivity {
                 }
 
                 //Team stats
+                //Get team user is on
                 if(game.getHasTeams() && userIsCreator) {
                     int teamScore = Integer.parseInt(etTeamScore.getText().toString());
-                    team.setScore(teamScore);
+                    teamA.setScore(teamScore);
+
+                    try {
+                        teamB = (Team) game.getTeamB().fetchIfNeeded();
+                        int opponentScore = Integer.parseInt(etOpponentScore.getText().toString());
+                        teamB.setScore(opponentScore);
+                    } catch (ParseException e) {
+                        Log.e(TAG, "onClick: Error fetching team B", e);
+                    }
                 }
 
                 //Add team to game stat
-                gameStat.setTeam(team);
+                gameStat.setTeam(teamA);
 
                 //Add user to game stat
                 gameStat.setPlayer(user);

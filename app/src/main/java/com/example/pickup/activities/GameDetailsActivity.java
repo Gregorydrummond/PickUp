@@ -98,9 +98,19 @@ public class GameDetailsActivity extends AppCompatActivity {
                 if(user.getParseObject("currentGame") != null) {
                     return;
                 }
-                Team teamA = (Team) game.getTeamA();
+                Team teamA = null;
+                try {
+                    teamA = (Team) game.getTeamA().fetchIfNeeded();
+                } catch (ParseException e) {
+                    Log.e(TAG, "onClick: Error fetching teamA", e);
+                }
                 if(game.getHasTeams()) {
-                    Team teamB = (Team) game.getTeamB();
+                    Team teamB = null;
+                    try {
+                        teamB = (Team) game.getTeamB().fetchIfNeeded();
+                    } catch (ParseException e) {
+                        Log.e(TAG, "onClick: Error fetching teamB", e);
+                    }
 
                     //If team B has less players in it than team A, add player to team B
                     if (teamB.getSize() < teamA.getSize()) {
@@ -138,7 +148,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-                            user.put("currentTeam", teamB);
+                            user.put("currentTeam", teamA);
                             user.saveInBackground();
                         } catch (JSONException e) {
                             Log.e(TAG, "onCreate: Error adding player to teamA", e);
@@ -160,6 +170,8 @@ public class GameDetailsActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
                     }
+                    user.put("currentTeam", teamA);
+                    user.saveInBackground();
                 }
 
                 //Set this game as current game
