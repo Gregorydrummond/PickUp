@@ -145,6 +145,7 @@ public class SignupFragment extends Fragment {
                     Log.i(TAG, "done: User logged in");
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
