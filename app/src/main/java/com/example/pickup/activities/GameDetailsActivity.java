@@ -95,21 +95,21 @@ public class GameDetailsActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(user.getParseObject("currentGame") != null) {
-                    return;
-                }
-                Team teamA = null;
+                //Assign player to a team
+                Team teamA;
                 try {
                     teamA = (Team) game.getTeamA().fetchIfNeeded();
                 } catch (ParseException e) {
                     Log.e(TAG, "onClick: Error fetching teamA", e);
+                    return;
                 }
                 if(game.getHasTeams()) {
-                    Team teamB = null;
+                    Team teamB;
                     try {
                         teamB = (Team) game.getTeamB().fetchIfNeeded();
                     } catch (ParseException e) {
                         Log.e(TAG, "onClick: Error fetching teamB", e);
+                        return;
                     }
 
                     //If team B has less players in it than team A, add player to team B
@@ -123,8 +123,10 @@ public class GameDetailsActivity extends AppCompatActivity {
                                         Log.i(TAG, "done: Added player to team B");
                                         game.setPlayerCount();
                                         game.saveInBackground();
+                                        btnJoin.setEnabled(false);
                                     } else {
                                         Log.e(TAG, "done: Backend error saving player to team B", e);
+                                        return;
                                     }
                                 }
                             });
@@ -132,8 +134,10 @@ public class GameDetailsActivity extends AppCompatActivity {
                             user.saveInBackground();
                         } catch (JSONException e) {
                             Log.e(TAG, "onCreate: Error adding player to teamB", e);
+                            return;
                         }
-                    } else {
+                    }
+                    else {
                         try {
                             teamA.setPlayers(user);
                             teamA.saveInBackground(new SaveCallback() {
@@ -143,8 +147,10 @@ public class GameDetailsActivity extends AppCompatActivity {
                                         Log.i(TAG, "done: Added player to team A");
                                         game.setPlayerCount();
                                         game.saveInBackground();
+                                        btnJoin.setEnabled(false);
                                     } else {
                                         Log.e(TAG, "done: Backend error saving player to team A", e);
+                                        return;
                                     }
                                 }
                             });
@@ -152,6 +158,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                             user.saveInBackground();
                         } catch (JSONException e) {
                             Log.e(TAG, "onCreate: Error adding player to teamA", e);
+                            return;
                         }
                     }
                 }
@@ -163,12 +170,15 @@ public class GameDetailsActivity extends AppCompatActivity {
                                 Log.i(TAG, "done: Added player to single team A");
                                 game.setPlayerCount();
                                 game.saveInBackground();
+                                btnJoin.setEnabled(false);
                             } else {
                                 Log.e(TAG, "done: Backend error saving player to single team A", e);
+                                return;
                             }
                         });
                     } catch (JSONException e) {
                         Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
+                        return;
                     }
                     user.put("currentTeam", teamA);
                     user.saveInBackground();
@@ -184,6 +194,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                     jsonGameObject.put("game", game.getObjectId());
                 } catch (JSONException e) {
                     Log.e(TAG, "onClick: Error setting game id for game list", e);
+                    return;
                 }
                 //Add to array
                 jsonGamesArray.put(jsonGameObject);
