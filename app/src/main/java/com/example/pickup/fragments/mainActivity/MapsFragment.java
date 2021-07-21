@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,19 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pickup.R;
+import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment{
     
     private static final String TAG = "MapsFragment";
 
@@ -48,7 +52,7 @@ public class MapsFragment extends Fragment {
             LatLng userLocation = new LatLng(ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").getLatitude(), ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").getLongitude());
 
             //Adding a marker at user's location
-            googleMap.addMarker(new MarkerOptions().position(userLocation).title("Marker on user"));
+            googleMap.addMarker(new MarkerOptions().position(userLocation).title("Your location"));
 
             //Moving camera onto user's location
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
@@ -57,7 +61,11 @@ public class MapsFragment extends Fragment {
             for(Game game : gameList) {
                 ParseGeoPoint gameLocationPGP = game.getLocation();
                 LatLng gameLocation = new LatLng(gameLocationPGP.getLatitude(), gameLocationPGP.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(gameLocation).title(game.getLocationName()));
+                googleMap.addMarker(
+                        new MarkerOptions()
+                                .position(gameLocation)
+                                .title(game.getGameType())
+                                .snippet("@" + game.getLocationName()));
             }
 
             //Zooming in camera
