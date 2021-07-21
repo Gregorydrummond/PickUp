@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 import com.example.pickup.R;
@@ -39,6 +40,7 @@ public class ProfileGamesFragment extends Fragment {
     ProfileGamesFragmentAdapter adapter;
     List<GameStat> gameStatList;
     ParseUser user;
+    TextView tvNoGames;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,6 +97,7 @@ public class ProfileGamesFragment extends Fragment {
 
         //Find components
         rvProfileGame = view.findViewById(R.id.rvProfileGames);
+        tvNoGames = view.findViewById(R.id.tvNoGamesPG);
 
         //Initialize list
         gameStatList = new ArrayList<>();
@@ -135,6 +138,14 @@ public class ProfileGamesFragment extends Fragment {
 
                 //Notify adapter of change
                 adapter.notifyDataSetChanged();
+
+                //Indicate if list is empty
+                if(gamesStats.isEmpty()) {
+                    tvNoGames.setVisibility(View.VISIBLE);
+                }
+                else {
+                    tvNoGames.setVisibility(View.GONE);
+                }
             }
             else {
                 Log.e(TAG, "done: Error retrieving games stats", e);

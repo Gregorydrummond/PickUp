@@ -11,6 +11,10 @@
     <string name="cannotFindUserErrorMessage">Cannot find user</string>
     <string name="gameInProgressMessage">Game in progress</string>
     <string name="gameEndedMessage">Game ended</string>
+    <string name="no_recent_games">No Recent Games</string>
+    <string name="no_games_in_the_area">No Games in the Area</string>
+    <string name="no_current_game">No Current Game</string>
+    <string name="no_games">No Games</string>
     <string-array name="game_types">
         <item>All</item>
         <item>Teams</item>
