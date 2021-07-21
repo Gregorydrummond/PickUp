@@ -119,7 +119,7 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
             public void onClick(View v) {
                 //Save user settings
                 if(!etMaxDistance.getText().toString().isEmpty()) {
-                    user.put("maxDistance", Integer.parseInt(etMaxDistance.getText().toString()));
+                    user.put("maxDistance", Double.parseDouble(etMaxDistance.getText().toString()));
                 }
                 user.saveInBackground();
                 Toast.makeText(getContext(), "Settings saved", Toast.LENGTH_SHORT).show();

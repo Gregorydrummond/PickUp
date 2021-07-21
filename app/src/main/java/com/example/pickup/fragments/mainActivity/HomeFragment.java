@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment {
     RecyclerView rvHome;
     HomeFragmentAdapter adapter;
     Button button;
+    ParseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,6 +100,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        user = ParseUser.getCurrentUser();
 
         //Find components
         toolbar = view.findViewById(R.id.toolbar_home);
@@ -159,7 +161,15 @@ public class HomeFragment extends Fragment {
         query.whereEqualTo("gameEnded", false);
 
         //Order from closest to farthest
-        query.whereNear("location", ParseUser.getCurrentUser().getParseGeoPoint("playerLocation"));
+        query.whereNear("location", user.getParseGeoPoint("playerLocation"));
+
+        //Query base on user's settings
+        query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
+        String gameType = user.getString("gameFilter");
+        assert gameType != null;
+        if(!gameType.equals("All")) {
+            query.whereEqualTo("gameType", user.getString("gameFilter"));
+        }
 
         //Get game objects
         query.findInBackground(new FindCallback<Game>() {
