@@ -11,4 +11,11 @@
     <string name="cannotFindUserErrorMessage">Cannot find user</string>
     <string name="gameInProgressMessage">Game in progress</string>
     <string name="gameEndedMessage">Game ended</string>
+    <string-array name="game_types">
+        <item>All</item>
+        <item>Teams</item>
+        <item>King of the Court</item>
+        <item>3-Point Shootout</item>
+        <item>21</item>
+    </string-array>
 </resources>

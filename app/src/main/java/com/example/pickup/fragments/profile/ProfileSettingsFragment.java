@@ -11,7 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pickup.R;
 import com.example.pickup.activities.UserAuthentication;
@@ -22,11 +28,18 @@ import com.parse.ParseUser;
  * Use the {@link ProfileSettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileSettingsFragment extends Fragment {
+public class ProfileSettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "ProfileSettingsFragment";
 
-    Button btnSignout;
+    TextView tvMaxDistance;
+    TextView tvGameTypeFilter;
+    EditText etMaxDistance;
+    Spinner spinnerGameTypeFilter;
+    Button btnSignOut;
+    Button btnSave;
+    ArrayAdapter<CharSequence> adapter;
+    ParseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,11 +92,42 @@ public class ProfileSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        user = ParseUser.getCurrentUser();
+
         //Find components
-        btnSignout = view.findViewById(R.id.btnSignout);
+        btnSignOut = view.findViewById(R.id.btnSignout);
+        etMaxDistance = view.findViewById(R.id.etMaxDistancePS);
+        spinnerGameTypeFilter = view.findViewById(R.id.spinnerGameTypePS);
+        btnSave = view.findViewById(R.id.btnSave);
+
+        //Spinner setup
+        //Initialize an ArrayAdapter using the string array and a default spinner layout
+        adapter = ArrayAdapter.createFromResource(getContext(), R.array.game_types, android.R.layout.simple_spinner_item);
+
+        //Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //Set adapter to spinner
+        spinnerGameTypeFilter.setAdapter(adapter);
+
+        //Set on item selected listener
+        spinnerGameTypeFilter.setOnItemSelectedListener(this);
+
+        //On save button click
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Save user settings
+                if(!etMaxDistance.getText().toString().isEmpty()) {
+                    user.put("maxDistance", Integer.parseInt(etMaxDistance.getText().toString()));
+                }
+                user.saveInBackground();
+                Toast.makeText(getContext(), "Settings saved", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //On sign out button click
-        btnSignout.setOnClickListener(new View.OnClickListener() {
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Log user out
@@ -96,5 +140,17 @@ public class ProfileSettingsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //Log.i(TAG, "onItemSelected: " + parent.getItemAtPosition(position));
+        //Set user's filter
+        user.put("gameFilter", parent.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
