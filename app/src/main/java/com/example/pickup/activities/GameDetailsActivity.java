@@ -92,6 +92,11 @@ public class GameDetailsActivity extends AppCompatActivity {
             btnJoin.setVisibility(View.GONE);
         }
 
+        //Hide join button if game is at capacity
+        if(game.getPlayerCount() == game.getPlayerLimit()) {
+            btnJoin.setVisibility(View.GONE);
+        }
+
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
