@@ -66,6 +66,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
+        android:gravity="center_horizontal"
         android:inputType="numberDecimal" />
 
     <Spinner

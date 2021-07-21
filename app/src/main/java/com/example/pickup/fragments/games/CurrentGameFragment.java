@@ -37,6 +37,7 @@ public class CurrentGameFragment extends Fragment {
     TextView tvPlayerCount;
     TextView tvWinBy2;
     TextView tvStatus;
+    TextView tvNoCurrentGame;
     Button btnCurrentGame;
     ParseUser user;
     ParseUser creator;
@@ -109,16 +110,20 @@ public class CurrentGameFragment extends Fragment {
         tvWinBy2 = view.findViewById(R.id.tvWinBy2CG);
         tvStatus = view.findViewById(R.id.tvStartedCG);
         btnCurrentGame = view.findViewById(R.id.btnCG);
+        tvNoCurrentGame = view.findViewById(R.id.tvNoCurrentGame);
 
-        try {
-            game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
-        } catch (ParseException e) {
-            Log.e(TAG, "onViewCreated: Error fetching game", e);
+        game = (Game) user.getParseObject("currentGame");
+
+        if(game == null) {
+            //Log.d(TAG, "onViewCreated: No current game");
+            btnCurrentGame.setVisibility(View.GONE);
+            tvNoCurrentGame.setVisibility(View.VISIBLE);
+            return;
         }
 
         try {
+            game.fetchIfNeeded();
             getGameData();
-
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error getting game data", e);
         }
@@ -204,7 +209,7 @@ public class CurrentGameFragment extends Fragment {
     }
 
     private void getGameData() throws ParseException {
-        game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
+        //game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
         if(game != null) {
             creator = game.getCreator().fetchIfNeeded();
             userIsCreator = user.getObjectId().equals(creator.getObjectId());

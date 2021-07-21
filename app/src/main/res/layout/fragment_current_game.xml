@@ -118,4 +118,14 @@
         android:backgroundTint="#E18804"
         android:text="Start Game" />
 
+    <TextView
+        android:id="@+id/tvNoCurrentGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Current Game"
+        android:textColor="#A5A5A5"
+        android:textSize="34sp"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.pickup.R;
 import com.example.pickup.activities.Creation;
@@ -46,6 +47,7 @@ public class HomeFragment extends Fragment {
     HomeFragmentAdapter adapter;
     Button button;
     ParseUser user;
+    TextView tvNoGames;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,6 +107,7 @@ public class HomeFragment extends Fragment {
         //Find components
         toolbar = view.findViewById(R.id.toolbar_home);
         rvHome = view.findViewById(R.id.rvHome);
+        tvNoGames = view.findViewById(R.id.tvNoGames);
 
         //button = view.findViewById(R.id.button);
 
@@ -182,6 +185,14 @@ public class HomeFragment extends Fragment {
 
                     //Notify adapter of change
                     adapter.notifyDataSetChanged();
+
+                    //Indicate if there are no games
+                    if(games.isEmpty()) {
+                        tvNoGames.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tvNoGames.setVisibility(View.GONE);
+                    }
                 }
                 else {
                     Log.e(TAG, "done: Error retrieving games", e);
