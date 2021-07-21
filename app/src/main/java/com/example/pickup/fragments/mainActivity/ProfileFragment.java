@@ -1,12 +1,25 @@
 package com.example.pickup.fragments.mainActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +29,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileFragmentViewPageAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,12 +53,15 @@ import org.parceler.Parcels;
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
+    public static final int GET_FROM_GALLERY = 1;
 
     ImageView ivProfilePicture;
     TextView tvUsername;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
+    FloatingActionButton fabAddPic;
     ProfileFragmentViewPageAdapter adapter;
+    ParseFile photoFile;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,6 +121,7 @@ public class ProfileFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsernameProfile);
         tabLayout = view.findViewById(R.id.tabLayout_profile);
         viewPager2 = view.findViewById(R.id.viewPager2_profile);
+        fabAddPic = view.findViewById(R.id.fabAddPP);
 
         //Initialize adapter
         adapter = new ProfileFragmentViewPageAdapter(getActivity());
@@ -121,7 +146,74 @@ public class ProfileFragment extends Fragment {
             }
         }).attach();
 
+        // Activity result launcher. OnActivityResult method is deprecated
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            //doSomeOperations();
+                            Uri selectedImage = data.getData();
+                            Bitmap bitmap = null;
+                            if(Build.VERSION.SDK_INT < 28) {
+                                Log.i(TAG, "onActivityResult: build version < 28");
+                                try {
+                                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                                    Glide.with(getContext())
+                                            .load(selectedImage)
+                                            .transform(new CircleCrop())
+                                            .into(ivProfilePicture);
+                                    Log.i(TAG, "onActivityResult: set image");
+                                } catch (IOException e) {
+                                    Log.e(TAG, "onActivityResult: Error getting image", e);
+                                    return;
+                                }
+                            }
+                            else {
+                                Log.i(TAG, "onActivityResult: build version >= 28");
+                                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), selectedImage);
+                                try {
+                                    bitmap = ImageDecoder.decodeBitmap((ImageDecoder.Source) source);
+                                    Glide.with(getContext())
+                                            .load(selectedImage)
+                                            .transform(new CircleCrop())
+                                            .into(ivProfilePicture);
+                                    Log.i(TAG, "onActivityResult: set image");
+                                } catch (IOException e) {
+                                    Log.e(TAG, "onActivityResult: Error getting image", e);
+                                    return;
+                                }
+
+                            }
+
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            photoFile = new ParseFile("UserProfilePic.png", stream.toByteArray());
+                            currentUser.put("profilePicture", photoFile);
+                            currentUser.saveInBackground();
+                        }
+                        else {
+                            Log.i(TAG, "onActivityResult: Result code not ok");
+                        }
+                    }
+                });
+
+        //Open gallery
+        fabAddPic.setOnClickListener(v -> {
+            Log.i(TAG, "onViewCreated: launching camera");
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            someActivityResultLauncher.launch(intent);
+        });
+
         ivProfilePicture.bringToFront();
+        ParseFile profilePicture = currentUser.getParseFile("profilePicture");
+        Glide.with(getContext())
+                .load(profilePicture.getUrl())
+                .transform(new CircleCrop())
+                .into(ivProfilePicture);
         tvUsername.setText(currentUser.getUsername());
     }
 }
