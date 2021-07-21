@@ -59,6 +59,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProfilePicture;
         TextView tvUsername;
+        TextView tvTime;
         TextView tvLocationName;
         TextView tvGameType;
         TextView tvScore;
@@ -72,6 +73,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
             //Find Components
             ivProfilePicture = itemView.findViewById(R.id.ivProfilePicturePG);
             tvUsername = itemView.findViewById(R.id.tvUsernamePG);
+            tvTime = itemView.findViewById(R.id.tvTimeStamp);
             tvLocationName = itemView.findViewById(R.id.tvLocationNamePG);
             tvGameType = itemView.findViewById(R.id.tvGameTypePG);
             tvScore = itemView.findViewById(R.id.tvScorePG);
@@ -81,7 +83,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
 
         public void bind(GameStat gameStat) throws ParseException {
             //Get game and team the stats belong to
-            Game game = (Game) gameStat.getGame();
+            Game game = (Game) gameStat.getGame().fetchIfNeeded();
             Team team = (Team) gameStat.getTeam();
             ParseUser user = ParseUser.getCurrentUser();
             ParseUser creator = game.getCreator().fetchIfNeeded();
@@ -91,6 +93,8 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
             String textName;
             textName = userIsCreator ? "Your Game" : creator.getUsername() + "'s Game";
             tvUsername.setText(textName);
+            String textTime = "· " + game.getUpdatedAtDate();
+            tvTime.setText(textTime);
             String textLocationName = "@" + game.getLocationName();
             tvLocationName.setText(textLocationName);
             String textGameType = "Game: " + game.getGameType();

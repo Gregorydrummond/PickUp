@@ -2,13 +2,26 @@ package com.example.pickup.fragments.games;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pickup.R;
+import com.example.pickup.adapters.ProfileGamesFragmentAdapter;
+import com.example.pickup.models.GameStat;
+import com.parse.FindCallback;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +29,13 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class RecentGamesFragment extends Fragment {
+
+    private static final String TAG = "RecentGamesFragment";
+
+    RecyclerView rvRecentGames;
+    ProfileGamesFragmentAdapter adapter;
+    List<GameStat> gameStatList;
+    ParseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +82,60 @@ public class RecentGamesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recent_games, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        user = ParseUser.getCurrentUser();
+
+        //Find component
+        rvRecentGames = view.findViewById(R.id.rvRecentGames);
+
+        //Initialize
+        gameStatList = new ArrayList<>();
+        adapter = new ProfileGamesFragmentAdapter(gameStatList, getContext());
+
+        //Layout manager
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvRecentGames.setLayoutManager(linearLayoutManager);
+
+        //Set adapter
+        rvRecentGames.setAdapter(adapter);
+
+        //Query game stats
+        queryGameStats();
+    }
+
+    private void queryGameStats() {
+        //Which class we are querying
+        ParseQuery<GameStat> query = ParseQuery.getQuery(GameStat.class);
+
+        //Include creator info
+        query.include(GameStat.KEY_GAME);
+        query.include(GameStat.KEY_PLAYER);
+        query.include(GameStat.KEY_TEAM);
+        query.whereEqualTo("player", user);
+
+        //Order from newest to oldest
+        query.orderByDescending("updatedAt");
+
+        //Limit to only 5
+        query.setLimit(5);
+
+        //Get game objects
+        query.findInBackground((FindCallback<GameStat>) (gamesStats, e) -> {
+            if(e == null) {
+                Log.i(TAG, "done: Retrieved games stats");
+                //Save list of games stats
+                gameStatList.addAll(gamesStats);
+
+                //Notify adapter of change
+                adapter.notifyDataSetChanged();
+            }
+            else {
+                Log.e(TAG, "done: Error retrieving games stats", e);
+            }
+        });
     }
 }

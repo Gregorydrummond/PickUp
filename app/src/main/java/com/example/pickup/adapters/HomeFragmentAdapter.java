@@ -55,6 +55,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
         ImageView ivProfilePicture;
         TextView tvUserName;
+        TextView tvTimeStamp;
         TextView tvLocationName;
         TextView tvGameType;
         TextView tvGameCapacity;
@@ -65,6 +66,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             super(itemView);
             ivProfilePicture = itemView.findViewById(R.id.ivUserProfilePictureHome);
             tvUserName = itemView.findViewById(R.id.tvUsernameHome);
+            tvTimeStamp = itemView.findViewById(R.id.tvTimeStampHome);
             tvLocationName = itemView.findViewById(R.id.tvLocationNameHome);
             tvGameType = itemView.findViewById(R.id.tvGameTypeHome);
             tvGameCapacity = itemView.findViewById(R.id.tvGameCapacityHome);
@@ -80,6 +82,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             //Set data
             String textName = game.getCreator().getUsername() + "'s Game";
             tvUserName.setText(textName);
+            String textTime = "· " + game.getCreatedAtDate();
+            tvTimeStamp.setText(textTime);
             String textLocationName = "Where: " + game.getLocationName();
             tvLocationName.setText(textLocationName);
             String textGameType = "Game Type: " + game.getGameType();

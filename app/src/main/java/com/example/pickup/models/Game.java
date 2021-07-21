@@ -165,8 +165,13 @@ public class Game extends ParseObject {
     }
 
     //Get createdAt
-    public String getDate() {
+    public String getCreatedAtDate() {
         return calculateTimeAgo(this.getCreatedAt());
+    }
+
+    //Get updatedAt
+    public String getUpdatedAtDate() {
+        return calculateTimeAgo(this.getUpdatedAt());
     }
 
     //Get createdAt helper
