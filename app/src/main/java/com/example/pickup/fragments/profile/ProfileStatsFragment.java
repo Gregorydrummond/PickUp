@@ -2,13 +2,17 @@ package com.example.pickup.fragments.profile;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.pickup.R;
+import com.parse.ParseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +20,12 @@ import com.example.pickup.R;
  * create an instance of this fragment.
  */
 public class ProfileStatsFragment extends Fragment {
+
+    private static final String TAG = "ProfileStatsFragment";
+
+    TextView tvGamesWon;
+    TextView tvGamesPlayed;
+    TextView tvTotalPoints;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +72,25 @@ public class ProfileStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile_stats, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ParseUser user = ParseUser.getCurrentUser();
+
+        //Find components
+        tvGamesWon = view.findViewById(R.id.tvGamesWonPS);
+        tvGamesPlayed = view.findViewById(R.id.tvGamesPlayedPS);
+        tvTotalPoints = view.findViewById(R.id.tvTotalPointsPS);
+
+        //Set data
+        String textGamesWon = "Games Won: " + String.valueOf(user.get("gamesWon"));
+        tvGamesWon.setText(textGamesWon);
+        String textGamesPlayed = "Games Played: " + String.valueOf(user.get("gamesPlayed"));
+        tvGamesPlayed.setText(textGamesPlayed);
+        String textTotalPoints = "Total Points: " + String.valueOf(user.get("totalPoints"));
+        tvTotalPoints.setText(textTotalPoints);
     }
 }
