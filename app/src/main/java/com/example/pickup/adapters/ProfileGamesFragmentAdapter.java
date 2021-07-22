@@ -1,6 +1,8 @@
 package com.example.pickup.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,8 @@ import com.example.pickup.models.Team;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -60,7 +64,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
         return gameStatList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivProfilePicture;
         TextView tvUsername;
         TextView tvTime;
@@ -83,6 +87,9 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
             tvScore = itemView.findViewById(R.id.tvScorePG);
             tvPoints = itemView.findViewById(R.id.tvPointsPG);
             tvWonStatus = itemView.findViewById(R.id.tvWinLossPG);
+
+            //Add this as the itemView's OnClickListener
+            itemView.setOnClickListener(this);
         }
 
         public void bind(GameStat gameStat) throws ParseException {
@@ -128,6 +135,26 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
 
             String textWonStatus = gameStat.getGameWon() ? "Won" : "Loss";
             tvWonStatus.setText(textWonStatus);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if(position != RecyclerView.NO_POSITION) {
+                GameStat gameStat = gameStatList.get(position);
+                Game game;
+                try {
+                    game = gameStat.getGame().fetchIfNeeded();
+                } catch (ParseException e) {
+                    Log.e(TAG, "onClick: Error getting game from game stat", e);
+                    return;
+                }
+                Intent intent = new Intent(context, GameDetailsActivity.class);
+                intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(game));
+                Activity activity = (Activity) context;
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            }
         }
     }
 }
