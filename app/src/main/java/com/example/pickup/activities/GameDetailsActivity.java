@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.adapters.GameDetailsActivityViewPagerAdapter;
 import com.example.pickup.models.Game;
@@ -18,6 +20,7 @@ import com.example.pickup.models.Team;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -38,6 +41,7 @@ public class GameDetailsActivity extends AppCompatActivity {
     ViewPager2 viewPager2;
     GameDetailsActivityViewPagerAdapter adapter;
     Game game;
+    ParseUser creator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +77,24 @@ public class GameDetailsActivity extends AppCompatActivity {
             }
         }).attach();
 
+        //Set data
+        ParseUser creator = game.getCreator();
+        ParseUser user = ParseUser.getCurrentUser();
+
+        ParseFile profilePicture = creator.getParseFile("profilePicture");
+        if(profilePicture != null) {
+            Glide.with(GameDetailsActivity.this)
+                    .load(profilePicture.getUrl())
+                    .transform(new CircleCrop())
+                    .into(ivProfilePicture);
+        }
+
         String textName = game.getCreator().getUsername() + "'s Game";
         tvUsername.setText(textName);
         String textLocationName = "@" + game.getLocationName();
         tvLocationName.setText(textLocationName);
 
         //Join button
-        ParseUser creator = game.getCreator();
-        ParseUser user = ParseUser.getCurrentUser();
 
         //Hide join button if user is the creator
         if(user.getObjectId().equals(creator.getObjectId())) {

@@ -2,6 +2,7 @@ package com.example.pickup.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -43,7 +48,11 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
     public void onBindViewHolder(@NonNull HomeFragmentAdapter.ViewHolder holder, int position) {
         Game game = games.get(position);
 
-        holder.bind(game);
+        try {
+            holder.bind(game);
+        } catch (ParseException e) {
+            Log.e(TAG, "onBindViewHolder: Error binding game", e);
+        }
     }
 
     @Override
@@ -77,9 +86,17 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Game game) {
+        public void bind(Game game) throws ParseException {
             ParseUser user = ParseUser.getCurrentUser();
+            ParseUser creator = game.getCreator().fetchIfNeeded();
             //Set data
+            ParseFile profilePicture = creator.getParseFile("profilePicture");
+            if(profilePicture != null) {
+                Glide.with(context)
+                        .load(profilePicture.getUrl())
+                        .transform(new CircleCrop())
+                        .into(ivProfilePicture);
+            }
             String textName = game.getCreator().getUsername() + "'s Game";
             tvUserName.setText(textName);
             String textTime = "· " + game.getCreatedAtDate();

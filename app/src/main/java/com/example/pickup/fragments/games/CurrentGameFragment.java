@@ -13,11 +13,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.activities.EnterStatsActivity;
+import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 /**
@@ -100,6 +104,7 @@ public class CurrentGameFragment extends Fragment {
         //Get current user
         user = ParseUser.getCurrentUser();
 
+
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivCurrentGameProfilePicture);
         tvUsername = view.findViewById(R.id.tvUsernameCG);
@@ -115,10 +120,14 @@ public class CurrentGameFragment extends Fragment {
         game = (Game) user.getParseObject("currentGame");
 
         if(game == null) {
-            //Log.d(TAG, "onViewCreated: No current game");
+            Log.d(TAG, "onViewCreated: No current game");
             btnCurrentGame.setVisibility(View.GONE);
             tvNoCurrentGame.setVisibility(View.VISIBLE);
             return;
+        }
+        else {
+            btnCurrentGame.setVisibility(View.VISIBLE);
+            tvNoCurrentGame.setVisibility(View.GONE);
         }
 
         try {
@@ -126,6 +135,77 @@ public class CurrentGameFragment extends Fragment {
             getGameData();
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error getting game data", e);
+            return;
+        }
+
+        //Set data
+        setData();
+
+        //Start/Finish/EnterStats Button
+        btnCurrentGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Button clicked");
+                if(userIsCreator) {
+                    Log.d(TAG, "onClick: User is creator");
+                    //Creator starts game
+                    if(btnCurrentGame.getText().equals("Start Game")) {
+                        Log.i(TAG, "onClick: Creator started the game");
+                        game.setGameStarted(true);
+                        tvStatus.setText(R.string.gameInProgressMessage);
+                        btnCurrentGame.setText(R.string.endGameButtonText);
+                    }
+                    //Creator ends games
+                    else if(btnCurrentGame.getText().equals("End Game")) {
+                        Log.i(TAG, "onClick: Creator ended the game");
+                        game.setGameStarted(false);
+                        game.setGameEnded(true);
+                        tvStatus.setText(R.string.gameEndedMessage);
+                        btnCurrentGame.setText(R.string.enterStatsButtonText);
+                        Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                //User enters game stats
+                if(btnCurrentGame.getText().equals("Enter Stats")) {
+                    Log.i(TAG, "onClick: Creator entering stats");
+                    Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
+                    startActivity(intent);
+                }
+                game.saveInBackground();
+            }
+        });
+    }
+
+    private void getGameData() throws ParseException {
+        if(game != null) {
+            creator = game.getCreator().fetchIfNeeded();
+            userIsCreator = user.getObjectId().equals(creator.getObjectId());
+            teamA = (Team) game.getTeamA().fetchIfNeeded();
+            if(game.getHasTeams()) {
+                teamB = game.getTeamB().fetchIfNeeded();
+            }
+        }
+    }
+
+    private void setData() {
+        if(game == null) {
+            Log.d(TAG, "setData: No current game");
+            btnCurrentGame.setVisibility(View.GONE);
+            tvNoCurrentGame.setVisibility(View.VISIBLE);
+            return;
+        }
+        else {
+            btnCurrentGame.setVisibility(View.VISIBLE);
+            tvNoCurrentGame.setVisibility(View.GONE);
+        }
+
+        ParseFile profilePicture = creator.getParseFile("profilePicture");
+        if(profilePicture != null) {
+            Glide.with(getContext())
+                    .load(profilePicture.getUrl())
+                    .transform(new CircleCrop())
+                    .into(ivProfilePicture);
         }
 
         String textName = creator.getUsername() + "'s Game";
@@ -171,52 +251,5 @@ public class CurrentGameFragment extends Fragment {
 
         tvStatus.setText(textStatus);
         ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
-
-        //Start/Finish/EnterStats Button
-        btnCurrentGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: Button clicked");
-                if(userIsCreator) {
-                    Log.d(TAG, "onClick: User is creator");
-                    //Creator starts game
-                    if(btnCurrentGame.getText().equals("Start Game")) {
-                        Log.i(TAG, "onClick: Creator started the game");
-                        game.setGameStarted(true);
-                        tvStatus.setText(R.string.gameInProgressMessage);
-                        btnCurrentGame.setText(R.string.endGameButtonText);
-                    }
-                    //Creator ends games
-                    else if(btnCurrentGame.getText().equals("End Game")) {
-                        Log.i(TAG, "onClick: Creator ended the game");
-                        game.setGameStarted(false);
-                        game.setGameEnded(true);
-                        tvStatus.setText(R.string.gameEndedMessage);
-                        btnCurrentGame.setText(R.string.enterStatsButtonText);
-                        Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
-                        startActivity(intent);
-                    }
-                }
-                //User enters game stats
-                if(btnCurrentGame.getText().equals("Enter Stats")) {
-                    Log.i(TAG, "onClick: Creator entering stats");
-                    Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
-                    startActivity(intent);
-                }
-                game.saveInBackground();
-            }
-        });
-    }
-
-    private void getGameData() throws ParseException {
-        //game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
-        if(game != null) {
-            creator = game.getCreator().fetchIfNeeded();
-            userIsCreator = user.getObjectId().equals(creator.getObjectId());
-            teamA = (Team) game.getTeamA().fetchIfNeeded();
-            if(game.getHasTeams()) {
-                teamB = game.getTeamB().fetchIfNeeded();
-            }
-        }
     }
 }

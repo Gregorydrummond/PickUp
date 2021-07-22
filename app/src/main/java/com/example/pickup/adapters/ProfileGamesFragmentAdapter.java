@@ -11,11 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
+import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
 import com.example.pickup.models.Team;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -90,6 +94,13 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
             userIsCreator = user.getObjectId().equals(creator.getObjectId());
 
             //Set data
+            ParseFile profilePicture = creator.getParseFile("profilePicture");
+            if(profilePicture != null) {
+                Glide.with(context)
+                        .load(profilePicture.getUrl())
+                        .transform(new CircleCrop())
+                        .into(ivProfilePicture);
+            }
             String textName;
             textName = userIsCreator ? "Your Game" : creator.getUsername() + "'s Game";
             tvUsername.setText(textName);
