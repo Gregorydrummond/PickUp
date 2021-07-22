@@ -210,10 +210,12 @@ public class ProfileFragment extends Fragment {
 
         ivProfilePicture.bringToFront();
         ParseFile profilePicture = currentUser.getParseFile("profilePicture");
-        Glide.with(getContext())
-                .load(profilePicture.getUrl())
-                .transform(new CircleCrop())
-                .into(ivProfilePicture);
+        if(profilePicture != null) {
+            Glide.with(getContext())
+                    .load(profilePicture.getUrl())
+                    .transform(new CircleCrop())
+                    .into(ivProfilePicture);
+        }
         tvUsername.setText(currentUser.getUsername());
     }
 }

@@ -12,12 +12,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
 import com.example.pickup.models.Team;
 import com.google.android.gms.maps.GoogleMap;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -82,6 +85,13 @@ public class EnterStatsActivity extends AppCompatActivity {
             Log.e(TAG, "onCreate: Error fetching game", e);
         }
 
+        ParseFile profilePicture = creator.getParseFile("profilePicture");
+        if(profilePicture != null) {
+            Glide.with(this)
+                    .load(profilePicture.getUrl())
+                    .transform(new CircleCrop())
+                    .into(ivProfilePicture);
+        }
         String textName = creator.getUsername() + "'s Game";
         tvUsername.setText(textName);
         String textLocationName = "@" + game.getLocationName();
