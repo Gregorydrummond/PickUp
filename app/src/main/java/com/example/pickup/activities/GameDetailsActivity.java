@@ -228,4 +228,11 @@ public class GameDetailsActivity extends AppCompatActivity {
     public Game getGame() {
         return game;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        supportFinishAfterTransition();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
 }

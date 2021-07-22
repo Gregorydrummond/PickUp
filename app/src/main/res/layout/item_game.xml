@@ -16,6 +16,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="distance"
         tools:text="1 mile away" />
 
     <TextView
@@ -29,6 +30,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="status"
         tools:text="Game Started/In Progress" />
 
     <TextView
@@ -42,6 +44,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="capacity"
         tools:text="Capacity: 3/8" />
 
     <TextView
@@ -55,6 +58,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="gameType"
         tools:text="Game Type: King of the Court" />
 
     <TextView
@@ -68,6 +72,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="location"
         tools:text="Where: Roosevelt Gardens" />
 
     <TextView
@@ -82,6 +87,7 @@
         android:singleLine="true"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:transitionName="username"
         tools:text="Greg's Game" />
 
     <ImageView
@@ -92,6 +98,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:transitionName="profilePic"
         app:srcCompat="@drawable/ic_baseline_person_24" />
 
     <View

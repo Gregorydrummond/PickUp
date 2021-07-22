@@ -1,5 +1,6 @@
 package com.example.pickup.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -101,12 +104,12 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             tvUserName.setText(textName);
             String textTime = "· " + game.getCreatedAtDate();
             tvTimeStamp.setText(textTime);
-            String textLocationName = "Where: " + game.getLocationName();
+            String textLocationName = "@" + game.getLocationName();
             tvLocationName.setText(textLocationName);
             String textGameType = "Game Type: " + game.getGameType();
             tvGameType.setText(textGameType);
             int playerCount = game.getPlayerCount();
-            String textGameCapacity = "Capacity: " + playerCount + "/" + game.getPlayerLimit();
+            String textGameCapacity = "Players: " + playerCount + "/" + game.getPlayerLimit();
             tvGameCapacity.setText(textGameCapacity);
             String textGameStatus = "Status: ";
             if(game.getGameStarted()) {
@@ -130,7 +133,15 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 Game game = games.get(position);
                 Intent intent = new Intent(context, GameDetailsActivity.class);
                 intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(game));
-                context.startActivity(intent);
+                Activity activity = (Activity) context;
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                //View Transitions
+//                Pair<View, String> profilePic = Pair.create((View) ivProfilePicture,"profilePic");
+//                Pair<View, String> username = Pair.create((View) tvUserName,"username");
+//                Pair<View, String> location = Pair.create((View) tvLocationName,"location");
+//                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, profilePic, username, location);
+//                context.startActivity(intent, optionsCompat.toBundle());
             }
         }
     }

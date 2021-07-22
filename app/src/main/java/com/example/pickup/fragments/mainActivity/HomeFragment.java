@@ -147,10 +147,6 @@ public class HomeFragment extends Fragment {
 
         //Set adapter
         rvHome.setAdapter(adapter);
-
-
-        //Query Games
-        queryGames();
     }
 
     private void queryGames() {
@@ -218,5 +214,13 @@ public class HomeFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Query Games
+        queryGames();
+        //Log.i(TAG, "onResume: resumed");
     }
 }

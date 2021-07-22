@@ -16,6 +16,7 @@
         android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textSize="24sp"
+        android:transitionName="distance"
         tools:text="1.2 miles away" />
 
     <TextView
@@ -38,6 +39,7 @@
         android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textSize="24sp"
+        android:transitionName="capacity"
         tools:text="Players: 4/6" />
 
     <TextView
@@ -49,6 +51,7 @@
         android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textSize="24sp"
+        android:transitionName="status"
         tools:text="Started" />
 
     <TextView
@@ -61,5 +64,6 @@
         android:layout_marginTop="50dp"
         android:textColor="#000000"
         android:textSize="24sp"
+        android:transitionName="gameType"
         tools:text="Game Type: Teams" />
 </RelativeLayout>
