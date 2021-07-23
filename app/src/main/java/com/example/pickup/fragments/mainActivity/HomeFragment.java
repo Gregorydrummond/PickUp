@@ -1,5 +1,6 @@
 package com.example.pickup.fragments.mainActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.pickup.R;
 import com.example.pickup.activities.Creation;
+import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.adapters.HomeFragmentAdapter;
 import com.example.pickup.models.Game;
 import com.mlsdev.animatedrv.AnimatedRecyclerView;
@@ -29,6 +31,8 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +157,9 @@ public class HomeFragment extends Fragment {
 
         animatedRecyclerView.setLayoutManager(linearLayoutManager);
         animatedRecyclerView.setAdapter(adapter);
+
+        //Query Games
+        queryGames();
     }
 
     private void queryGames() {
@@ -177,29 +184,26 @@ public class HomeFragment extends Fragment {
         }
 
         //Get game objects
-        query.findInBackground(new FindCallback<Game>() {
-            @Override
-            public void done(List<Game> games, ParseException e) {
-                if(e == null) {
-                    Log.i(TAG, "done: Retrieved games");
-                    //Save list of games
-                    gamesFeed.addAll(games);
+        query.findInBackground((games, e) -> {
+            if(e == null) {
+                Log.i(TAG, "done: Retrieved games");
+                //Save list of games
+                gamesFeed.addAll(games);
 
-                    //Notify adapter of change
-                    adapter.notifyDataSetChanged();
-                    animatedRecyclerView.scheduleLayoutAnimation();
+                //Notify adapter of change
+                adapter.notifyDataSetChanged();
+                animatedRecyclerView.scheduleLayoutAnimation();
 
-                    //Indicate if there are no games
-                    if(games.isEmpty()) {
-                        tvNoGames.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        tvNoGames.setVisibility(View.GONE);
-                    }
+                //Indicate if there are no games
+                if(games.isEmpty()) {
+                    tvNoGames.setVisibility(View.VISIBLE);
                 }
                 else {
-                    Log.e(TAG, "done: Error retrieving games", e);
+                    tvNoGames.setVisibility(View.GONE);
                 }
+            }
+            else {
+                Log.e(TAG, "done: Error retrieving games", e);
             }
         });
     }
@@ -217,7 +221,9 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "onOptionsItemSelected: Create button pressed");
             //Go to creation activity
             Intent intent = new Intent(getContext(), Creation.class);
-            startActivity(intent);
+            Activity activity = getActivity();
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -226,8 +232,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //Query Games
-        queryGames();
+//        //Query Games
+//        queryGames();
         //Log.i(TAG, "onResume: resumed");
     }
 }

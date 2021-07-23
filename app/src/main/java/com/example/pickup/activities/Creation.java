@@ -98,6 +98,7 @@ public class Creation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
             }
         });
 
@@ -229,6 +230,7 @@ public class Creation extends AppCompatActivity {
 
                 Log.i(TAG, "onClick: Closing creation screen");
                 finish();
+                overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
             }
         });
 
@@ -403,5 +405,11 @@ public class Creation extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.creation, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
     }
 }
