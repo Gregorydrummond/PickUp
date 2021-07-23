@@ -2,9 +2,17 @@ package com.example.pickup.fragments.mainActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +26,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -32,6 +42,8 @@ public class MapsFragment extends Fragment{
     private static final String TAG = "MapsFragment";
 
     List<Game> gameList;
+    ParseUser user;
+    Game currentGame;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -61,17 +73,46 @@ public class MapsFragment extends Fragment{
             for(Game game : gameList) {
                 ParseGeoPoint gameLocationPGP = game.getLocation();
                 LatLng gameLocation = new LatLng(gameLocationPGP.getLatitude(), gameLocationPGP.getLongitude());
-                googleMap.addMarker(
-                        new MarkerOptions()
-                                .position(gameLocation)
-                                .title(game.getGameType())
-                                .snippet("@" + game.getLocationName()));
+                if(currentGame != null && game.getObjectId().equals(currentGame.getObjectId())) {
+                    Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_basketball_map_marker_icon_2);
+                    googleMap.addMarker(
+                            new MarkerOptions()
+                                    .position(gameLocation)
+                                    .title(game.getGameType())
+                                    .snippet("@" + game.getLocationName())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                }
+                else {
+                    Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_basketball_map_marker_icon);
+                    googleMap.addMarker(
+                            new MarkerOptions()
+                                    .position(gameLocation)
+                                    .title(game.getGameType())
+                                    .snippet("@" + game.getLocationName())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                }
             }
 
             //Zooming in camera
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
         }
     };
+
+    private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
 
     @Nullable
     @Override
@@ -87,6 +128,12 @@ public class MapsFragment extends Fragment{
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
 
+        user = ParseUser.getCurrentUser();
+        try {
+            currentGame = user.getParseObject("currentGame").fetchIfNeeded();
+        } catch (ParseException e) {
+            Log.e(TAG, "onViewCreated: Cannot fetch current game", e);
+        }
         gameList = HomeFragment.gamesFeed;
 
         if (mapFragment != null) {
