@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileGamesFragmentAdapter;
 import com.example.pickup.models.GameStat;
+import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -34,6 +35,7 @@ public class RecentGamesFragment extends Fragment {
     private static final String TAG = "RecentGamesFragment";
 
     RecyclerView rvRecentGames;
+    AnimatedRecyclerView animatedRecyclerView;
     ProfileGamesFragmentAdapter adapter;
     List<GameStat> gameStatList;
     ParseUser user;
@@ -92,7 +94,8 @@ public class RecentGamesFragment extends Fragment {
         user = ParseUser.getCurrentUser();
 
         //Find components
-        rvRecentGames = view.findViewById(R.id.rvRecentGames);
+        //rvRecentGames = view.findViewById(R.id.rvRecentGames);
+        animatedRecyclerView = view.findViewById(R.id.rvRecentGames);
         tvNoRecents = view.findViewById(R.id.tvNoRecentGames);
 
         //Initialize
@@ -101,10 +104,13 @@ public class RecentGamesFragment extends Fragment {
 
         //Layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvRecentGames.setLayoutManager(linearLayoutManager);
+//        rvRecentGames.setLayoutManager(linearLayoutManager);
 
         //Set adapter
-        rvRecentGames.setAdapter(adapter);
+//        rvRecentGames.setAdapter(adapter);
+
+        animatedRecyclerView.setLayoutManager(linearLayoutManager);
+        animatedRecyclerView.setAdapter(adapter);
 
         //Query game stats
         queryGameStats();
@@ -135,6 +141,7 @@ public class RecentGamesFragment extends Fragment {
 
                 //Notify adapter of change
                 adapter.notifyDataSetChanged();
+                animatedRecyclerView.scheduleLayoutAnimation();
 
                 //Indicate if there aren't any recent games
                 if(gamesStats.isEmpty()) {

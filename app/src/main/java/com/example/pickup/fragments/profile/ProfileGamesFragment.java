@@ -19,6 +19,7 @@ import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileGamesFragmentAdapter;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
+import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -37,6 +38,7 @@ public class ProfileGamesFragment extends Fragment {
     private static final String TAG = "ProfileGamesFragment";
 
     RecyclerView rvProfileGame;
+    AnimatedRecyclerView animatedRecyclerView;
     ProfileGamesFragmentAdapter adapter;
     List<GameStat> gameStatList;
     ParseUser user;
@@ -96,7 +98,8 @@ public class ProfileGamesFragment extends Fragment {
         user = ParseUser.getCurrentUser();
 
         //Find components
-        rvProfileGame = view.findViewById(R.id.rvProfileGames);
+        //rvProfileGame = view.findViewById(R.id.rvProfileGames);
+        animatedRecyclerView = view.findViewById(R.id.rvProfileGames);
         tvNoGames = view.findViewById(R.id.tvNoGamesPG);
 
         //Initialize list
@@ -104,13 +107,16 @@ public class ProfileGamesFragment extends Fragment {
 
         //Layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvProfileGame.setLayoutManager(linearLayoutManager);
+//        rvProfileGame.setLayoutManager(linearLayoutManager);
 
         //Adapter
         adapter = new ProfileGamesFragmentAdapter(gameStatList, getContext());
 
         //Set adapter
-        rvProfileGame.setAdapter(adapter);
+//        rvProfileGame.setAdapter(adapter);
+
+        animatedRecyclerView.setLayoutManager(linearLayoutManager);
+        animatedRecyclerView.setAdapter(adapter);
 
         //Query game stats
         queryGameStats();
@@ -138,6 +144,7 @@ public class ProfileGamesFragment extends Fragment {
 
                 //Notify adapter of change
                 adapter.notifyDataSetChanged();
+                animatedRecyclerView.scheduleLayoutAnimation();
 
                 //Indicate if list is empty
                 if(gamesStats.isEmpty()) {

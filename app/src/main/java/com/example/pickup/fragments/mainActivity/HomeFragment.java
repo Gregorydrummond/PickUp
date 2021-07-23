@@ -24,6 +24,7 @@ import com.example.pickup.R;
 import com.example.pickup.activities.Creation;
 import com.example.pickup.adapters.HomeFragmentAdapter;
 import com.example.pickup.models.Game;
+import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment {
     Toolbar toolbar;
     static List<Game> gamesFeed;
     RecyclerView rvHome;
+    AnimatedRecyclerView animatedRecyclerView;
     HomeFragmentAdapter adapter;
     Button button;
     ParseUser user;
@@ -106,7 +108,8 @@ public class HomeFragment extends Fragment {
 
         //Find components
         toolbar = view.findViewById(R.id.toolbar_home);
-        rvHome = view.findViewById(R.id.rvHome);
+//        rvHome = view.findViewById(R.id.rvHome);
+        animatedRecyclerView = view.findViewById(R.id.rvHome);
         tvNoGames = view.findViewById(R.id.tvNoGames);
 
         //button = view.findViewById(R.id.button);
@@ -143,10 +146,13 @@ public class HomeFragment extends Fragment {
 
         //Set layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvHome.setLayoutManager(linearLayoutManager);
+//        rvHome.setLayoutManager(linearLayoutManager);
+//
+//        //Set adapter
+//        rvHome.setAdapter(adapter);
 
-        //Set adapter
-        rvHome.setAdapter(adapter);
+        animatedRecyclerView.setLayoutManager(linearLayoutManager);
+        animatedRecyclerView.setAdapter(adapter);
     }
 
     private void queryGames() {
@@ -181,6 +187,7 @@ public class HomeFragment extends Fragment {
 
                     //Notify adapter of change
                     adapter.notifyDataSetChanged();
+                    animatedRecyclerView.scheduleLayoutAnimation();
 
                     //Indicate if there are no games
                     if(games.isEmpty()) {
