@@ -58,8 +58,5 @@ public class UserAuthentication extends AppCompatActivity {
                         }
                     }
                 }).attach();
-
-        //Animation
-        viewPager2.setPageTransformer(new DepthPageTransformer());
     }
 }
