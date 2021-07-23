@@ -27,9 +27,5 @@ public class PickUpApplication extends Application {
         ParseObject.registerSubclass(Game.class);
         ParseObject.registerSubclass(GameStat.class);
         ParseObject.registerSubclass(Team.class);
-
-        //Initialize the Places SDK
-        // Initialize the SDK
-        Places.initialize(getApplicationContext(), String.valueOf(R.string.api_key));
     }
 }

@@ -4,24 +4,15 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -32,26 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pickup.R;
-import com.example.pickup.fragments.games.CurrentGameFragment;
-import com.example.pickup.fragments.games.RecentGamesFragment;
-import com.example.pickup.fragments.mainActivity.HomeFragment;
-import com.example.pickup.fragments.userAuthentication.LoginFragment;
-import com.example.pickup.fragments.userAuthentication.SignupFragment;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class Creation extends AppCompatActivity {
 
@@ -60,6 +46,9 @@ public class Creation extends AppCompatActivity {
     public static final String KEY_LOCATION = "location";
     public static final String KEY_LOCATION_LAT = "lat";
     public static final String KEY_LOCATION_LONG = "long";
+    public static final String host = "trueway-geocoding.p.rapidapi.com";
+    public static final String  API_KEY = String.valueOf(R.string.true_way_api_key);
+    public static final String  reverseGeocodeUrl = "https://trueway-geocoding.p.rapidapi.com/ReverseGeocode?";
 
     String[] gameType = new String[]{"Teams", "King of the Court", "3-Point Shootout", "21"};
 
@@ -271,8 +260,22 @@ public class Creation extends AppCompatActivity {
                             Creation.latitude = data.getExtras().getDouble(KEY_LOCATION_LAT);
                             Creation.longitude = data.getExtras().getDouble(KEY_LOCATION_LONG);
 
-                            String text = Creation.latitude + ", " + Creation.longitude;
-                            etLocation.setText(text);
+//                            String text = Creation.latitude + "," + Creation.longitude;
+//                            etLocation.setText(text);
+
+                            //Call geocoding api: reverse geocoding -> use lat & long to get address
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Log.i(TAG, "run: Thread running");
+                                        getAddressFromLatLong(Creation.latitude, Creation.longitude);
+                                    } catch (IOException | JSONException e) {
+                                        Log.e(TAG, "onActivityResult: Error with true way api call", e);
+                                    }
+                                }
+                            });
+                            thread.start();
                         }
                         else {
                             //Error handling
@@ -305,6 +308,36 @@ public class Creation extends AppCompatActivity {
         actvGameType.setAdapter(adapter);
         //Hide keyboard for autocomplete text view
         actvGameType.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void getAddressFromLatLong(Double latitude, Double longitude) throws IOException, JSONException {
+        String url = reverseGeocodeUrl + latitude + "%2C" + longitude + "&language=en";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(reverseGeocodeUrl + "location=" + latitude + "%2C" + longitude)
+                .get()
+                .addHeader("x-rapidapi-key", "82c4e3dc10mshf43555d353ba554p19004fjsn847db8612dbe")
+                .addHeader("x-rapidapi-host", "trueway-geocoding.p.rapidapi.com")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String responseData = response.body().string();
+        JSONObject jsonObject = new JSONObject(responseData);
+        JSONArray jsonArray = jsonObject.getJSONArray("results");
+        for(int i = 0; i <jsonArray.length(); i++) {
+            JSONObject jsonGeoObject = jsonArray.getJSONObject(i);
+            String type = jsonGeoObject.getString("type");
+            if(type.equals("street_address")) {
+                String address = jsonGeoObject.getString("address");
+                etLocation.setText(address);
+                return;
+            }
+            if(jsonGeoObject.has("address")) {
+                String address = jsonGeoObject.getString("address");
+                etLocation.setText(address);
+            }
+        }
+        //Log.i(TAG, "getAddressFromLatLong: " + responseData);
     }
 
     private void setUsersGameProperties() throws JSONException {

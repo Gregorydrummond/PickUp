@@ -61,4 +61,7 @@ dependencies {
 
     //Recycler view animation
     implementation "com.mlsdev.animatedrv:library:2.0.0"
+
+    //CodePath Async Http Client
+    implementation 'com.codepath.libraries:asynchttpclient:2.1.1'
 }

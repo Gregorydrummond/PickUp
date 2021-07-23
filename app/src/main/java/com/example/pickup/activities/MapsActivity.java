@@ -69,8 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //Initialize placeClient
-        placesClient = Places.createClient(this);
+//        //Initialize placeClient
+//        placesClient = Places.createClient(this);
 
         //Components
         //svLocation = findViewById(R.id.svLocation);
@@ -253,4 +253,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
