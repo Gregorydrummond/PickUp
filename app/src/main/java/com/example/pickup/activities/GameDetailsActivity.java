@@ -17,6 +17,7 @@ import com.example.pickup.R;
 import com.example.pickup.adapters.GameDetailsActivityViewPagerAdapter;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
+import com.example.pickup.pageTransformers.DepthPageTransformer;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
@@ -76,6 +77,9 @@ public class GameDetailsActivity extends AppCompatActivity {
                 }
             }
         }).attach();
+
+        //Animation
+        viewPager2.setPageTransformer(new DepthPageTransformer());
 
         //Set data
         ParseUser creator = game.getCreator();

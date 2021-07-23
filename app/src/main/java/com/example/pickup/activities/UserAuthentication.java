@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.example.pickup.R;
 import com.example.pickup.adapters.UserAuthenticationViewPagerAdapter;
+import com.example.pickup.pageTransformers.DepthPageTransformer;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseUser;
@@ -57,5 +58,8 @@ public class UserAuthentication extends AppCompatActivity {
                         }
                     }
                 }).attach();
+
+        //Animation
+        viewPager2.setPageTransformer(new DepthPageTransformer());
     }
 }

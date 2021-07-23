@@ -18,6 +18,7 @@ import com.example.pickup.R;
 import com.example.pickup.adapters.GameFragmentViewPagerAdapter;
 import com.example.pickup.fragments.games.CurrentGameFragment;
 import com.example.pickup.fragments.games.RecentGamesFragment;
+import com.example.pickup.pageTransformers.DepthPageTransformer;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
@@ -109,6 +110,9 @@ public class GameFragment extends Fragment {
                 }
             }
         }).attach();
+
+        //Animation
+        viewPager2.setPageTransformer(new DepthPageTransformer());
 
     }
 }
