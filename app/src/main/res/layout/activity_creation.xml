@@ -10,12 +10,12 @@
         android:id="@+id/etLocationNameCreation"
         android:layout_width="353dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tbCreation"
+        android:layout_below="@+id/ivSelectLocation"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
         android:ellipsize="end"
         android:ems="10"
         android:hint="Enter Location Name"
@@ -49,38 +49,28 @@
 
     <EditText
         android:id="@+id/etLocationCreation"
-        android:layout_width="353dp"
+        android:layout_width="326dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etLocationNameCreation"
+        android:layout_below="@+id/tbCreation"
         android:layout_alignStart="@+id/etLocationNameCreation"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="30dp"
         android:ellipsize="end"
         android:ems="10"
-        android:hint="Enter Location"
+        android:hint="Select Location"
         android:inputType="textPersonName"
         android:singleLine="true" />
-
-    <AutoCompleteTextView
-        android:id="@+id/atvGameTypesCreation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etLocationCreation"
-        android:layout_alignStart="@+id/etLocationCreation"
-        android:layout_alignEnd="@+id/etLocationNameCreation"
-        android:layout_marginTop="40dp"
-        android:hint="Select Game Type"
-        android:singleLine="true">
-
-    </AutoCompleteTextView>
 
     <EditText
         android:id="@+id/etPlayerLimitCreation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/atvGameTypesCreation"
-        android:layout_alignStart="@+id/atvGameTypesCreation"
-        android:layout_alignEnd="@+id/atvGameTypesCreation"
+        android:layout_below="@+id/spinnerGameTypeCreation"
+        android:layout_alignStart="@+id/spinnerGameTypeCreation"
+        android:layout_alignEnd="@+id/spinnerGameTypeCreation"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="0dp"
         android:ems="10"
         android:hint="Set Player Limit"
         android:inputType="number" />
@@ -142,11 +132,24 @@
         android:layout_width="46dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/etLocationCreation"
+        android:layout_alignEnd="@+id/spinnerGameTypeCreation"
         android:layout_alignBottom="@+id/etLocationCreation"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/etLocationCreation"
         android:clickable="true"
         app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+    <Spinner
+        android:id="@+id/spinnerGameTypeCreation"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_below="@+id/etLocationNameCreation"
+        android:layout_alignStart="@+id/etLocationNameCreation"
+        android:layout_alignEnd="@+id/etLocationNameCreation"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="0dp" />
 
 </RelativeLayout>

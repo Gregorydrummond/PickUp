@@ -102,7 +102,7 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
 
         //Spinner setup
         //Initialize an ArrayAdapter using the string array and a default spinner layout
-        adapter = ArrayAdapter.createFromResource(getContext(), R.array.game_types, android.R.layout.simple_spinner_item);
+        adapter = ArrayAdapter.createFromResource(getContext(), R.array.game_filter, android.R.layout.simple_spinner_item);
 
         //Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

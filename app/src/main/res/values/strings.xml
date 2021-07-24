@@ -15,8 +15,14 @@
     <string name="no_games_in_the_area">No Games in the Area</string>
     <string name="no_current_game">No Current Game</string>
     <string name="no_games">No Games</string>
-    <string-array name="game_types">
+    <string-array name="game_filter">
         <item>All</item>
+        <item>Teams</item>
+        <item>King of the Court</item>
+        <item>3-Point Shootout</item>
+        <item>21</item>
+    </string-array>
+    <string-array name="game_types">
         <item>Teams</item>
         <item>King of the Court</item>
         <item>3-Point Shootout</item>

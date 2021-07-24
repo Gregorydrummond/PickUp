@@ -9,16 +9,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,9 +37,8 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
-public class Creation extends AppCompatActivity {
+public class Creation extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "Creation";
     public static final int REQUEST_CODE = 1;
@@ -50,12 +49,10 @@ public class Creation extends AppCompatActivity {
     public static final String  API_KEY = String.valueOf(R.string.true_way_api_key);
     public static final String  reverseGeocodeUrl = "https://trueway-geocoding.p.rapidapi.com/ReverseGeocode?";
 
-    String[] gameType = new String[]{"Teams", "King of the Court", "3-Point Shootout", "21"};
-
     Toolbar toolbar;
     EditText etLocationName;
     EditText etLocation;
-    AutoCompleteTextView actvGameType;
+    Spinner spinnerGameType;
     EditText etPlayerLimit;
     EditText etScoreLimit;
     CheckBox cbWinBy2;
@@ -63,6 +60,7 @@ public class Creation extends AppCompatActivity {
     Button btnCancel;
     Button btnCreate;
     ImageView ivSelectLocation;
+    ArrayAdapter<CharSequence> adapter;
     ActivityResultLauncher<Intent> autoCompleteResultLauncher;
     static double latitude;
     static double longitude;
@@ -79,7 +77,7 @@ public class Creation extends AppCompatActivity {
         toolbar = findViewById(R.id.tbCreation);
         etLocationName = findViewById(R.id.etLocationNameCreation);
         etLocation = findViewById(R.id.etLocationCreation);
-        actvGameType = findViewById(R.id.atvGameTypesCreation);
+        spinnerGameType = findViewById(R.id.spinnerGameTypeCreation);
         etPlayerLimit = findViewById(R.id.etPlayerLimitCreation);
         etScoreLimit = findViewById(R.id.etScoreLimitCreation);
         cbWinBy2 = findViewById(R.id.cbWinBy2Creation);
@@ -87,7 +85,7 @@ public class Creation extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancelCreation);
         btnCreate = findViewById(R.id.btnCreateCreation);
         ivSelectLocation = findViewById(R.id.ivSelectLocation);
-        ArrayAdapter<String> adapter;
+        ArrayAdapter<CharSequence> adapter;
 
         //Toolbar
         toolbar.setTitle("");
@@ -115,10 +113,6 @@ public class Creation extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(actvGameType.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "Please select a game type", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 if(etPlayerLimit.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "Please enter a player limit", Toast.LENGTH_SHORT).show();
                     return;
@@ -136,7 +130,7 @@ public class Creation extends AppCompatActivity {
                 game.setCreator(ParseUser.getCurrentUser());
                 game.setLocation(location);
                 game.setLocationName(etLocationName.getText().toString());
-                game.setGameType(actvGameType.getText().toString());
+                game.setGameType(spinnerGameType.getSelectedItem().toString());
                 game.setPlayerLimit(Integer.parseInt(etPlayerLimit.getText().toString()));
                 game.setScoreLimit(Integer.parseInt(etScoreLimit.getText().toString()));
                 if(cbWinBy2.isChecked()) {
@@ -146,7 +140,7 @@ public class Creation extends AppCompatActivity {
                     game.setWinByTwo(false);
                 }
                 //If game requires teams, create and associate two team objects
-                if(actvGameType.getText().toString().equals("Teams")) {
+                if(spinnerGameType.getSelectedItem().toString().equals("Teams")) {
                     game.setHasTeams(true);
                 }
                 else {
@@ -288,28 +282,19 @@ public class Creation extends AppCompatActivity {
                 }
         );
 
-        //Autocomplete text view
-        //Create an array adapter
-        adapter = new ArrayAdapter<String>(Creation.this, R.layout.support_simple_spinner_dropdown_item, gameType);
+        //Spinner setup
+        //Initialize an ArrayAdapter using the string array and a default spinner layout
+        adapter = ArrayAdapter.createFromResource(this, R.array.game_types, android.R.layout.simple_spinner_item);
 
-        //Show dropdown when selected
-        actvGameType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                actvGameType.showDropDown();
-            }
-        });
-        actvGameType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actvGameType.showDropDown();
-            }
-        });
+        //Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        //Set adapter
-        actvGameType.setAdapter(adapter);
-        //Hide keyboard for autocomplete text view
-        actvGameType.setInputType(InputType.TYPE_NULL);
+        //Set adapter to spinner
+        spinnerGameType.setAdapter(adapter);
+
+        //Set on item selected listener
+        spinnerGameType.setOnItemSelectedListener(this);
+
     }
 
     private void getAddressFromLatLong(Double latitude, Double longitude) throws IOException, JSONException {
@@ -411,5 +396,14 @@ public class Creation extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
