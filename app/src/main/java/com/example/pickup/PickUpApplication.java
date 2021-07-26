@@ -17,8 +17,8 @@ public class PickUpApplication extends Application {
         super.onCreate();
 
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("jtG8WfhyT0Sx2YbeFGHNGt3oQckjgtGUN1EOlqIf")
-                .clientKey("nGo9Rwkxslzb9De6MSUjKdVFzZK1y0PAJu6Dz11D")
+                .applicationId("uqufYtVKZPXH4qE8yuNlOLsCSu9vGRYbaIJ2jvDs")
+                .clientKey("vCSu87FaBUKpcnrru7KjkYLitBa0HXxN067gB1qt")
                 .server("https://parseapi.back4app.com")
                 .build()
         );
