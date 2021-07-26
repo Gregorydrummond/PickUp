@@ -195,4 +195,13 @@ public class MainActivity extends AppCompatActivity {
             saveCurrentUserLocation();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(bottomNavigationView.getSelectedItemId() != R.id.action_home) {
+            MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
+            return;
+        }
+        super.onBackPressed();
+    }
 }
