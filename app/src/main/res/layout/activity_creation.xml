@@ -93,13 +93,11 @@
         android:layout_height="32dp"
         android:layout_alignTop="@+id/tvWinBy2TextCreation"
         android:layout_alignEnd="@+id/etScoreLimitCreation"
-        android:layout_alignBottom="@+id/tvWinBy2TextCreation"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@+id/tvWinBy2TextCreation" />
+        android:layout_alignBottom="@+id/tvWinBy2TextCreation" />
 
     <TextView
         android:id="@+id/tvWinBy2TextCreation"
-        android:layout_width="326dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etScoreLimitCreation"
         android:layout_alignStart="@+id/etScoreLimitCreation"
