@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -243,6 +244,8 @@ public class GameDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 //        supportFinishAfterTransition();
+        Intent intent = new Intent(GameDetailsActivity.this, MainActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 }
