@@ -181,18 +181,20 @@ public class HomeFragment extends Fragment {
                     try {
                         //Creator info
                         ParseUser creator = newGame.getCreator().fetchIfNeeded();
-                        //Set notification content
-                        builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.ic_basketball_small_icon)
-                                .setContentTitle("New game by " + creator.getUsername())
-                                .setContentText("New " + newGame.getGameType().toLowerCase() + " game in your area. Join before it fills up!")
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true);
+                        if(!creator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            //Set notification content
+                            builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.ic_basketball_small_icon)
+                                    .setContentTitle("New game by " + creator.getUsername())
+                                    .setContentText("New " + newGame.getGameType().toLowerCase() + " game in your area. Join before it fills up!")
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setContentIntent(pendingIntent)
+                                    .setAutoCancel(true);
 
-                        //Show notification
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-                        notificationManager.notify(notificationId, builder.build());
+                            //Show notification
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+                            notificationManager.notify(notificationId, builder.build());
+                        }
                     } catch (ParseException e) {
                         Log.e(TAG, "onViewCreated: Error fetching creator info for notification", e);
                     }
