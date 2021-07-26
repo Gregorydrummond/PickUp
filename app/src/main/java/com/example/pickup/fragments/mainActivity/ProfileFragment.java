@@ -141,7 +141,7 @@ public class ProfileFragment extends Fragment {
         }).attach();
 
         //Animation
-        viewPager2.setPageTransformer(new DepthPageTransformer());
+        viewPager2.setPageTransformer(new ZoomOutPageTransformer());
 
 
         // Activity result launcher. OnActivityResult method is deprecated
