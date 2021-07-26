@@ -5,7 +5,6 @@ import android.app.Application;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.GameStat;
 import com.example.pickup.models.Team;
-import com.google.android.libraries.places.api.Places;
 import com.parse.Parse;
 import com.parse.ParseObject;
 

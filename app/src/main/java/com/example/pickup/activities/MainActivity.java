@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Log.d(TAG, "onCreate: User: " + ParseUser.getCurrentUser().getUsername() + " Games won: " + ParseUser.getCurrentUser().getNumber("gamesWon"));
-
         //Initialize location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
