@@ -48,6 +48,7 @@ dependencies {
 
     //Parse
     implementation "com.github.parse-community.Parse-SDK-Android:parse:1.24.1"
+    implementation 'com.github.parse-community:ParseLiveQuery-Android:1.1.0'
 
     //Location
     implementation "com.google.android.gms:play-services-location:18.0.0"

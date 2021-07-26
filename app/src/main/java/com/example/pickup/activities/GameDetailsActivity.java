@@ -83,6 +83,12 @@ public class GameDetailsActivity extends AppCompatActivity {
 
         //Set data
         ParseUser creator = game.getCreator();
+        try {
+            creator.fetchIfNeeded();
+        } catch (ParseException e) {
+            Log.e(TAG, "onCreate: Error fetching creator", e);
+            return;
+        }
         ParseUser user = ParseUser.getCurrentUser();
 
         ParseFile profilePicture = creator.getParseFile("profilePicture");
