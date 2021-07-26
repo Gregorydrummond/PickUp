@@ -129,8 +129,11 @@ public class MapsFragment extends Fragment{
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
 
         user = ParseUser.getCurrentUser();
+        currentGame = (Game) user.getParseObject("currentGame");
         try {
-            currentGame = user.getParseObject("currentGame").fetchIfNeeded();
+            if(currentGame != null) {
+                currentGame.fetchIfNeeded();
+            }
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Cannot fetch current game", e);
         }
