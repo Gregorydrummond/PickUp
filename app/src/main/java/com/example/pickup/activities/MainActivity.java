@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION = 1;
 
     FragmentManager fragmentManager;
-    BottomNavigationView bottomNavigationView;
+    public static BottomNavigationView bottomNavigationView;
     Location location;
     LocationManager locationManager;
     ParseGeoPoint userLocation;
