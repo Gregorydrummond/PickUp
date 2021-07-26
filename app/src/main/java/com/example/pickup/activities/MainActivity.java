@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             if(isGPSEnabled) {
                 Log.d(TAG, "saveCurrentUserLocation: GPS enabled");
                 //Update location
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
                         //Log.d(TAG, "onLocationChanged: location changed " + location.toString());
