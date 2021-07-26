@@ -118,6 +118,7 @@ public class LoginFragment extends Fragment {
             public void done(ParseUser user, ParseException e) {
                 //If there's an error with the user login
                 if(e != null) {
+                    Toast.makeText(getContext(), "Incorrect password/username", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "done: Issue with login", e);
                 }
                 else {

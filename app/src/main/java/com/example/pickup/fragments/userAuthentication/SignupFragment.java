@@ -99,6 +99,12 @@ public class SignupFragment extends Fragment {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
 
+                if(username.isEmpty()) {
+                    Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onClick: Username is empty");
+                    return;
+                }
+
                 if(password.isEmpty()) {
                     Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "onClick: Password is empty");
@@ -106,7 +112,6 @@ public class SignupFragment extends Fragment {
                 }
 
                 signupUser(username, password);
-
             }
         });
     }
@@ -122,6 +127,7 @@ public class SignupFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if(e != null) {
+                    Toast.makeText(getContext(), "Issue signing up, try a different username.", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "done: Issue with signup", e);
                 }
                 else {
@@ -138,6 +144,7 @@ public class SignupFragment extends Fragment {
             public void done(ParseUser user, ParseException e) {
                 //If there's an error with the user login
                 if(e != null) {
+                    Toast.makeText(getContext(), "Incorrect password/username", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "done: Issue with login", e);
                 }
                 else {
