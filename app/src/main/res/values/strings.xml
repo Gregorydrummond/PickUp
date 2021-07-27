@@ -17,6 +17,8 @@
     <string name="no_games">No Games</string>
     <string name="channel_name_new_game">New Games Channel</string>
     <string name="channel_description_new_game">Notification channel for new games</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
     <string-array name="game_filter">
         <item>All</item>
         <item>Teams</item>

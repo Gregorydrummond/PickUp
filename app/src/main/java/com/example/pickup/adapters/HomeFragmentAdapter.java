@@ -63,6 +63,18 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
         return games.size();
     }
 
+    //Clean all elements of the recycler
+    public void clear() {
+        games.clear();
+        notifyDataSetChanged();
+    }
+
+    //Add a list of items
+    public void addAll(List<Game> gamesList) {
+        games.addAll(gamesList);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView ivProfilePicture;

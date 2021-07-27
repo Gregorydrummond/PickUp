@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pickup.PickUpApplication;
 import com.example.pickup.R;
@@ -36,6 +38,7 @@ import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.activities.MainActivity;
 import com.example.pickup.adapters.HomeFragmentAdapter;
 import com.example.pickup.models.Game;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.parse.FindCallback;
 import com.parse.ParseObject;
@@ -48,7 +51,9 @@ import com.parse.ParseUser;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HomeFragment extends Fragment {
 
@@ -66,6 +71,7 @@ public class HomeFragment extends Fragment {
     Button button;
     ParseUser user;
     TextView tvNoGames;
+    Set<String> gameFilterSet = new HashSet<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -243,10 +249,28 @@ public class HomeFragment extends Fragment {
 
         //Query base on user's settings
         query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
-        String gameType = user.getString("gameFilter");
-        assert gameType != null;
-        if(!gameType.equals("All")) {
-            query.whereEqualTo("gameType", user.getString("gameFilter"));
+        if(gameFilterSet.isEmpty()) {
+            String gameType = user.getString("gameFilter");
+            assert gameType != null;
+            if (!gameType.equals("All")) {
+                query.whereEqualTo("gameType", user.getString("gameFilter"));
+            }
+        }
+        else {
+            if (!gameFilterSet.contains("All")) {
+                if(gameFilterSet.contains("Teams")) {
+                    query.whereEqualTo("gameType", "Teams");
+                }
+                if(gameFilterSet.contains("King of the Court")) {
+                    query.whereEqualTo("gameType", "King of the Court");
+                }
+                if(gameFilterSet.contains("3-Point Shootout")) {
+                    query.whereEqualTo("gameType", "3-Point Shootout");
+                }
+                if(gameFilterSet.contains("21")) {
+                    query.whereEqualTo("gameType", "21");
+                }
+            }
         }
 
         //Get game objects
@@ -254,6 +278,7 @@ public class HomeFragment extends Fragment {
             if(e == null) {
                 Log.i(TAG, "done: Retrieved games");
                 //Save list of games
+                gamesFeed.clear();
                 gamesFeed.addAll(games);
 
                 //Notify adapter of change
@@ -291,6 +316,25 @@ public class HomeFragment extends Fragment {
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
             return true;
+        }
+        if (item.getItemId() == R.id.action_filter) {
+            Log.i(TAG, "onOptionsItemSelected: Filter button pressed");
+            gameFilterSet.clear();
+            String[] gameFilter = {"All", "Teams", "King of the Court", "3-Point Shootout", "21"};
+            //Open dialog box
+            MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+            materialAlertDialogBuilder.setSingleChoiceItems(R.array.game_filter, -1, (dialog, which) -> {
+                gameFilterSet.clear();
+                gameFilterSet.add(gameFilter[which]);
+                Log.i(TAG, "onClick: Added " + gameFilter[which]);
+            }).setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.clear();
+                    queryGames();
+                    Toast.makeText(getContext(), "Filter updated", Toast.LENGTH_SHORT).show();
+                }
+            }).setNeutralButton(R.string.cancel, null).show();
         }
         return super.onOptionsItemSelected(item);
     }
