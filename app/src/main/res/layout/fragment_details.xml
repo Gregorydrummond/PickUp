@@ -14,8 +14,9 @@
         android:layout_alignStart="@+id/tvPlayerCountDetails"
         android:layout_marginStart="1dp"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/rock_salt"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:transitionName="distance"
         tools:text="1.2 miles away" />
 
@@ -26,8 +27,9 @@
         android:layout_below="@+id/tvPlayerCountDetails"
         android:layout_alignStart="@+id/tvPlayerCountDetails"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/rock_salt"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         tools:text="Win By 2: No" />
 
     <TextView
@@ -37,8 +39,9 @@
         android:layout_below="@+id/tvStartedDetails"
         android:layout_alignStart="@+id/tvStartedDetails"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/rock_salt"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:transitionName="capacity"
         tools:text="Players: 4/6" />
 
@@ -49,8 +52,9 @@
         android:layout_below="@+id/tvGameTypeDetails"
         android:layout_alignStart="@+id/tvGameTypeDetails"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/rock_salt"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:transitionName="status"
         tools:text="Started" />
 
@@ -62,8 +66,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
+        android:fontFamily="@font/rock_salt"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:transitionName="gameType"
         tools:text="Game Type: Teams" />
 </RelativeLayout>

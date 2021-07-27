@@ -13,9 +13,10 @@
         android:layout_below="@+id/tvOpponentScoreESA"
         android:layout_alignStart="@+id/tvPointsScoredTextESA"
         android:layout_marginTop="35dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Game Won: "
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="287dp" />
 
@@ -41,10 +42,11 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:layout_toEndOf="@+id/ivProfilePictureESA"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:text="Username's Game"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         app:autoSizeTextType="uniform"
         tools:layout_editor_absoluteX="189dp" />
 
@@ -56,10 +58,11 @@
         android:layout_alignStart="@+id/tvUsernameESA"
         android:layout_alignEnd="@+id/tvUsernameESA"
         android:layout_marginTop="5dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:text="@ Location's Name"
         android:textColor="#6E6E6E"
-        android:textSize="16sp"
+        android:textSize="10sp"
         app:autoSizeTextType="uniform"
         tools:layout_editor_absoluteX="189dp" />
 
@@ -73,9 +76,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
+        android:fontFamily="@font/rock_salt"
         android:gravity="center"
         android:text="Enter Stats"
-        android:textSize="34sp"
+        android:textSize="20sp"
         tools:layout_editor_absoluteX="165dp"
         tools:layout_editor_absoluteY="201dp" />
 
@@ -97,9 +101,10 @@
         android:layout_alignStart="@+id/view"
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Points Scored:"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="287dp" />
 
@@ -110,7 +115,10 @@
         android:layout_alignStart="@+id/view"
         android:layout_alignTop="@+id/tvPointsScoredTextESA"
         android:layout_alignEnd="@+id/view"
+        android:layout_alignBottom="@+id/tvPointsScoredTextESA"
         android:layout_marginStart="230dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="number"
@@ -124,9 +132,10 @@
         android:layout_below="@+id/tvPointsScoredTextESA"
         android:layout_alignStart="@+id/tvPointsScoredTextESA"
         android:layout_marginTop="35dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Team's Score:"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="287dp" />
 
@@ -137,6 +146,8 @@
         android:layout_alignStart="@+id/etPointsScoredESA"
         android:layout_alignTop="@+id/tvTeamScoreESA"
         android:layout_alignEnd="@+id/etPointsScoredESA"
+        android:layout_alignBottom="@+id/tvTeamScoreESA"
+        android:layout_marginBottom="0dp"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="number"
@@ -150,9 +161,10 @@
         android:layout_below="@+id/tvTeamScoreESA"
         android:layout_alignStart="@+id/tvTeamScoreESA"
         android:layout_marginTop="35dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Opponent's Score:"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="287dp" />
 
@@ -163,6 +175,8 @@
         android:layout_alignStart="@+id/etTeamScoreESA"
         android:layout_alignTop="@+id/tvOpponentScoreESA"
         android:layout_alignEnd="@+id/etTeamScoreESA"
+        android:layout_alignBottom="@+id/tvOpponentScoreESA"
+        android:layout_marginBottom="0dp"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="number"
@@ -178,6 +192,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
         android:text="Finish" />
 
     <CheckBox
@@ -187,6 +202,8 @@
         android:layout_alignStart="@+id/etPointsScoredESA"
         android:layout_alignTop="@+id/tvGameWonESA"
         android:layout_alignEnd="@+id/etPointsScoredESA"
+        android:layout_alignBottom="@+id/tvGameWonESA"
         android:layout_marginStart="49dp"
-        android:layout_marginTop="-5dp" />
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="0dp" />
 </RelativeLayout>

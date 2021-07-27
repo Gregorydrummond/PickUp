@@ -18,9 +18,11 @@
         android:layout_marginEnd="20dp"
         android:ellipsize="end"
         android:ems="10"
+        android:fontFamily="@font/rock_salt"
         android:hint="Enter Location Name"
         android:inputType="textPersonName"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="14sp" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbCreation"
@@ -55,11 +57,15 @@
         android:layout_alignStart="@+id/etLocationNameCreation"
         android:layout_marginStart="0dp"
         android:layout_marginTop="30dp"
+        android:editable="false"
         android:ellipsize="end"
         android:ems="10"
+        android:enabled="false"
+        android:fontFamily="@font/rock_salt"
         android:hint="Select Location"
         android:inputType="textPersonName"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etPlayerLimitCreation"
@@ -69,11 +75,13 @@
         android:layout_alignStart="@+id/spinnerGameTypeCreation"
         android:layout_alignEnd="@+id/spinnerGameTypeCreation"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="0dp"
         android:ems="10"
+        android:fontFamily="@font/rock_salt"
         android:hint="Set Player Limit"
-        android:inputType="number" />
+        android:inputType="number"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etScoreLimitCreation"
@@ -84,8 +92,10 @@
         android:layout_alignEnd="@+id/etPlayerLimitCreation"
         android:layout_marginTop="40dp"
         android:ems="10"
+        android:fontFamily="@font/rock_salt"
         android:hint="Set Score Limit"
-        android:inputType="number" />
+        android:inputType="number"
+        android:textSize="14sp" />
 
     <CheckBox
         android:id="@+id/cbWinBy2Creation"
@@ -102,17 +112,18 @@
         android:layout_below="@+id/etScoreLimitCreation"
         android:layout_alignStart="@+id/etScoreLimitCreation"
         android:layout_marginTop="40dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Win By 2"
         android:textColor="#000000"
-        android:textSize="24sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/btnCancelCreation"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvWinBy2TextCreation"
         android:layout_alignStart="@+id/tvWinBy2TextCreation"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="#E18804"
         android:text="Cancel" />
 
@@ -147,7 +158,7 @@
         android:layout_alignStart="@+id/etLocationNameCreation"
         android:layout_alignEnd="@+id/etLocationNameCreation"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="0dp" />
 
 </RelativeLayout>

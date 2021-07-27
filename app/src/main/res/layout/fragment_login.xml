@@ -40,6 +40,7 @@
         android:layout_alignEnd="@+id/etPassword"
         android:layout_marginTop="50dp"
         android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
         android:text="Log In" />
 
 </RelativeLayout>

@@ -13,9 +13,10 @@
         android:layout_alignStart="@+id/tvGameStatusHome"
         android:layout_alignEnd="@+id/tvGameStatusHome"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="distance"
         tools:text="1 mile away" />
 
@@ -27,9 +28,10 @@
         android:layout_alignStart="@+id/tvGameCapacityHome"
         android:layout_alignEnd="@+id/tvGameCapacityHome"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="status"
         tools:text="Game Started/In Progress" />
 
@@ -41,9 +43,10 @@
         android:layout_alignStart="@+id/tvGameTypeHome"
         android:layout_alignEnd="@+id/tvGameTypeHome"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="capacity"
         tools:text="Capacity: 3/8" />
 
@@ -55,9 +58,10 @@
         android:layout_alignStart="@+id/tvLocationNameHome"
         android:layout_alignEnd="@+id/tvLocationNameHome"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="gameType"
         tools:text="Game Type: King of the Court" />
 
@@ -69,9 +73,10 @@
         android:layout_alignStart="@+id/tvUsernameHome"
         android:layout_alignEnd="@+id/tvTimeStampHome"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="location"
         tools:text="Where: Roosevelt Gardens" />
 
@@ -84,9 +89,10 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivUserProfilePictureHome"
         android:ellipsize="end"
+        android:fontFamily="@font/rock_salt"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:transitionName="username"
         tools:text="Greg's Game" />
 
@@ -121,11 +127,12 @@
         android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/tvUsernameHome"
+        android:fontFamily="@font/rock_salt"
         android:gravity="start|center_vertical"
         android:minWidth="50dp"
         android:singleLine="true"
         android:textColor="#ACACAC"
-        android:textSize="14sp"
+        android:textSize="10sp"
         tools:text="· 20 m" />
 
 </RelativeLayout>

@@ -26,9 +26,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="60dp"
         android:ellipsize="end"
+        android:fontFamily="@font/rock_salt"
         android:text="Team B"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:autoSizeTextType="uniform" />
 
     <TextView
@@ -40,9 +41,10 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="50dp"
         android:ellipsize="end"
+        android:fontFamily="@font/rock_salt"
         android:text="Team A"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:autoSizeTextType="uniform" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -14,10 +14,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="100dp"
+        android:fontFamily="@font/rock_salt"
         android:text="PickUp"
         android:textAllCaps="false"
         android:textColor="#000000"
-        android:textSize="60sp"
+        android:textSize="48sp"
         android:textStyle="bold|italic" />
 
     <com.google.android.material.tabs.TabLayout

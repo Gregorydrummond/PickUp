@@ -9,26 +9,28 @@
         android:id="@+id/btnSignout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSave"
-        android:layout_alignStart="@+id/btnSave"
-        android:layout_alignEnd="@+id/btnSave"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
         android:text="Sign Out" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvGameTypesPS"
+        android:layout_above="@+id/btnSignout"
         android:layout_alignStart="@+id/tvGameTypesPS"
         android:layout_alignEnd="@+id/spinnerGameTypePS"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="150dp"
         android:layout_marginEnd="0dp"
+        android:layout_marginBottom="6dp"
         android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
         android:text="Save" />
 
     <TextView
@@ -39,9 +41,10 @@
         android:layout_alignStart="@+id/tvMaxDistancePS"
         android:layout_alignEnd="@+id/tvMaxDistancePS"
         android:layout_marginTop="30dp"
+        android:fontFamily="@font/rock_salt"
         android:text="Filter By Game Type"
         android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvMaxDistancePS"
@@ -53,9 +56,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_toStartOf="@+id/etMaxDistancePS"
+        android:fontFamily="@font/rock_salt"
         android:text="Max Distance (miles)"
         android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/etMaxDistancePS"
@@ -71,10 +75,11 @@
 
     <Spinner
         android:id="@+id/spinnerGameTypePS"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
+        android:layout_width="135dp"
+        android:layout_height="40dp"
         android:layout_alignStart="@+id/etMaxDistancePS"
         android:layout_alignTop="@+id/tvGameTypesPS"
-        android:layout_alignEnd="@+id/etMaxDistancePS" />
+        android:layout_alignEnd="@+id/etMaxDistancePS"
+        android:layout_marginEnd="0dp" />
 
 </RelativeLayout>
