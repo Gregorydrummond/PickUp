@@ -64,6 +64,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     ActivityResultLauncher<Intent> autoCompleteResultLauncher;
     static double latitude;
     static double longitude;
+    ParseUser user = ParseUser.getCurrentUser();
     Game game;
     Team teamA, teamB, teamC;
     boolean gameCreated = false, teamACreated = false, teamBCreated = false, teamCCreated = false;
@@ -295,6 +296,12 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         //Set on item selected listener
         spinnerGameType.setOnItemSelectedListener(this);
 
+        //Disable create button if user is already in a game
+        Game currentGame = (Game) user.getParseObject("currentGame");
+        if(currentGame != null) {
+            Log.i(TAG, "onCreate: user is already in a game");
+            btnCreate.setEnabled(false);
+        }
     }
 
     private void getAddressFromLatLong(Double latitude, Double longitude) throws IOException, JSONException {
