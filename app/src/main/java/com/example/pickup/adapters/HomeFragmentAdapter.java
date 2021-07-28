@@ -197,6 +197,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 Log.i(TAG, "showBottomSheetDialog: game not null " + game.getLocationName());
                 creator = game.getCreator().fetchIfNeeded();
                 Log.i(TAG, "showBottomSheetDialog: " + creator.getUsername());
+                String title = "Quick Join " + creator.getUsername() + "'s Game";
+                bottomSheetDialogTitle.setText(title);
                 bottomSheetDialogLocationName.setText(game.getLocationName());
                 bottomSheetDialogGameType.setText(game.getGameType());
                 ParseFile bottomSheetDialogProfilePictureFile = creator.getParseFile("profilePicture");
@@ -230,5 +232,4 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             }
         }
     }
-
 }
