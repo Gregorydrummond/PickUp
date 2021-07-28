@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
@@ -20,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -75,8 +78,9 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
+        ParseUser user;
         ImageView ivProfilePicture;
         TextView tvUserName;
         TextView tvTimeStamp;
@@ -99,10 +103,11 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
             //Add this as the itemView's OnClickListener
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         public void bind(Game game) throws ParseException {
-            ParseUser user = ParseUser.getCurrentUser();
+            user = ParseUser.getCurrentUser();
             ParseUser creator = game.getCreator().fetchIfNeeded();
             //Set data
             ParseFile profilePicture = creator.getParseFile("profilePicture");
@@ -154,6 +159,74 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 //                Pair<View, String> location = Pair.create((View) tvLocationName,"location");
 //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, profilePic, username, location);
 //                context.startActivity(intent, optionsCompat.toBundle());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            try {
+                showBottomSheetDialog();
+            } catch (ParseException e) {
+                Log.e(TAG, "onLongClick: Error with long click", e);
+            }
+            return false;
+        }
+
+        private void showBottomSheetDialog() throws ParseException {
+            int position = getAdapterPosition();
+            Game game = null;
+            ParseUser creator;
+            if(position != RecyclerView.NO_POSITION) {
+                game = games.get(position);
+            }
+
+            //Initialize new bottom sheet dialog
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
+
+            TextView bottomSheetDialogTitle = bottomSheetDialog.findViewById(R.id.tvBottomDialogTitle);
+            TextView bottomSheetDialogLocationName = bottomSheetDialog.findViewById(R.id.tvBottomDialogLocationName);
+            TextView bottomSheetDialogGameType = bottomSheetDialog.findViewById(R.id.tvBottomDialogGameType);
+            ImageView bottomSheetDialogProfilePicture = bottomSheetDialog.findViewById(R.id.ivBottomDialogProfilePicture);
+            Button bottomSheetDialogBtnCancel = bottomSheetDialog.findViewById(R.id.btnBottomDialogCancel);
+            Button bottomSheetDialogBtnJoin = bottomSheetDialog.findViewById(R.id.btnBottomDialogJoin);
+
+            bottomSheetDialog.show();
+
+            if(game != null) {
+                Log.i(TAG, "showBottomSheetDialog: game not null " + game.getLocationName());
+                creator = game.getCreator().fetchIfNeeded();
+                Log.i(TAG, "showBottomSheetDialog: " + creator.getUsername());
+                bottomSheetDialogLocationName.setText(game.getLocationName());
+                bottomSheetDialogGameType.setText(game.getGameType());
+                ParseFile bottomSheetDialogProfilePictureFile = creator.getParseFile("profilePicture");
+                if(bottomSheetDialogProfilePictureFile != null) {
+                    Glide.with(context)
+                            .load(bottomSheetDialogProfilePictureFile.getUrl())
+                            .transform(new CircleCrop())
+                            .into(bottomSheetDialogProfilePicture);
+                }
+                bottomSheetDialogBtnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.hide();
+                    }
+                });
+                Game finalGame = game;
+
+                if(user.getParseObject("currentGame") != null) {
+                    bottomSheetDialogBtnJoin.setEnabled(false);
+                }
+
+                bottomSheetDialogBtnJoin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(TAG, "onClick: joining game");
+                        GameDetailsActivity.joinGame(finalGame, false);
+                        bottomSheetDialog.hide();
+                        Toast.makeText(context, "Joined game", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }

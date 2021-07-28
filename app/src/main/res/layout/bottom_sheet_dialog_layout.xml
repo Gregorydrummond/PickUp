@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/tvBottomDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/rock_salt"
+        android:gravity="center"
+        android:text="Quick Join"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/ivBottomDialogProfilePicture"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_below="@+id/tvBottomDialogTitle"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvBottomDialogLocationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivBottomDialogProfilePicture"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="50dp"
+        android:layout_toEndOf="@+id/ivBottomDialogProfilePicture"
+        android:ellipsize="end"
+        android:fontFamily="@font/rock_salt"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        tools:text="Roosevelt Gardens" />
+
+    <TextView
+        android:id="@+id/tvBottomDialogGameType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvBottomDialogLocationName"
+        android:layout_alignEnd="@+id/tvBottomDialogLocationName"
+        android:layout_alignBottom="@+id/ivBottomDialogProfilePicture"
+        android:fontFamily="@font/rock_salt"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        tools:text="Teams" />
+
+    <Button
+        android:id="@+id/btnBottomDialogJoin"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnBottomDialogCancel"
+        android:layout_alignEnd="@+id/tvBottomDialogGameType"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
+        android:text="Join" />
+
+    <Button
+        android:id="@+id/btnBottomDialogCancel"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivBottomDialogProfilePicture"
+        android:layout_alignStart="@+id/ivBottomDialogProfilePicture"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
+        android:text="@string/cancel" />
+</RelativeLayout>

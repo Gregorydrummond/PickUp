@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.AutomaticZenRule;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -34,15 +36,19 @@ import org.parceler.Parcels;
 public class GameDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "GameDetailsActivity";
+    private static Game game;
+    private static ParseUser user;
+    private static Button btnJoin;
 
     ImageView ivProfilePicture;
     TextView tvUsername;
     TextView tvLocationName;
-    Button btnJoin;
+    //Button btnJoin;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     GameDetailsActivityViewPagerAdapter adapter;
-    Game game;
+    //Game game;
+    //ParseUser user;
     ParseUser creator;
 
     @Override
@@ -83,14 +89,14 @@ public class GameDetailsActivity extends AppCompatActivity {
         viewPager2.setPageTransformer(new DepthPageTransformer());
 
         //Set data
-        ParseUser creator = game.getCreator();
+        creator = game.getCreator();
         try {
             creator.fetchIfNeeded();
         } catch (ParseException e) {
             Log.e(TAG, "onCreate: Error fetching creator", e);
             return;
         }
-        ParseUser user = ParseUser.getCurrentUser();
+        user = ParseUser.getCurrentUser();
 
         ParseFile profilePicture = creator.getParseFile("profilePicture");
         if(profilePicture != null) {
@@ -125,115 +131,234 @@ public class GameDetailsActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                joinGame(game, true);
                 //Assign player to a team
-                Team teamA;
-                try {
-                    teamA = (Team) game.getTeamA().fetchIfNeeded();
-                } catch (ParseException e) {
-                    Log.e(TAG, "onClick: Error fetching teamA", e);
-                    return;
-                }
-                if(game.getHasTeams()) {
-                    Team teamB;
-                    try {
-                        teamB = (Team) game.getTeamB().fetchIfNeeded();
-                    } catch (ParseException e) {
-                        Log.e(TAG, "onClick: Error fetching teamB", e);
-                        return;
-                    }
-
-                    //If team B has less players in it than team A, add player to team B
-                    if (teamB.getSize() < teamA.getSize()) {
-                        try {
-                            teamB.setPlayers(user);
-                            teamB.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        Log.i(TAG, "done: Added player to team B");
-                                        game.setPlayerCount();
-                                        game.saveInBackground();
-                                        btnJoin.setEnabled(false);
-                                    } else {
-                                        Log.e(TAG, "done: Backend error saving player to team B", e);
-                                        return;
-                                    }
-                                }
-                            });
-                            user.put("currentTeam", teamB);
-                            user.saveInBackground();
-                        } catch (JSONException e) {
-                            Log.e(TAG, "onCreate: Error adding player to teamB", e);
-                            return;
-                        }
-                    }
-                    else {
-                        try {
-                            teamA.setPlayers(user);
-                            teamA.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        Log.i(TAG, "done: Added player to team A");
-                                        game.setPlayerCount();
-                                        game.saveInBackground();
-                                        btnJoin.setEnabled(false);
-                                    } else {
-                                        Log.e(TAG, "done: Backend error saving player to team A", e);
-                                        return;
-                                    }
-                                }
-                            });
-                            user.put("currentTeam", teamA);
-                            user.saveInBackground();
-                        } catch (JSONException e) {
-                            Log.e(TAG, "onCreate: Error adding player to teamA", e);
-                            return;
-                        }
-                    }
-                }
-                else {
-                    try {
-                        teamA.setPlayers(user);
-                        teamA.saveInBackground(e -> {
-                            if (e == null) {
-                                Log.i(TAG, "done: Added player to single team A");
-                                game.setPlayerCount();
-                                game.saveInBackground();
-                                btnJoin.setEnabled(false);
-                            } else {
-                                Log.e(TAG, "done: Backend error saving player to single team A", e);
-                                return;
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
-                        return;
-                    }
-                    user.put("currentTeam", teamA);
-                    user.saveInBackground();
-                }
-
-                //Set this game as current game
-                user.put("currentGame", game);
-                //Get gameList array
-                JSONArray jsonGamesArray = user.getJSONArray("gameList");
-                //Create json game object
-                JSONObject jsonGameObject = new JSONObject();
-                try {
-                    jsonGameObject.put("game", game.getObjectId());
-                } catch (JSONException e) {
-                    Log.e(TAG, "onClick: Error setting game id for game list", e);
-                    return;
-                }
-                //Add to array
-                jsonGamesArray.put(jsonGameObject);
-                //Save array
-                user.put("gameList", jsonGamesArray);
-                //Save user in backend
-                user.saveInBackground();
+//                Team teamA;
+//                try {
+//                    teamA = (Team) game.getTeamA().fetchIfNeeded();
+//                } catch (ParseException e) {
+//                    Log.e(TAG, "onClick: Error fetching teamA", e);
+//                    return;
+//                }
+//                if(game.getHasTeams()) {
+//                    Team teamB;
+//                    try {
+//                        teamB = (Team) game.getTeamB().fetchIfNeeded();
+//                    } catch (ParseException e) {
+//                        Log.e(TAG, "onClick: Error fetching teamB", e);
+//                        return;
+//                    }
+//
+//                    //If team B has less players in it than team A, add player to team B
+//                    if (teamB.getSize() < teamA.getSize()) {
+//                        try {
+//                            teamB.setPlayers(user);
+//                            teamB.saveInBackground(new SaveCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        Log.i(TAG, "done: Added player to team B");
+//                                        game.setPlayerCount();
+//                                        game.saveInBackground();
+//                                        btnJoin.setEnabled(false);
+//                                    } else {
+//                                        Log.e(TAG, "done: Backend error saving player to team B", e);
+//                                        return;
+//                                    }
+//                                }
+//                            });
+//                            user.put("currentTeam", teamB);
+//                            user.saveInBackground();
+//                        } catch (JSONException e) {
+//                            Log.e(TAG, "onCreate: Error adding player to teamB", e);
+//                            return;
+//                        }
+//                    }
+//                    else {
+//                        try {
+//                            teamA.setPlayers(user);
+//                            teamA.saveInBackground(new SaveCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        Log.i(TAG, "done: Added player to team A");
+//                                        game.setPlayerCount();
+//                                        game.saveInBackground();
+//                                        btnJoin.setEnabled(false);
+//                                    } else {
+//                                        Log.e(TAG, "done: Backend error saving player to team A", e);
+//                                        return;
+//                                    }
+//                                }
+//                            });
+//                            user.put("currentTeam", teamA);
+//                            user.saveInBackground();
+//                        } catch (JSONException e) {
+//                            Log.e(TAG, "onCreate: Error adding player to teamA", e);
+//                            return;
+//                        }
+//                    }
+//                }
+//                else {
+//                    try {
+//                        teamA.setPlayers(user);
+//                        teamA.saveInBackground(e -> {
+//                            if (e == null) {
+//                                Log.i(TAG, "done: Added player to single team A");
+//                                game.setPlayerCount();
+//                                game.saveInBackground();
+//                                btnJoin.setEnabled(false);
+//                            } else {
+//                                Log.e(TAG, "done: Backend error saving player to single team A", e);
+//                                return;
+//                            }
+//                        });
+//                    } catch (JSONException e) {
+//                        Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
+//                        return;
+//                    }
+//                    user.put("currentTeam", teamA);
+//                    user.saveInBackground();
+//                }
+//
+//                //Set this game as current game
+//                user.put("currentGame", game);
+//                //Get gameList array
+//                JSONArray jsonGamesArray = user.getJSONArray("gameList");
+//                //Create json game object
+//                JSONObject jsonGameObject = new JSONObject();
+//                try {
+//                    jsonGameObject.put("game", game.getObjectId());
+//                } catch (JSONException e) {
+//                    Log.e(TAG, "onClick: Error setting game id for game list", e);
+//                    return;
+//                }
+//                //Add to array
+//                jsonGamesArray.put(jsonGameObject);
+//                //Save array
+//                user.put("gameList", jsonGamesArray);
+//                //Save user in backend
+//                user.saveInBackground();
             }
         });
+    }
+
+    public static void joinGame(Game _game, boolean onGameDetail) {
+        user = ParseUser.getCurrentUser();
+        Team teamA;
+        try {
+            teamA = (Team) _game.getTeamA().fetchIfNeeded();
+        } catch (ParseException e) {
+            Log.e(TAG, "onClick: Error fetching teamA", e);
+            return;
+        }
+        if(_game.getHasTeams()) {
+            Team teamB;
+            try {
+                teamB = (Team) _game.getTeamB().fetchIfNeeded();
+            } catch (ParseException e) {
+                Log.e(TAG, "onClick: Error fetching teamB", e);
+                return;
+            }
+
+            //If team B has less players in it than team A, add player to team B
+            if (teamB.getSize() < teamA.getSize()) {
+                try {
+                    teamB.setPlayers(user);
+                    teamB.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Log.i(TAG, "done: Added player to team B");
+                                _game.setPlayerCount();
+                                _game.saveInBackground();
+                                if(onGameDetail) {
+                                    btnJoin.setEnabled(false);
+                                }
+                            } else {
+                                Log.e(TAG, "done: Backend error saving player to team B", e);
+                                return;
+                            }
+                        }
+                    });
+                    user.put("currentTeam", teamB);
+                    user.saveInBackground();
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCreate: Error adding player to teamB", e);
+                    return;
+                }
+            }
+            else {
+                try {
+                    teamA.setPlayers(user);
+                    teamA.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Log.i(TAG, "done: Added player to team A");
+                                _game.setPlayerCount();
+                                _game.saveInBackground();
+                                if(onGameDetail) {
+                                    btnJoin.setEnabled(false);
+                                }
+                            } else {
+                                Log.e(TAG, "done: Backend error saving player to team A", e);
+                                return;
+                            }
+                        }
+                    });
+                    user.put("currentTeam", teamA);
+                    user.saveInBackground();
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCreate: Error adding player to teamA", e);
+                    return;
+                }
+            }
+        }
+        else {
+            try {
+                teamA.setPlayers(user);
+                teamA.saveInBackground(e -> {
+                    if (e == null) {
+                        Log.i(TAG, "done: Added player to single team A");
+                        _game.setPlayerCount();
+                        _game.saveInBackground();
+                        if (onGameDetail) {
+                            btnJoin.setEnabled(false);
+                        }
+                    } else {
+                        Log.e(TAG, "done: Backend error saving player to single team A", e);
+                        return;
+                    }
+                });
+            } catch (JSONException e) {
+                Log.e(TAG, "onClick: Error adding player to team A(no team game)", e);
+                return;
+            }
+            user.put("currentTeam", teamA);
+            user.saveInBackground();
+        }
+
+        //Set this game as current game
+        user.put("currentGame", _game);
+        //Get gameList array
+        JSONArray jsonGamesArray = user.getJSONArray("gameList");
+        //Create json game object
+        JSONObject jsonGameObject = new JSONObject();
+        try {
+            jsonGameObject.put("game", _game.getObjectId());
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: Error setting game id for game list", e);
+            return;
+        }
+        //Add to array
+        jsonGamesArray.put(jsonGameObject);
+        //Save array
+        user.put("gameList", jsonGamesArray);
+        //Save user in backend
+        user.saveInBackground();
+
+        Toast.makeText(btnJoin.getContext(), "Joined game", Toast.LENGTH_SHORT).show();
     }
 
     public Game getGame() {
