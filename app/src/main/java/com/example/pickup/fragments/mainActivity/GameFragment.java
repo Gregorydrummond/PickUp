@@ -85,37 +85,37 @@ public class GameFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        executor = ContextCompat.getMainExecutor(getContext());
-//        biometricPrompt = new androidx.biometric.BiometricPrompt(getActivity(), executor, new androidx.biometric.BiometricPrompt.AuthenticationCallback() {
-//            @Override
-//            public void onAuthenticationError(int errorCode, @NonNull @NotNull CharSequence errString) {
-//                super.onAuthenticationError(errorCode, errString);
-//                Log.i(TAG, "onAuthenticationError: Authentication error: " + errString);
-//                Toast.makeText(getActivity().getApplicationContext(), "Authentication error", Toast.LENGTH_SHORT).show();
-//
-//                MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
-//            }
-//
-//            @Override
-//            public void onAuthenticationSucceeded(@NonNull @NotNull androidx.biometric.BiometricPrompt.AuthenticationResult result) {
-//                super.onAuthenticationSucceeded(result);
-//                Log.i(TAG, "onAuthenticationSucceeded: Authentication succeeded");
-//                Toast.makeText(getActivity().getApplicationContext(), "Authentication succeeded", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onAuthenticationFailed() {
-//                super.onAuthenticationFailed();
-//                Log.i(TAG, "onAuthenticationFailed: Authentication Failed");
-//                Toast.makeText(getActivity().getApplicationContext(), "Authentication Faile", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-//                .setTitle("Biometric security")
-//                .setSubtitle("Please provide a fingerprint")
-//                .setNegativeButtonText("Use account password")
-//                .build();
+        executor = ContextCompat.getMainExecutor(getContext());
+        biometricPrompt = new androidx.biometric.BiometricPrompt(getActivity(), executor, new androidx.biometric.BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull @NotNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Log.i(TAG, "onAuthenticationError: Authentication error: " + errString);
+                Toast.makeText(getActivity().getApplicationContext(), "Authentication error", Toast.LENGTH_SHORT).show();
+
+                MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull @NotNull androidx.biometric.BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Log.i(TAG, "onAuthenticationSucceeded: Authentication succeeded");
+                Toast.makeText(getActivity().getApplicationContext(), "Authentication succeeded", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Log.i(TAG, "onAuthenticationFailed: Authentication Failed");
+                Toast.makeText(getActivity().getApplicationContext(), "Authentication Faile", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Biometric security")
+                .setSubtitle("Please provide a fingerprint")
+                .setNegativeButtonText("Use account password")
+                .build();
     }
 
     @Override
@@ -129,26 +129,25 @@ public class GameFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        // Create an executor that executes tasks in the main thread.
-//        Executor mainExecutor = ContextCompat.getMainExecutor(getContext());
-//
-//        // Create an executor that executes tasks in a background thread.
-//        ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
-//
-//        // Execute a task in the background thread.
-//        backgroundExecutor.execute(() -> {
-//            // Your code logic goes here.
-//
-//                // Update UI on the main thread
-//                mainExecutor.execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        // You code logic goes here.
-//                        biometricPrompt.authenticate(promptInfo);
-//                    }
-//                });
-//        });
+        // Create an executor that executes tasks in the main thread.
+        Executor mainExecutor = ContextCompat.getMainExecutor(getContext());
 
+        // Create an executor that executes tasks in a background thread.
+        ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
+
+        // Execute a task in the background thread.
+        backgroundExecutor.execute(() -> {
+            // Your code logic goes here.
+
+                // Update UI on the main thread
+                mainExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        // You code logic goes here.
+                        biometricPrompt.authenticate(promptInfo);
+                    }
+                });
+        });
 
         //Find components
         tabLayout = view.findViewById(R.id.tabLayout_game);
