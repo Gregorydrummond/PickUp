@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -72,6 +73,7 @@ public class HomeFragment extends Fragment {
     ParseUser user;
     TextView tvNoGames;
     Set<String> gameFilterSet = new HashSet<>();
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -122,29 +124,15 @@ public class HomeFragment extends Fragment {
 
         //Find components
         toolbar = view.findViewById(R.id.toolbar_home);
-//        rvHome = view.findViewById(R.id.rvHome);
         animatedRecyclerView = view.findViewById(R.id.rvHome);
         tvNoGames = view.findViewById(R.id.tvNoGames);
+        swipeRefreshLayout = view.findViewById(R.id.swipeContainerHome);
 
-        //button = view.findViewById(R.id.button);
-
-
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Create new fragment and transaction
-//                Fragment gameDetailsFragment = new GameDetailsFragment();
-//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//
-//                // Replace whatever is in the fragment_container view with this fragment,
-//                // and add the transaction to the back stack
-//                transaction.replace(R.id.flContainerMain, gameDetailsFragment);
-//                transaction.addToBackStack(null);
-//
-//                // Commit the transaction
-//                transaction.commit();
-//            }
-//        });
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.i(TAG, "onRefresh: Refreshing home feed");
+            fetchHomeFeed();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         //Live queries
         if (PickUpApplication.parseLiveQueryClient != null) {
@@ -222,10 +210,6 @@ public class HomeFragment extends Fragment {
 
         //Set layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        rvHome.setLayoutManager(linearLayoutManager);
-//
-//        //Set adapter
-//        rvHome.setAdapter(adapter);
 
         animatedRecyclerView.setLayoutManager(linearLayoutManager);
         animatedRecyclerView.setAdapter(adapter);
@@ -234,69 +218,78 @@ public class HomeFragment extends Fragment {
         queryGames();
     }
 
+    private void fetchHomeFeed() {
+        adapter.clear();
+        queryGames();;
+    }
+
     private void queryGames() {
-        //Which class we are querying
-        ParseQuery<Game> query = ParseQuery.getQuery(Game.class);
+        Thread thread = new Thread(() -> {
+            Log.i(TAG, "queryGames: Querying games in new thread");
+            //Which class we are querying
+            ParseQuery<Game> query = ParseQuery.getQuery(Game.class);
 
-        //Include creator info
-        query.include(Game.KEY_CREATOR);
-        query.include(Game.KEY_TEAM_A);
-        query.include(Game.KEY_TEAM_B);
-        query.whereEqualTo("gameEnded", false);
+            //Include creator info
+            query.include(Game.KEY_CREATOR);
+            query.include(Game.KEY_TEAM_A);
+            query.include(Game.KEY_TEAM_B);
+            query.whereEqualTo("gameEnded", false);
 
-        //Order from closest to farthest
-        query.whereNear("location", user.getParseGeoPoint("playerLocation"));
+            //Order from closest to farthest
+            query.whereNear("location", user.getParseGeoPoint("playerLocation"));
 
-        //Query base on user's settings
-        query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
-        if(gameFilterSet.isEmpty()) {
-            String gameType = user.getString("gameFilter");
-            assert gameType != null;
-            if (!gameType.equals("All")) {
-                query.whereEqualTo("gameType", user.getString("gameFilter"));
-            }
-        }
-        else {
-            if (!gameFilterSet.contains("All")) {
-                if(gameFilterSet.contains("Teams")) {
-                    query.whereEqualTo("gameType", "Teams");
-                }
-                if(gameFilterSet.contains("King of the Court")) {
-                    query.whereEqualTo("gameType", "King of the Court");
-                }
-                if(gameFilterSet.contains("3-Point Shootout")) {
-                    query.whereEqualTo("gameType", "3-Point Shootout");
-                }
-                if(gameFilterSet.contains("21")) {
-                    query.whereEqualTo("gameType", "21");
-                }
-            }
-        }
-
-        //Get game objects
-        query.findInBackground((games, e) -> {
-            if(e == null) {
-                Log.i(TAG, "done: Retrieved games");
-                //Save list of games
-                gamesFeed.clear();
-                gamesFeed.addAll(games);
-
-                //Notify adapter of change
-                adapter.notifyDataSetChanged();
-                animatedRecyclerView.scheduleLayoutAnimation();
-
-                //Indicate if there are no games
-                if(games.isEmpty()) {
-                    tvNoGames.setVisibility(View.VISIBLE);
-                }
-                else {
-                    tvNoGames.setVisibility(View.GONE);
+            //Query base on user's settings
+            query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
+            if(gameFilterSet.isEmpty()) {
+                String gameType = user.getString("gameFilter");
+                assert gameType != null;
+                if (!gameType.equals("All")) {
+                    query.whereEqualTo("gameType", user.getString("gameFilter"));
                 }
             }
             else {
-                Log.e(TAG, "done: Error retrieving games", e);
+                if (!gameFilterSet.contains("All")) {
+                    if(gameFilterSet.contains("Teams")) {
+                        query.whereEqualTo("gameType", "Teams");
+                    }
+                    if(gameFilterSet.contains("King of the Court")) {
+                        query.whereEqualTo("gameType", "King of the Court");
+                    }
+                    if(gameFilterSet.contains("3-Point Shootout")) {
+                        query.whereEqualTo("gameType", "3-Point Shootout");
+                    }
+                    if(gameFilterSet.contains("21")) {
+                        query.whereEqualTo("gameType", "21");
+                    }
+                }
             }
+
+            //Get game objects
+            query.findInBackground((games, e) -> {
+                if(e == null) {
+                    Log.i(TAG, "done: Retrieved games");
+                    //Save list of games
+                    gamesFeed.clear();
+                    gamesFeed.addAll(games);
+
+                    //Notify adapter of change
+                    adapter.notifyDataSetChanged();
+                    animatedRecyclerView.scheduleLayoutAnimation();
+
+                    //Indicate if there are no games
+                    if(games.isEmpty()) {
+                        tvNoGames.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tvNoGames.setVisibility(View.GONE);
+                    }
+                }
+                else {
+                    Log.e(TAG, "done: Error retrieving games", e);
+                }
+            });
         });
+        thread.start();
     }
 
     //Inflate menu icons

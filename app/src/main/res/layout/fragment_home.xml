@@ -39,19 +39,28 @@
 
 <!--    </androidx.recyclerview.widget.RecyclerView>-->
 
-    <com.mlsdev.animatedrv.AnimatedRecyclerView
-        android:id="@+id/rvHome"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainerHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_home"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        app:animationDuration="600"
-        app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
-        app:layoutManagerOrientation="vertical"
-        app:layoutManagerReverse="false"
-        app:layoutManagerType="linear"/>
+        android:layout_marginTop="0dp">
+
+        <com.mlsdev.animatedrv.AnimatedRecyclerView
+            android:id="@+id/rvHome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_home"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            app:animationDuration="600"
+            app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+            app:layoutManagerOrientation="vertical"
+            app:layoutManagerReverse="false"
+            app:layoutManagerType="linear" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/tvNoGames"
