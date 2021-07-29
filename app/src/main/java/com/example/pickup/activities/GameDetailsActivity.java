@@ -245,9 +245,10 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     public static void joinGame(Game _game, boolean onGameDetail) {
         user = ParseUser.getCurrentUser();
-        Team teamA;
+        Team teamA = (Team) _game.getTeamA();
+        Log.d(TAG, "joinGame: teamA: " + teamA);
         try {
-            teamA = (Team) _game.getTeamA().fetchIfNeeded();
+            teamA.fetchIfNeeded();
         } catch (ParseException e) {
             Log.e(TAG, "onClick: Error fetching teamA", e);
             return;
@@ -264,13 +265,13 @@ public class GameDetailsActivity extends AppCompatActivity {
             //If team B has less players in it than team A, add player to team B
             if (teamB.getSize() < teamA.getSize()) {
                 try {
-                    teamB.setPlayers(user);
+                    teamB.setPlayers(user, true);
                     teamB.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
                                 Log.i(TAG, "done: Added player to team B");
-                                _game.setPlayerCount();
+                                _game.setPlayerCount(true);
                                 _game.saveInBackground();
                                 if(onGameDetail) {
                                     btnJoin.setEnabled(false);
@@ -290,13 +291,13 @@ public class GameDetailsActivity extends AppCompatActivity {
             }
             else {
                 try {
-                    teamA.setPlayers(user);
+                    teamA.setPlayers(user, true);
                     teamA.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
                                 Log.i(TAG, "done: Added player to team A");
-                                _game.setPlayerCount();
+                                _game.setPlayerCount(true);
                                 _game.saveInBackground();
                                 if(onGameDetail) {
                                     btnJoin.setEnabled(false);
@@ -317,11 +318,11 @@ public class GameDetailsActivity extends AppCompatActivity {
         }
         else {
             try {
-                teamA.setPlayers(user);
+                teamA.setPlayers(user, true);
                 teamA.saveInBackground(e -> {
                     if (e == null) {
                         Log.i(TAG, "done: Added player to single team A");
-                        _game.setPlayerCount();
+                        _game.setPlayerCount(true);
                         _game.saveInBackground();
                         if (onGameDetail) {
                             btnJoin.setEnabled(false);
@@ -358,7 +359,9 @@ public class GameDetailsActivity extends AppCompatActivity {
         //Save user in backend
         user.saveInBackground();
 
-        Toast.makeText(btnJoin.getContext(), "Joined game", Toast.LENGTH_SHORT).show();
+        if (onGameDetail) {
+            Toast.makeText(btnJoin.getContext(), "Joined game", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public Game getGame() {

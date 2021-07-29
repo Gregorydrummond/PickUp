@@ -150,7 +150,9 @@ public class TeamsFragment extends Fragment {
         adapterA.clear();
 
         //Find teams that belong to the game;
-        Team teamA = game.getTeamA().fetchIfNeeded();
+        Team teamA = (Team) game.getTeamA();
+        Log.d(TAG, "setTeams: " + teamA);
+        teamA.fetchIfNeeded();
         //Get array
         JSONArray jsonPlayerArrayA = teamA.getJSONArray("players");
         //Add each player object
@@ -162,7 +164,8 @@ public class TeamsFragment extends Fragment {
         if(game.getHasTeams()) {
             teamListB.clear();
             adapterB.clear();
-            Team teamB = game.getTeamB().fetchIfNeeded();
+            Team teamB = (Team) game.getTeamB();
+            teamB.fetchIfNeeded();
             JSONArray jsonPlayerArrayB = teamB.getJSONArray("players");
             for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
                 teamListB.add(jsonPlayerArrayB.getJSONObject(i));

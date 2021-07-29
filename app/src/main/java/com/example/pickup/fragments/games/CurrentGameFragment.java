@@ -18,11 +18,14 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.activities.EnterStatsActivity;
 import com.example.pickup.activities.GameDetailsActivity;
+import com.example.pickup.fragments.mainActivity.GameFragment;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.json.JSONException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +46,7 @@ public class CurrentGameFragment extends Fragment {
     TextView tvStatus;
     TextView tvNoCurrentGame;
     Button btnCurrentGame;
+    Button btnLeaveGame;
     ParseUser user;
     ParseUser creator;
     boolean userIsCreator;
@@ -115,26 +119,41 @@ public class CurrentGameFragment extends Fragment {
         tvWinBy2 = view.findViewById(R.id.tvWinBy2CG);
         tvStatus = view.findViewById(R.id.tvStartedCG);
         btnCurrentGame = view.findViewById(R.id.btnCG);
+        btnLeaveGame = view.findViewById(R.id.btnLeaveGame);
         tvNoCurrentGame = view.findViewById(R.id.tvNoCurrentGame);
 
         game = (Game) user.getParseObject("currentGame");
+       // game = GameFragment.currentGame;
+        Log.d(TAG, "onViewCreated: " + game);
 
-        if(game == null) {
-            Log.d(TAG, "onViewCreated: No current game");
-            btnCurrentGame.setVisibility(View.GONE);
-            tvNoCurrentGame.setVisibility(View.VISIBLE);
-            return;
-        }
-        else {
-            btnCurrentGame.setVisibility(View.VISIBLE);
-            tvNoCurrentGame.setVisibility(View.GONE);
-        }
+//        if(game == null) {
+//            Log.d(TAG, "onViewCreated: No current game");
+//            btnCurrentGame.setVisibility(View.GONE);
+//            tvNoCurrentGame.setVisibility(View.VISIBLE);
+//            return;
+//        }
+//        else {
+//            btnCurrentGame.setVisibility(View.VISIBLE);
+//            tvNoCurrentGame.setVisibility(View.GONE);
+//        }
 
         try {
-            game.fetchIfNeeded();
-            getGameData();
+            if(game != null) {
+                game.fetchIfNeeded();
+                getGameData();
+                btnCurrentGame.setVisibility(View.VISIBLE);
+                btnLeaveGame.setVisibility(View.VISIBLE);
+                tvNoCurrentGame.setVisibility(View.GONE);
+            }
+            else {
+                btnCurrentGame.setVisibility(View.GONE);
+                btnLeaveGame.setVisibility(View.GONE);
+                tvNoCurrentGame.setVisibility(View.VISIBLE);
+            }
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error getting game data", e);
+            btnCurrentGame.setVisibility(View.GONE);
+            tvNoCurrentGame.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -174,6 +193,25 @@ public class CurrentGameFragment extends Fragment {
                 }
                 game.saveInBackground();
             }
+        });
+
+        btnLeaveGame.setOnClickListener(v -> {
+            Log.i(TAG, "onClick: Leaving game");
+            user.remove("currentGame");
+            Team team = (Team) user.getParseObject("currentTeam");
+            try {
+                //Remove player from team
+                team.fetchIfNeeded();
+                team.setPlayers(user, false);
+                team.saveInBackground();
+            } catch (ParseException | JSONException parseException) {
+                Log.e(TAG, "onClick: Error fetching team on leave game action", parseException);
+                return;
+            }
+            user.remove("currentTeam");
+            game.setPlayerCount(false);
+            game.saveInBackground();
+            user.saveInBackground();
         });
     }
 

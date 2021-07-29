@@ -40,8 +40,13 @@ public class Team extends ParseObject {
     }
 
     //Set size of team
-    public void setSize() {
-        put(KEY_SIZE, getSize() + 1);
+    public void setSize(boolean addPlayer) {
+        if(addPlayer) {
+            put(KEY_SIZE, getSize() + 1);
+        }
+        else {
+            put(KEY_SIZE, getSize() - 1);
+        }
     }
 
     //Get name of team
@@ -70,22 +75,36 @@ public class Team extends ParseObject {
     }
 
     //Set array of players
-    public void setPlayers(ParseUser parseUser) throws JSONException {
+    public void setPlayers(ParseUser parseUser, boolean addPlayer) throws JSONException {
         //Get original array
         JSONArray jsonPlayerArray = getJSONArray(KEY_PLAYERS);
 
-        //Create new player object to add to array
-        JSONObject jsonPlayerObject = new JSONObject();
-        jsonPlayerObject.put("userID", parseUser.getObjectId());
-        jsonPlayerObject.put("name", parseUser.getUsername());
+        if(addPlayer) {
+            //Create new player object to add to array
+            JSONObject jsonPlayerObject = new JSONObject();
+            jsonPlayerObject.put("userID", parseUser.getObjectId());
+            jsonPlayerObject.put("name", parseUser.getUsername());
 
-        //Put object in array
-        jsonPlayerArray.put(jsonPlayerObject);
+            //Put object in array
+            jsonPlayerArray.put(jsonPlayerObject);
 
-        //Save to backend
-        put(KEY_PLAYERS, jsonPlayerArray);
+            //Save to backend
+            put(KEY_PLAYERS, jsonPlayerArray);
 
-        //Update size
-        setSize();
+            //Update size
+            setSize(true);
+        }
+        else {
+            for(int i = 0; i < jsonPlayerArray.length(); i++) {
+                JSONObject jsonObject = jsonPlayerArray.getJSONObject(i);
+                String userID = jsonObject.getString("userID");
+                if(userID.equals(ParseUser.getCurrentUser().getObjectId())) {
+                    jsonPlayerArray.remove(i);
+                    break;
+                }
+            }
+            put(KEY_PLAYERS, jsonPlayerArray);
+            setSize(false);
+        }
     }
 }

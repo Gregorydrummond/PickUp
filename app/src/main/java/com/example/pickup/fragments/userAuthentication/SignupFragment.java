@@ -132,6 +132,7 @@ public class SignupFragment extends Fragment {
                 }
                 else {
                     Log.i(TAG, "done: User signed up!");
+                    Toast.makeText(getContext(), "Sign up successful", Toast.LENGTH_SHORT).show();
                     loginUser(username, password);
                 }
             }

@@ -25,8 +25,10 @@ import android.widget.Toast;
 import com.example.pickup.R;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,126 +108,24 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 //Empty input handler
-                if(etLocationName.getText().toString().isEmpty()) {
+                if (etLocationName.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "Please enter a location name", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(etLocation.getText().toString().isEmpty()) {
+                if (etLocation.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(etPlayerLimit.getText().toString().isEmpty()) {
+                if (etPlayerLimit.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "Please enter a player limit", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(etScoreLimit.getText().toString().isEmpty()) {
+                if (etScoreLimit.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "Please enter a score limit", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                //Create game object and save it to the backend
-                game = new Game();
-                ParseGeoPoint location = new ParseGeoPoint(latitude, longitude);
-
-                //Set data
-                game.setCreator(ParseUser.getCurrentUser());
-                game.setLocation(location);
-                game.setLocationName(etLocationName.getText().toString());
-                game.setGameType(spinnerGameType.getSelectedItem().toString());
-                game.setPlayerLimit(Integer.parseInt(etPlayerLimit.getText().toString()));
-                game.setScoreLimit(Integer.parseInt(etScoreLimit.getText().toString()));
-                if(cbWinBy2.isChecked()) {
-                    game.setWinByTwo(true);
-                }
-                else {
-                    game.setWinByTwo(false);
-                }
-                //If game requires teams, create and associate two team objects
-                if(spinnerGameType.getSelectedItem().toString().equals("Teams")) {
-                    game.setHasTeams(true);
-                }
-                else {
-                    game.setHasTeams(false);
-                }
-                game.setGameStarted(false);
-                game.setGameEnded(false);
-                game.setPlayerCount();
-
-                //Save game in background
-                game.saveInBackground(e -> {
-                    if(e == null) {
-                        //Successful game creation
-                        Log.i(TAG, "done: Game created");
-                        Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
-                        gameCreated = true;
-                        try {
-                            setUsersGameProperties();
-                        } catch (JSONException jsonException) {
-                            Log.e(TAG, "onClick: Error setting game properties", jsonException);
-                        }
-                        setTeams(teamACreated, teamBCreated);
-                        try {
-                            setTeam(teamCCreated);
-                        } catch (JSONException jsonException) {
-                            Log.e(TAG, "onClick: Error setting single team", e);
-                        }
-
-                    }
-                    else {
-                        Log.e(TAG, "done: Error saving game", e);
-                        Toast.makeText(Creation.this, "Game not created :(", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                //Create teams if necessary
-                if(game.getHasTeams()) {
-                    Log.i(TAG, "done: Generating teams");
-                    teamA = new Team();
-                    teamA.saveInBackground(e -> {
-                        if(e == null) {
-                            Log.i(TAG, "done: Team A created");
-                            teamACreated = true;
-                            setTeams(gameCreated, teamBCreated);
-                        }
-                        else {
-                            Log.e(TAG, "done: Error creating Team A", e);
-                        }
-                    });
-                    teamB = new Team();
-                    teamB.saveInBackground(e -> {
-                        if(e == null) {
-                            Log.i(TAG, "done: Team B created");
-                            teamBCreated = true;
-                            setTeams(teamACreated, gameCreated);
-                        }
-                        else {
-                            Log.e(TAG, "done: Error creating Team B", e);
-                        }
-                    });
-                }
-                else {
-                    Log.i(TAG, "onClick: Generating single team object");
-                    teamC = new Team();
-                    teamC.saveInBackground(e -> {
-                        if(e == null) {
-                            Log.i(TAG, "done: Team C created");
-                            teamCCreated = true;
-                            try {
-                                setTeam(gameCreated);
-                            } catch (JSONException jsonException) {
-                                Log.e(TAG, "onClick: Error setting single team", jsonException);
-                            }
-                        }
-                        else {
-                            Log.e(TAG, "done: Error creating Team A", e);
-                        }
-                    });
-                }
-
-                Log.i(TAG, "onClick: Closing creation screen");
-                finish();
-                overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
+                createGame();
             }
         });
 
@@ -304,6 +204,117 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         }
     }
 
+    private void createGame() {
+        //Create game object and save it to the backend
+        game = new Game();
+        ParseGeoPoint location = new ParseGeoPoint(latitude, longitude);
+
+        //Set data
+        game.setCreator(ParseUser.getCurrentUser());
+        game.setLocation(location);
+        game.setLocationName(etLocationName.getText().toString());
+        game.setGameType(spinnerGameType.getSelectedItem().toString());
+        game.setPlayerLimit(Integer.parseInt(etPlayerLimit.getText().toString()));
+        game.setScoreLimit(Integer.parseInt(etScoreLimit.getText().toString()));
+        if(cbWinBy2.isChecked()) {
+            game.setWinByTwo(true);
+        }
+        else {
+            game.setWinByTwo(false);
+        }
+        //If game requires teams, create and associate two team objects
+        if(spinnerGameType.getSelectedItem().toString().equals("Teams")) {
+            game.setHasTeams(true);
+        }
+        else {
+            game.setHasTeams(false);
+        }
+        game.setGameStarted(false);
+        game.setGameEnded(false);
+        game.setPlayerCount(true);
+
+        //Save game in background
+        game.saveInBackground(e -> {
+            if(e == null) {
+                //Successful game creation
+                Log.i(TAG, "done: Game created");
+                //Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
+                gameCreated = true;
+                try {
+                    setUsersGameProperties();
+                } catch (JSONException jsonException) {
+                    Log.e(TAG, "onClick: Error setting game properties", jsonException);
+                }
+                if(teamACreated && teamBCreated) {
+                    setTeams();
+                }
+                try {
+                    if(teamCCreated) {
+                        setTeam();
+                    }
+                } catch (JSONException jsonException) {
+                    Log.e(TAG, "onClick: Error setting single team", e);
+                }
+            }
+            else {
+                Log.e(TAG, "done: Error saving game", e);
+                Toast.makeText(Creation.this, "Game not created :(", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //Create teams if necessary
+        if(game.getHasTeams()) {
+            Log.i(TAG, "done: Generating teams");
+            teamA = new Team();
+            teamA.saveInBackground(e -> {
+                if(e == null) {
+                    Log.i(TAG, "done: Team A created");
+                    teamACreated = true;
+                    if(gameCreated && teamBCreated) {
+                        setTeams();
+                    }
+                }
+                else {
+                    Log.e(TAG, "done: Error creating Team A", e);
+                }
+            });
+            teamB = new Team();
+            teamB.saveInBackground(e -> {
+                if(e == null) {
+                    Log.i(TAG, "done: Team B created");
+                    teamBCreated = true;
+                    if(gameCreated && teamACreated) {
+                        setTeams();
+                    }
+                }
+                else {
+                    Log.e(TAG, "done: Error creating Team B", e);
+                }
+            });
+        }
+        else {
+            Log.i(TAG, "onClick: Generating single team object");
+            teamC = new Team();
+            teamC.saveInBackground(e -> {
+                if(e == null) {
+                    Log.i(TAG, "done: Team C created");
+                    teamCCreated = true;
+                    try {
+                        if(gameCreated) {
+                            setTeam();
+                        }
+                    } catch (JSONException jsonException) {
+                        Log.e(TAG, "onClick: Error setting single team", jsonException);
+                    }
+                }
+                else {
+                    Log.e(TAG, "done: Error creating Team A", e);
+                }
+            });
+        }
+    }
+
     private void getAddressFromLatLong(Double latitude, Double longitude) throws IOException, JSONException {
         String url = reverseGeocodeUrl + latitude + "%2C" + longitude + "&language=en";
         OkHttpClient client = new OkHttpClient();
@@ -335,8 +346,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     private void setUsersGameProperties() throws JSONException {
-        //Get current user
-        ParseUser user = ParseUser.getCurrentUser();
         //Set this game as current game
         user.put("currentGame", game);
         //Get gameList array
@@ -350,47 +359,99 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         user.put("gameList", jsonGamesArray);
         //Save user in backend
         user.saveInBackground();
+        Log.i(TAG, "setUsersGameProperties: Updated current game and game list");
     }
 
-    private void setTeam(boolean object1) throws JSONException {
-        ParseUser user = ParseUser.getCurrentUser();
-        if(object1) {
-            Log.i(TAG, "setTeam: Setting single team");
-            game.setTeamA(teamC);
-            game.saveInBackground();
-            teamC.setGame(game);
-            //Save current player
-            teamC.setPlayers(ParseUser.getCurrentUser());
-            teamC.saveInBackground();
+    private void setTeam() throws JSONException {
+        Log.i(TAG, "setTeam: Setting single team");
 
-            user.put("currentTeam", teamC);
-            user.saveInBackground();
-        }
-    }
-
-    private void setTeams(boolean object1, boolean object2) {
-        ParseUser user = ParseUser.getCurrentUser();
-        if(object1 && object2) {
-            Log.i(TAG, "setTeams: Setting teams");
-            game.setTeamA(teamA);
-            game.setTeamB(teamB);
-            game.saveInBackground();
-            teamA.setGame(game);
-
-            teamB.setGame(game);
-            teamB.saveInBackground();
-
-            //save current user to team A
-            try {
-                teamA.setPlayers(ParseUser.getCurrentUser());
-            } catch (JSONException e) {
-                Log.e(TAG, "onClick: Error saving player to team", e);
+        game.setTeamA(teamC);
+        game.saveInBackground(e -> {
+            if(e == null) {
+                Log.i(TAG, "done: Saved teamC");
             }
-            teamA.saveInBackground();
+            else {
+                Log.e(TAG, "done: Error saving teamC to game", e);
+            }
+        });
+        teamC.setGame(game);
+        //Save current player
+        teamC.setPlayers(user, true);
+        teamC.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    Log.i(TAG, "done: Set game and player for teamC");
+                }
+                else {
+                    Log.e(TAG, "done: Error setting game and player for teamC", e);
+                }
+            }
+        });
 
+        user.put("currentTeam", teamC);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    Log.i(TAG, "done: Saved user");
+                }
+                else {
+                    Log.e(TAG, "done: Error saving current teamC for user.", e);
+                }
+            }
+        });
+
+        Log.i(TAG, "onClick: Closing creation screen");
+        finish();
+        overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
+    }
+
+    private void setTeams() {
+        Log.i(TAG, "setTeams: Setting teams");
+
+        game.setTeamA(teamA);
+        game.setTeamB(teamB);
+        game.saveInBackground(e -> {
+            if(e == null) {
+                Log.i(TAG, "done: Saved teamA & teamB");
+            }
+            else {
+                Log.e(TAG, "done: Error saving teams to game", e);
+            }
+        });
+
+        teamB.setGame(game);
+        teamB.saveInBackground(e -> {
+            if(e == null) {
+                Log.i(TAG, "done: Set game for teamB");
+            }
+            else {
+                Log.e(TAG, "done: Error setting game for teamB", e);
+            }
+        });
+
+        //save current user to team A
+        try {
+            teamA.setGame(game);
+            teamA.setPlayers(user, true);
+            teamA.saveInBackground(e -> {
+                if(e == null) {
+                    Log.i(TAG, "done: Set game and player for teamA");
+                }
+                else {
+                    Log.e(TAG, "done: Error setting game and player for teamA", e);
+                }
+            });
             user.put("currentTeam", teamA);
             user.saveInBackground();
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: Error saving player to team. Current team not set", e);
         }
+
+        Log.i(TAG, "onClick: Closing creation screen");
+        finish();
+        overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
     }
 
     @Override
@@ -411,6 +472,12 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 }
