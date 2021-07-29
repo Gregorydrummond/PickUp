@@ -126,17 +126,6 @@ public class CurrentGameFragment extends Fragment {
        // game = GameFragment.currentGame;
         Log.d(TAG, "onViewCreated: " + game);
 
-//        if(game == null) {
-//            Log.d(TAG, "onViewCreated: No current game");
-//            btnCurrentGame.setVisibility(View.GONE);
-//            tvNoCurrentGame.setVisibility(View.VISIBLE);
-//            return;
-//        }
-//        else {
-//            btnCurrentGame.setVisibility(View.VISIBLE);
-//            tvNoCurrentGame.setVisibility(View.GONE);
-//        }
-
         try {
             if(game != null) {
                 game.fetchIfNeeded();
@@ -153,6 +142,7 @@ public class CurrentGameFragment extends Fragment {
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error getting game data", e);
             btnCurrentGame.setVisibility(View.GONE);
+            btnLeaveGame.setVisibility(View.GONE);
             tvNoCurrentGame.setVisibility(View.VISIBLE);
             return;
         }
