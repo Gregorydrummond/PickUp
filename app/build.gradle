@@ -68,4 +68,7 @@ dependencies {
 
     //Biometrics
     implementation "androidx.biometric:biometric:1.1.0"
+
+    //AVLoadingIndicatorView
+    implementation 'com.wang.avi:library:2.1.3'
 }

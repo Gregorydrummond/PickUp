@@ -48,6 +48,7 @@ import com.parse.livequery.SubscriptionHandling;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.parceler.Parcels;
 
@@ -74,6 +75,8 @@ public class HomeFragment extends Fragment {
     TextView tvNoGames;
     Set<String> gameFilterSet = new HashSet<>();
     SwipeRefreshLayout swipeRefreshLayout;
+    AVLoadingIndicatorView loadingIndicator;
+    boolean queryFinished = false;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -127,6 +130,24 @@ public class HomeFragment extends Fragment {
         animatedRecyclerView = view.findViewById(R.id.rvHome);
         tvNoGames = view.findViewById(R.id.tvNoGames);
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerHome);
+        loadingIndicator = view.findViewById(R.id.loadingIndicatorHome);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    try {
+                        wait(1000);
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "run: Error with wait runnable", e);
+                    }
+                }
+                if(!queryFinished) {
+                    startLoadingAnimation();
+                }
+            }
+        });
+        thread.start();
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Log.i(TAG, "onRefresh: Refreshing home feed");
@@ -219,8 +240,27 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchHomeFeed() {
+        queryFinished = false;
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    try {
+                        wait(500);
+                        if(queryFinished) {
+                            startLoadingAnimation();
+                        }
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "run: Error with wait runnable", e);
+                    }
+                }
+            }
+        });
+        thread.start();
+
         adapter.clear();
-        queryGames();;
+        queryGames();
     }
 
     private void queryGames() {
@@ -267,7 +307,13 @@ public class HomeFragment extends Fragment {
             //Get game objects
             query.findInBackground((games, e) -> {
                 if(e == null) {
+                    //Set query finished to true
+                    queryFinished = true;
                     Log.i(TAG, "done: Retrieved games");
+
+                    //Stop loading animation
+                    stopLoadingAnimation();
+
                     //Save list of games
                     gamesFeed.clear();
                     gamesFeed.addAll(games);
@@ -354,5 +400,15 @@ public class HomeFragment extends Fragment {
             NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    void startLoadingAnimation(){
+        loadingIndicator.show();
+        // or avi.smoothToShow();
+    }
+
+    void stopLoadingAnimation(){
+        loadingIndicator.hide();
+        // or avi.smoothToHide();
     }
 }

@@ -28,16 +28,6 @@
         android:textSize="48sp"
         android:textStyle="bold" />
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rvHome"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_below="@+id/toolbar_home"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentBottom="true" >-->
-
-<!--    </androidx.recyclerview.widget.RecyclerView>-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainerHome"
@@ -72,14 +62,15 @@
         android:textSize="34sp"
         android:visibility="gone" />
 
-    <!--    <Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:layout_marginStart="50dp"-->
-<!--        android:text="Button" />-->
-
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loadingIndicatorHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/AVLoadingIndicatorView"
+        android:visibility="visible"
+        app:indicatorName="BallPulseIndicator"
+        app:indicatorColor="@color/quantum_orange"
+    />
 
 </RelativeLayout>

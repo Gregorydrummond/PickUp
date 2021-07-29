@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,8 @@ public class ProfileGamesFragment extends Fragment {
     List<GameStat> gameStatList;
     ParseUser user;
     TextView tvNoGames;
+    AVLoadingIndicatorView loadingIndicator;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -98,27 +102,38 @@ public class ProfileGamesFragment extends Fragment {
         user = ParseUser.getCurrentUser();
 
         //Find components
-        //rvProfileGame = view.findViewById(R.id.rvProfileGames);
         animatedRecyclerView = view.findViewById(R.id.rvProfileGames);
         tvNoGames = view.findViewById(R.id.tvNoGamesPG);
+        loadingIndicator = view.findViewById(R.id.loadingIndicatorProfileGames);
+        swipeRefreshLayout = view.findViewById(R.id.swipeContainerProfileGames);
+
+        startLoadingAnimation();
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.i(TAG, "onRefresh: Refreshing home feed");
+            fetchProfileGameFeed();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         //Initialize list
         gameStatList = new ArrayList<>();
 
         //Layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        rvProfileGame.setLayoutManager(linearLayoutManager);
 
         //Adapter
         adapter = new ProfileGamesFragmentAdapter(gameStatList, getContext());
 
         //Set adapter
-//        rvProfileGame.setAdapter(adapter);
-
         animatedRecyclerView.setLayoutManager(linearLayoutManager);
         animatedRecyclerView.setAdapter(adapter);
 
         //Query game stats
+        queryGameStats();
+    }
+
+    private void fetchProfileGameFeed() {
+        adapter.clear();
         queryGameStats();
     }
 
@@ -139,6 +154,7 @@ public class ProfileGamesFragment extends Fragment {
         query.findInBackground((FindCallback<GameStat>) (gamesStats, e) -> {
             if(e == null) {
                 Log.i(TAG, "done: Retrieved games stats");
+                stopLoadingAnimation();
                 //Save list of games stats
                 gameStatList.addAll(gamesStats);
 
@@ -158,5 +174,15 @@ public class ProfileGamesFragment extends Fragment {
                 Log.e(TAG, "done: Error retrieving games stats", e);
             }
         });
+    }
+
+    void startLoadingAnimation(){
+        loadingIndicator.show();
+        // or avi.smoothToShow();
+    }
+
+    void stopLoadingAnimation(){
+        loadingIndicator.hide();
+        // or avi.smoothToHide();
     }
 }

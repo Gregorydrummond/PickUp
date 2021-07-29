@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class RecentGamesFragment extends Fragment {
     List<GameStat> gameStatList;
     ParseUser user;
     TextView tvNoRecents;
+    AVLoadingIndicatorView loadingIndicator;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,9 +98,18 @@ public class RecentGamesFragment extends Fragment {
         user = ParseUser.getCurrentUser();
 
         //Find components
-        //rvRecentGames = view.findViewById(R.id.rvRecentGames);
         animatedRecyclerView = view.findViewById(R.id.rvRecentGames);
         tvNoRecents = view.findViewById(R.id.tvNoRecentGames);
+        loadingIndicator = view.findViewById(R.id.loadingIndicatorRecentGames);
+        swipeRefreshLayout = view.findViewById(R.id.swipeContainerRecentGames);
+
+        startLoadingAnimation();
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.i(TAG, "onRefresh: Refreshing recent games feed");
+            fetchRecentGames();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         //Initialize
         gameStatList = new ArrayList<>();
@@ -104,15 +117,31 @@ public class RecentGamesFragment extends Fragment {
 
         //Layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        rvRecentGames.setLayoutManager(linearLayoutManager);
-
-        //Set adapter
-//        rvRecentGames.setAdapter(adapter);
 
         animatedRecyclerView.setLayoutManager(linearLayoutManager);
         animatedRecyclerView.setAdapter(adapter);
 
         //Query game stats
+        queryGameStats();
+    }
+
+    private void fetchRecentGames() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    try {
+                        wait(500);
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "run: Error with wait runnable", e);
+                    }
+                }
+                startLoadingAnimation();
+            }
+        });
+        thread.start();
+
+        adapter.clear();
         queryGameStats();
     }
 
@@ -136,6 +165,7 @@ public class RecentGamesFragment extends Fragment {
         query.findInBackground((FindCallback<GameStat>) (gamesStats, e) -> {
             if(e == null) {
                 Log.i(TAG, "done: Retrieved games stats");
+                stopLoadingAnimation();
                 //Save list of games stats
                 gameStatList.addAll(gamesStats);
 
@@ -155,5 +185,15 @@ public class RecentGamesFragment extends Fragment {
                 Log.e(TAG, "done: Error retrieving games stats", e);
             }
         });
+    }
+
+    void startLoadingAnimation(){
+        loadingIndicator.show();
+        // or avi.smoothToShow();
+    }
+
+    void stopLoadingAnimation(){
+        loadingIndicator.hide();
+        // or avi.smoothToHide();
     }
 }

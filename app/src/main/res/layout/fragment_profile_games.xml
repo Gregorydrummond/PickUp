@@ -6,26 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.profile.ProfileGamesFragment">
 
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rvProfileGames"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" >-->
-
-<!--    </androidx.recyclerview.widget.RecyclerView>-->
-
-    <com.mlsdev.animatedrv.AnimatedRecyclerView
-        android:id="@+id/rvProfileGames"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainerProfileGames"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        app:animationDuration="600"
-        app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
-        app:layoutManagerOrientation="vertical"
-        app:layoutManagerReverse="false"
-        app:layoutManagerType="linear"/>
+        android:layout_marginTop="0dp">
+
+        <com.mlsdev.animatedrv.AnimatedRecyclerView
+            android:id="@+id/rvProfileGames"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            app:animationDuration="600"
+            app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+            app:layoutManagerOrientation="vertical"
+            app:layoutManagerReverse="false"
+            app:layoutManagerType="linear"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/tvNoGamesPG"
@@ -36,4 +36,15 @@
         android:textColor="#A5A5A5"
         android:textSize="34sp"
         android:visibility="gone" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loadingIndicatorProfileGames"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/AVLoadingIndicatorView"
+        android:visibility="visible"
+        app:indicatorName="BallPulseIndicator"
+        app:indicatorColor="@color/quantum_orange"
+        />
 </RelativeLayout>

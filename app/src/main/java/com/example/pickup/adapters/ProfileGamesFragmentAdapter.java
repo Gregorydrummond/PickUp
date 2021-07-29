@@ -64,6 +64,18 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
         return gameStatList.size();
     }
 
+    //Clean all elements of the recycler
+    public void clear() {
+        gameStatList.clear();
+        notifyDataSetChanged();
+    }
+
+    //Add a list of items
+    public void addAll(List<GameStat> gamesList) {
+        gameStatList.addAll(gamesList);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivProfilePicture;
         TextView tvUsername;
