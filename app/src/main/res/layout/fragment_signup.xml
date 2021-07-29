@@ -36,10 +36,10 @@
         android:id="@+id/btnSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etPassword"
         android:layout_alignStart="@+id/etPassword"
         android:layout_alignEnd="@+id/etPassword"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
         android:backgroundTint="#E18804"
         android:fontFamily="@font/rock_salt"
         android:text="Sign Up" />
