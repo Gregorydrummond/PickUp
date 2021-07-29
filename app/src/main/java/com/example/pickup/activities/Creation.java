@@ -202,6 +202,9 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
             Log.i(TAG, "onCreate: user is already in a game");
             btnCreate.setEnabled(false);
         }
+        else {
+            btnCreate.setEnabled(true);
+        }
     }
 
     private void createGame() {
