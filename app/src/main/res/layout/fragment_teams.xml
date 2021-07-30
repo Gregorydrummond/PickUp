@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.gameDetails.TeamsFragment">
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.gameDetails.TeamsFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTeamB"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTeamA"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeamB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTeamB"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp" />
 
-    <TextView
-        android:id="@+id/tvTeamB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvTeamA"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="60dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/rock_salt"
-        android:text="Team B"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:autoSizeTextType="uniform" />
+        <TextView
+            android:id="@+id/tvTeamB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rvTeamA"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="161dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/rock_salt"
+            android:text="Team B"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            app:autoSizeTextType="uniform" />
 
-    <TextView
-        android:id="@+id/tvTeamA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="50dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/rock_salt"
-        android:text="Team A"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:autoSizeTextType="uniform" />
+        <TextView
+            android:id="@+id/tvTeamA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/rock_salt"
+            android:text="Team A"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            app:autoSizeTextType="uniform" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTeamA"
-        android:layout_width="202dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTeamA"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toStartOf="@+id/rvTeamB" />
-</RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeamA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTeamA"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp" />
+    </RelativeLayout>
+
+</ScrollView>
+

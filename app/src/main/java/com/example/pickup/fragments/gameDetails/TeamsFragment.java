@@ -132,7 +132,7 @@ public class TeamsFragment extends Fragment {
             rvTeamA.setLayoutManager(gridLayoutManager);
         }
         else {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             rvTeamA.setLayoutManager(linearLayoutManager);
         }
 
@@ -144,7 +144,7 @@ public class TeamsFragment extends Fragment {
             rvTeamB = view.findViewById(R.id.rvTeamB);
             teamListB = new ArrayList<>();
             adapterB = new TeamsFragmentAdapter(teamListB, getContext());
-            LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext());
+            LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             rvTeamB.setLayoutManager(linearLayoutManagerB);
             rvTeamB.setAdapter(adapterB);
         }
