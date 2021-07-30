@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/ivProfilePictureTeams"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
 
     <TextView
         android:id="@+id/tvPlayerNameTeams"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ivProfilePictureTeams"
+        android:layout_alignEnd="@+id/ivProfilePictureTeams"
+        android:layout_alignBottom="@+id/ivProfilePictureTeams"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="#FF9800"
         android:ellipsize="end"
         android:fontFamily="@font/rock_salt"
         android:gravity="center_horizontal"
         android:paddingStart="10dp"
         android:singleLine="true"
         android:textColor="#000000"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="40dp"
-        tools:layout_editor_absoluteY="49dp"
+        android:textSize="10sp"
         tools:text="Greg" />
 </RelativeLayout>

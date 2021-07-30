@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -91,6 +92,18 @@ public class TeamsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Get data from activity
+        GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
+        game = gameDetailsActivity.getGame();
+        try {
+            game.fetchIfNeeded();
+            if(!game.getHasTeams()) {
+                return inflater.inflate(R.layout.fragment_team_single_team, container, false);
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "onCreateView: ", e);
+        }
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_teams, container, false);
     }
@@ -99,15 +112,13 @@ public class TeamsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Find components
-        tvTeamA = view.findViewById(R.id.tvTeamA);
-        tvTeamB = view.findViewById(R.id.tvTeamB);
-        rvTeamA = view.findViewById(R.id.rvTeamA);
-        rvTeamB = view.findViewById(R.id.rvTeamB);
-
         //Get data from activity
         GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
         game = gameDetailsActivity.getGame();
+
+        //Find components
+        tvTeamA = view.findViewById(R.id.tvTeamA);
+        rvTeamA = view.findViewById(R.id.rvTeamA);
 
         //Initialize team array
         teamListA = new ArrayList<>();
@@ -116,23 +127,32 @@ public class TeamsFragment extends Fragment {
         adapterA = new TeamsFragmentAdapter(teamListA, getContext());
 
         //Set layout managers
-        LinearLayoutManager linearLayoutManagerA = new LinearLayoutManager(getContext());
-        rvTeamA.setLayoutManager(linearLayoutManagerA);
+        if(!game.getHasTeams()) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+            rvTeamA.setLayoutManager(gridLayoutManager);
+        }
+        else {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            rvTeamA.setLayoutManager(linearLayoutManager);
+        }
 
         //Set adapters
         rvTeamA.setAdapter(adapterA);
 
         if(game.getHasTeams()) {
+            tvTeamB = view.findViewById(R.id.tvTeamB);
+            rvTeamB = view.findViewById(R.id.rvTeamB);
             teamListB = new ArrayList<>();
             adapterB = new TeamsFragmentAdapter(teamListB, getContext());
             LinearLayoutManager linearLayoutManagerB = new LinearLayoutManager(getContext());
             rvTeamB.setLayoutManager(linearLayoutManagerB);
             rvTeamB.setAdapter(adapterB);
         }
-        else {
-            tvTeamB.setVisibility(View.GONE);
-            rvTeamB.setVisibility(View.GONE);
-        }
+//        else {
+//
+//            tvTeamB.setVisibility(View.GONE);
+//            rvTeamB.setVisibility(View.GONE);
+//        }
 
         //Query teams
         try {

@@ -153,12 +153,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 Activity activity = (Activity) context;
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                //View Transitions
-//                Pair<View, String> profilePic = Pair.create((View) ivProfilePicture,"profilePic");
-//                Pair<View, String> username = Pair.create((View) tvUserName,"username");
-//                Pair<View, String> location = Pair.create((View) tvLocationName,"location");
-//                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, profilePic, username, location);
-//                context.startActivity(intent, optionsCompat.toBundle());
             }
         }
 

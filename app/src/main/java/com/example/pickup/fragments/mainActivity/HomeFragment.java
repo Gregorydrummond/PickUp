@@ -248,7 +248,7 @@ public class HomeFragment extends Fragment {
                 synchronized (this) {
                     try {
                         wait(500);
-                        if(queryFinished) {
+                        if(!queryFinished) {
                             startLoadingAnimation();
                         }
                     } catch (InterruptedException e) {
