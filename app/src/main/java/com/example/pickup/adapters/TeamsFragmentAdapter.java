@@ -1,30 +1,31 @@
 package com.example.pickup.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pickup.R;
-import com.example.pickup.models.Game;
-import com.example.pickup.models.Team;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,7 +118,74 @@ public class TeamsFragmentAdapter extends RecyclerView.Adapter<TeamsFragmentAdap
 
         @Override
         public void onClick(View v) {
+            Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_team_member);
 
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(dialog.getWindow().getAttributes());
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.horizontalMargin = 10;
+            dialog.getWindow().setAttributes(layoutParams);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+            ImageView ivPic = dialog.findViewById(R.id.ivProfilePictureTeamDialog);
+            TextView tvName = dialog.findViewById(R.id.tvNameTeamDialog);
+            TextView tvWins = dialog.findViewById(R.id.tvWinsTeamDialog);
+            TextView tvWinPercentage = dialog.findViewById(R.id.tvWinPercentageTeamDialog);
+            TextView tvStreak = dialog.findViewById(R.id.tvStreakTeamDialog);
+
+
+            int position = getAdapterPosition();
+            JSONObject player = players.get(position);
+            List<ParseUser> teammate = new ArrayList<>();
+            String userID;
+
+            try {
+                userID = player.getString("userID");
+                ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+                query.whereEqualTo("objectId", userID);
+                query.findInBackground((teamMember, e) -> {
+                    teammate.addAll(teamMember);
+                    //Get data
+                    int gamesWon = teamMember.get(0).getInt("gamesWon");
+                    int gamesPlayed = teamMember.get(0).getInt("gamesPlayed");
+                    int streak = teamMember.get(0).getInt("currentStreak");
+                    float winPercentage = (gamesPlayed == 0) ? 0 : ((float) gamesWon / (float) gamesPlayed) * 100;
+                    String textGameWon;
+                    String textWinPercentage;
+                    String textStreak;
+
+                    //Set data
+                    tvName.setText(teamMember.get(0).getUsername());
+                    textGameWon = "Games Won: " + gamesWon;
+                    tvWins.setText(textGameWon);
+                    textWinPercentage = "Win Percentage: " + winPercentage + "%";
+                    tvWinPercentage.setText(textWinPercentage);
+                    if (streak < 0) {
+                        textStreak = Math.abs(streak) + " Game Losing Streak";
+                    } else if (streak > 0) {
+                        textStreak = streak + " Game Winning Streak";
+                    } else {
+                        textStreak = "No games played";
+                    }
+                    tvStreak.setText(textStreak);
+                    ParseFile profilePicture = teamMember.get(0).getParseFile("profilePicture");
+                    if (profilePicture != null) {
+                        Glide.with(context)
+                                .load(profilePicture.getUrl())
+                                .apply(RequestOptions.bitmapTransform(new RoundedCorners(25)))
+                                .into(ivPic);
+                    }
+                });
+                dialog.show();
+            } catch (JSONException e) {
+                Log.e(TAG, "onClick: Error getting userID", e);
+                Toast.makeText(context, "Couldn't get player", Toast.LENGTH_SHORT).show();
+                dialog.hide();
+            }
         }
     }
 }
