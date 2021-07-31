@@ -116,6 +116,8 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         //Set activity launchers
         setActivityLaunchers();
 
+        ivPhoto.setVisibility(View.GONE);
+
         //Toolbar
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -256,13 +258,14 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
                         Intent data = result.getData();
-                        //doSomeOperations();
+                        //Get and set image
                         Uri selectedImage = data.getData();
                         bitmap = null;
                         if(Build.VERSION.SDK_INT < 28) {
                             Log.i(TAG, "onActivityResult: build version < 28");
                             try {
                                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                                ivPhoto.setVisibility(View.VISIBLE);
                                 Glide.with(Creation.this)
                                         .load(selectedImage)
                                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
@@ -278,6 +281,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                             ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), selectedImage);
                             try {
                                 bitmap = ImageDecoder.decodeBitmap((ImageDecoder.Source) source);
+                                ivPhoto.setVisibility(View.VISIBLE);
                                 Glide.with(Creation.this)
                                         .load(selectedImage)
                                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
@@ -301,6 +305,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                         // There are no request codes
                         Intent data = result.getData();
                         //doSomeOperations();
+                        ivPhoto.setVisibility(View.VISIBLE);
                         bitmap = (Bitmap) data.getExtras().get("data");
                         ivPhoto.setImageBitmap(bitmap);
                     }
