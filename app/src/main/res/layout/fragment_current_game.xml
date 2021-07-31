@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFEFD8">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -143,7 +144,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="35dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="105dp"
             android:layout_marginEnd="35dp"
             android:backgroundTint="#E18804"
             android:fontFamily="@font/rock_salt"
