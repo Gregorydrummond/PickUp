@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1000dp"
+        android:layout_height="wrap_content"
+        android:background="#FFEFD8"
         tools:context=".activities.Creation">
 
         <Button
@@ -60,7 +61,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="0dp"
-            android:background="#E18804"
+            android:background="#FFEFD8"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme">
 
@@ -72,7 +73,7 @@
                 android:layout_marginTop="0dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/creation_title"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -150,9 +151,9 @@
             android:id="@+id/btnCancelCreation"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tvWinBy2TextCreation"
             android:layout_alignStart="@+id/tvWinBy2TextCreation"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="100dp"
             android:backgroundTint="#E18804"
             android:text="Cancel" />
 
@@ -160,10 +161,10 @@
             android:id="@+id/btnCreateCreation"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btnCancelCreation"
             android:layout_alignEnd="@+id/cbWinBy2Creation"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
-            android:layout_marginBottom="0dp"
             android:backgroundTint="#E18804"
             android:text="Create Game" />
 
@@ -202,8 +203,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="0dp"
-            android:elevation="10dp"
-            app:srcCompat="@drawable/imageplaceholder" />
+            android:elevation="10dp" />
 
         <Button
             android:id="@+id/btnSelectPhototCreation"
