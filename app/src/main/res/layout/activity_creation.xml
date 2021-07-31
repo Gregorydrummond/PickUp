@@ -1,164 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.Creation">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etLocationNameCreation"
-        android:layout_width="353dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivSelectLocation"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:ellipsize="end"
-        android:ems="10"
-        android:fontFamily="@font/rock_salt"
-        android:hint="Enter Location Name"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textSize="14sp" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbCreation"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
-        android:background="#E18804"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" >
+        android:layout_height="1000dp"
+        tools:context=".activities.Creation">
+
+        <Button
+            android:id="@+id/btnTakePhototCreation"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btnSelectPhototCreation"
+            android:layout_alignEnd="@+id/ivPhotoCreation"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:text="Take Photo" />
 
         <TextView
-            android:id="@+id/tvTitleCreation"
+            android:id="@+id/tvSetPictureCreation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/etLocationNameCreation"
+            android:layout_alignStart="@+id/etLocationNameCreation"
+            android:layout_alignEnd="@+id/etLocationNameCreation"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/creation_title"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:hint="Set Picture of Location"
+            android:textColor="#000000"
+            android:textSize="14sp" />
 
-    </androidx.appcompat.widget.Toolbar>
+        <EditText
+            android:id="@+id/etLocationNameCreation"
+            android:layout_width="353dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivSelectLocation"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:ems="10"
+            android:fontFamily="@font/rock_salt"
+            android:hint="Enter Location Name"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textSize="14sp" />
 
-    <EditText
-        android:id="@+id/etLocationCreation"
-        android:layout_width="326dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tbCreation"
-        android:layout_alignStart="@+id/etLocationNameCreation"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="30dp"
-        android:editable="false"
-        android:ellipsize="end"
-        android:ems="10"
-        android:enabled="false"
-        android:fontFamily="@font/rock_salt"
-        android:hint="Select Location"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textSize="14sp" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbCreation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:background="#E18804"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
 
-    <EditText
-        android:id="@+id/etPlayerLimitCreation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerGameTypeCreation"
-        android:layout_alignStart="@+id/spinnerGameTypeCreation"
-        android:layout_alignEnd="@+id/spinnerGameTypeCreation"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="0dp"
-        android:ems="10"
-        android:fontFamily="@font/rock_salt"
-        android:hint="Set Player Limit"
-        android:inputType="number"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvTitleCreation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/creation_title"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/etScoreLimitCreation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etPlayerLimitCreation"
-        android:layout_alignStart="@+id/etPlayerLimitCreation"
-        android:layout_alignEnd="@+id/etPlayerLimitCreation"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:fontFamily="@font/rock_salt"
-        android:hint="Set Score Limit"
-        android:inputType="number"
-        android:textSize="14sp" />
+        </androidx.appcompat.widget.Toolbar>
 
-    <CheckBox
-        android:id="@+id/cbWinBy2Creation"
-        android:layout_width="46dp"
-        android:layout_height="32dp"
-        android:layout_alignTop="@+id/tvWinBy2TextCreation"
-        android:layout_alignEnd="@+id/etScoreLimitCreation"
-        android:layout_alignBottom="@+id/tvWinBy2TextCreation" />
+        <EditText
+            android:id="@+id/etLocationCreation"
+            android:layout_width="326dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tbCreation"
+            android:layout_alignStart="@+id/etLocationNameCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:editable="false"
+            android:ellipsize="end"
+            android:ems="10"
+            android:enabled="false"
+            android:fontFamily="@font/rock_salt"
+            android:hint="Select Location"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tvWinBy2TextCreation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etScoreLimitCreation"
-        android:layout_alignStart="@+id/etScoreLimitCreation"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/rock_salt"
-        android:text="Win By 2"
-        android:textColor="#000000"
-        android:textSize="14sp" />
+        <EditText
+            android:id="@+id/etPlayerLimitCreation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerGameTypeCreation"
+            android:layout_alignStart="@+id/spinnerGameTypeCreation"
+            android:layout_alignEnd="@+id/spinnerGameTypeCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="0dp"
+            android:ems="10"
+            android:fontFamily="@font/rock_salt"
+            android:hint="Set Player Limit"
+            android:inputType="number"
+            android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/btnCancelCreation"
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvWinBy2TextCreation"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="#E18804"
-        android:text="Cancel" />
+        <EditText
+            android:id="@+id/etScoreLimitCreation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etPlayerLimitCreation"
+            android:layout_alignStart="@+id/etPlayerLimitCreation"
+            android:layout_alignEnd="@+id/etPlayerLimitCreation"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:fontFamily="@font/rock_salt"
+            android:hint="Set Score Limit"
+            android:inputType="number"
+            android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/btnCreateCreation"
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnCancelCreation"
-        android:layout_alignEnd="@+id/cbWinBy2Creation"
-        android:backgroundTint="#E18804"
-        android:text="Create Game" />
+        <CheckBox
+            android:id="@+id/cbWinBy2Creation"
+            android:layout_width="46dp"
+            android:layout_height="32dp"
+            android:layout_alignTop="@+id/tvWinBy2TextCreation"
+            android:layout_alignEnd="@+id/etScoreLimitCreation"
+            android:layout_alignBottom="@+id/tvWinBy2TextCreation" />
 
-    <ImageView
-        android:id="@+id/ivSelectLocation"
-        android:layout_width="46dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/etLocationCreation"
-        android:layout_alignEnd="@+id/spinnerGameTypeCreation"
-        android:layout_alignBottom="@+id/etLocationCreation"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/etLocationCreation"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+        <TextView
+            android:id="@+id/tvWinBy2TextCreation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etScoreLimitCreation"
+            android:layout_alignStart="@+id/etScoreLimitCreation"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/rock_salt"
+            android:text="Win By 2"
+            android:textColor="#000000"
+            android:textSize="14sp" />
 
-    <Spinner
-        android:id="@+id/spinnerGameTypeCreation"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:layout_below="@+id/etLocationNameCreation"
-        android:layout_alignStart="@+id/etLocationNameCreation"
-        android:layout_alignEnd="@+id/etLocationNameCreation"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="0dp" />
+        <Button
+            android:id="@+id/btnCancelCreation"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tvWinBy2TextCreation"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#E18804"
+            android:text="Cancel" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnCreateCreation"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/cbWinBy2Creation"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:backgroundTint="#E18804"
+            android:text="Create Game" />
+
+        <ImageView
+            android:id="@+id/ivSelectLocation"
+            android:layout_width="46dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/etLocationCreation"
+            android:layout_alignEnd="@+id/spinnerGameTypeCreation"
+            android:layout_alignBottom="@+id/etLocationCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@+id/etLocationCreation"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+        <Spinner
+            android:id="@+id/spinnerGameTypeCreation"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_below="@+id/btnSelectPhototCreation"
+            android:layout_alignStart="@+id/etLocationNameCreation"
+            android:layout_alignEnd="@+id/etLocationNameCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="0dp" />
+
+        <ImageView
+            android:id="@+id/ivPhotoCreation"
+            android:layout_width="370dp"
+            android:layout_height="190dp"
+            android:layout_below="@+id/tvSetPictureCreation"
+            android:layout_alignStart="@+id/tvSetPictureCreation"
+            android:layout_alignEnd="@+id/tvSetPictureCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="0dp"
+            android:elevation="10dp"
+            app:srcCompat="@drawable/imageplaceholder" />
+
+        <Button
+            android:id="@+id/btnSelectPhototCreation"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivPhotoCreation"
+            android:layout_alignStart="@+id/ivPhotoCreation"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="10dp"
+            android:text="Select Photo" />
+
+    </RelativeLayout>
+
+</ScrollView>

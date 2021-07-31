@@ -15,8 +15,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp">
-    </com.google.android.material.tabs.TabLayout>
+        android:layout_marginEnd="0dp"
+        android:background="#FFEFD8"></com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2_game"

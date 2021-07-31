@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
@@ -46,7 +48,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_game, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_game_2, parent, false);
         return new ViewHolder(view);
     }
 
@@ -89,17 +91,19 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
         TextView tvGameCapacity;
         TextView tvGameStatus;
         TextView tvDistance;
+        ImageView ivGamePhoto;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProfilePicture = itemView.findViewById(R.id.ivUserProfilePictureHome);
             tvUserName = itemView.findViewById(R.id.tvUsernameHome);
             tvTimeStamp = itemView.findViewById(R.id.tvTimeStampHome);
-            tvLocationName = itemView.findViewById(R.id.tvLocationNameHome);
+            //tvLocationName = itemView.findViewById(R.id.tvLocationNameHome);
             tvGameType = itemView.findViewById(R.id.tvGameTypeHome);
             tvGameCapacity = itemView.findViewById(R.id.tvGameCapacityHome);
-            tvGameStatus = itemView.findViewById(R.id.tvGameStatusHome);
+            //tvGameStatus = itemView.findViewById(R.id.tvGameStatusHome);
             tvDistance = itemView.findViewById(R.id.tvDistanceHome);
+            ivGamePhoto = itemView.findViewById(R.id.ivGamePhotoHome);
 
             //Add this as the itemView's OnClickListener
             itemView.setOnClickListener(this);
@@ -115,14 +119,22 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 Glide.with(context)
                         .load(profilePicture.getUrl())
                         .transform(new CircleCrop())
+//                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(15)))
                         .into(ivProfilePicture);
+            }
+            ParseFile gamePhoto = game.getLocationPhoto();
+            if(profilePicture != null) {
+                Glide.with(context)
+                        .load(gamePhoto.getUrl())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(5)))
+                        .into(ivGamePhoto);
             }
             String textName = game.getCreator().getUsername() + "'s Game";
             tvUserName.setText(textName);
             String textTime = "· " + game.getCreatedAtDate();
             tvTimeStamp.setText(textTime);
             String textLocationName = "@" + game.getLocationName();
-            tvLocationName.setText(textLocationName);
+            //tvLocationName.setText(textLocationName);
             String textGameType = "Game Type: " + game.getGameType();
             tvGameType.setText(textGameType);
             int playerCount = game.getPlayerCount();
@@ -138,7 +150,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             else {
                 textGameStatus = textGameStatus.concat("Game not started");
             }
-            tvGameStatus.setText(textGameStatus);
+            //tvGameStatus.setText(textGameStatus);
             String textDistance = String.format("%.2f", user.getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation())) + " miles away";
             tvDistance.setText(textDistance);
         }

@@ -7,8 +7,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -22,10 +28,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pickup.R;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -34,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -62,14 +75,21 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     Button btnCancel;
     Button btnCreate;
     ImageView ivSelectLocation;
+    ImageView ivPhoto;
+    Button btnSelectPhoto;
+    Button btnTakePhoto;
     ArrayAdapter<CharSequence> adapter;
     ActivityResultLauncher<Intent> autoCompleteResultLauncher;
+    ActivityResultLauncher<Intent> selectPhotoResultLauncher;
+    ActivityResultLauncher<Intent> takePhotoResultLauncher;
     static double latitude;
     static double longitude;
     ParseUser user = ParseUser.getCurrentUser();
     Game game;
     Team teamA, teamB, teamC;
     boolean gameCreated = false, teamACreated = false, teamBCreated = false, teamCCreated = false;
+    Bitmap bitmap;
+    ParseFile photoFile;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +108,37 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         btnCancel = findViewById(R.id.btnCancelCreation);
         btnCreate = findViewById(R.id.btnCreateCreation);
         ivSelectLocation = findViewById(R.id.ivSelectLocation);
+        ivPhoto = findViewById(R.id.ivPhotoCreation);
+        btnSelectPhoto = findViewById(R.id.btnSelectPhototCreation);
+        btnTakePhoto = findViewById(R.id.btnTakePhototCreation);
         ArrayAdapter<CharSequence> adapter;
+
+        //Set activity launchers
+        setActivityLaunchers();
 
         //Toolbar
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+        //Select Photo Button
+        btnSelectPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onViewCreated: opening gallery");
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                selectPhotoResultLauncher.launch(intent);
+            }
+        });
+
+        //Take Photo Button
+        btnTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onViewCreated: opening camera");
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePhotoResultLauncher.launch(intent);
+            }
+        });
 
         //Cancel Button
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -143,45 +189,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
         //Create launcher (startActivityForResult is deprecated)
-        autoCompleteResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        Intent data = result.getData();
-                        //Log.d(TAG, "onActivityResult: " + data.getStringExtra(KEY_LOCATION));
-                        if(result.getResultCode() == RESULT_OK) {
-                            //Set text
-                            Log.d(TAG, "onActivityResult: Received data");
 
-                            Creation.latitude = data.getExtras().getDouble(KEY_LOCATION_LAT);
-                            Creation.longitude = data.getExtras().getDouble(KEY_LOCATION_LONG);
-
-//                            String text = Creation.latitude + "," + Creation.longitude;
-//                            etLocation.setText(text);
-
-                            //Call geocoding api: reverse geocoding -> use lat & long to get address
-                            Thread thread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        Log.i(TAG, "run: Thread running");
-                                        getAddressFromLatLong(Creation.latitude, Creation.longitude);
-                                    } catch (IOException | JSONException e) {
-                                        Log.e(TAG, "onActivityResult: Error with true way api call", e);
-                                    }
-                                }
-                            });
-                            thread.start();
-                        }
-                        else {
-                            //Error handling
-                            Log.d(TAG, "onActivityResult: Error getting place. " + result.getResultCode());
-                        }
-                        Creation.super.onActivityResult(REQUEST_CODE, result.getResultCode(), data);
-                    }
-                }
-        );
 
         //Spinner setup
         //Initialize an ArrayAdapter using the string array and a default spinner layout
@@ -205,6 +213,101 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         else {
             btnCreate.setEnabled(true);
         }
+    }
+
+    private void setActivityLaunchers() {
+        autoCompleteResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
+                    //Log.d(TAG, "onActivityResult: " + data.getStringExtra(KEY_LOCATION));
+                    if(result.getResultCode() == RESULT_OK) {
+                        //Set text
+                        Log.d(TAG, "onActivityResult: Received data");
+
+                        Creation.latitude = data.getExtras().getDouble(KEY_LOCATION_LAT);
+                        Creation.longitude = data.getExtras().getDouble(KEY_LOCATION_LONG);
+
+                        //Call geocoding api: reverse geocoding -> use lat & long to get address
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Log.i(TAG, "run: Thread running");
+                                    getAddressFromLatLong(Creation.latitude, Creation.longitude);
+                                } catch (IOException | JSONException e) {
+                                    Log.e(TAG, "onActivityResult: Error with true way api call", e);
+                                }
+                            }
+                        });
+                        thread.start();
+                    }
+                    else {
+                        //Error handling
+                        Log.d(TAG, "onActivityResult: Error getting place. " + result.getResultCode());
+                    }
+                    Creation.super.onActivityResult(REQUEST_CODE, result.getResultCode(), data);
+                }
+        );
+
+        selectPhotoResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        //doSomeOperations();
+                        Uri selectedImage = data.getData();
+                        bitmap = null;
+                        if(Build.VERSION.SDK_INT < 28) {
+                            Log.i(TAG, "onActivityResult: build version < 28");
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                                Glide.with(Creation.this)
+                                        .load(selectedImage)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
+                                        .into(ivPhoto);
+                                Log.i(TAG, "onActivityResult: set image");
+                            } catch (IOException e) {
+                                Log.e(TAG, "onActivityResult: Error getting image", e);
+                                return;
+                            }
+                        }
+                        else {
+                            Log.i(TAG, "onActivityResult: build version >= 28");
+                            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), selectedImage);
+                            try {
+                                bitmap = ImageDecoder.decodeBitmap((ImageDecoder.Source) source);
+                                Glide.with(Creation.this)
+                                        .load(selectedImage)
+                                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
+                                        .into(ivPhoto);
+                                Log.i(TAG, "onActivityResult: set image");
+                            } catch (IOException e) {
+                                Log.e(TAG, "onActivityResult: Error getting image", e);
+                                return;
+                            }
+                        }
+                    }
+                    else {
+                        Log.i(TAG, "onActivityResult: Result code not ok");
+                    }
+                });
+
+        takePhotoResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        //doSomeOperations();
+                        bitmap = (Bitmap) data.getExtras().get("data");
+                        ivPhoto.setImageBitmap(bitmap);
+                    }
+                    else {
+                        Log.i(TAG, "onActivityResult: Result code not ok");
+                    }
+                });
     }
 
     private void createGame() {
@@ -235,6 +338,13 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         game.setGameStarted(false);
         game.setGameEnded(false);
         game.setPlayerCount(true);
+
+        //Saving the location image
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        photoFile = new ParseFile("GameImage.png", stream.toByteArray());
+        game.setLocationPhoto(photoFile);
+
 
         //Save game in background
         game.saveInBackground(e -> {

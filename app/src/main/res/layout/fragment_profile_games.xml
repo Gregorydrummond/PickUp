@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFEFD8"
     tools:context=".fragments.profile.ProfileGamesFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,7 +24,7 @@
             app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
             app:layoutManagerOrientation="vertical"
             app:layoutManagerReverse="false"
-            app:layoutManagerType="linear"/>
+            app:layoutManagerType="linear" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -39,12 +40,11 @@
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/loadingIndicatorProfileGames"
+        style="@style/AVLoadingIndicatorView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        style="@style/AVLoadingIndicatorView"
         android:visibility="visible"
-        app:indicatorName="BallPulseIndicator"
         app:indicatorColor="@color/quantum_orange"
-        />
+        app:indicatorName="BallPulseIndicator" />
 </RelativeLayout>

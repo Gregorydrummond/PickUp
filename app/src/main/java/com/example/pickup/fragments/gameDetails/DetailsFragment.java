@@ -9,12 +9,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 /**
@@ -31,6 +37,7 @@ public class DetailsFragment extends Fragment {
     TextView tvPlayerCount;
     TextView tvWinBy2;
     TextView tvDistance;
+    ImageView ivGamePhoto;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,6 +96,7 @@ public class DetailsFragment extends Fragment {
         tvPlayerCount = view.findViewById(R.id.tvPlayerCountDetails);
         tvWinBy2 = view.findViewById(R.id.tvWinBy2Details);
         tvDistance = view.findViewById(R.id.tvDistanceDetails);
+        ivGamePhoto = view.findViewById(R.id.ivGamePhotoDetails);
 
         //Get data from activity
         GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
@@ -116,6 +124,14 @@ public class DetailsFragment extends Fragment {
             tvWinBy2.setText(textWinBy2);
             String textDistance = String.format("%.2f", ParseUser.getCurrentUser().getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation())) + " miles away";
             tvDistance.setText(textDistance);
+
+            ParseFile photo = game.getLocationPhoto();
+            if(photo != null) {
+                Glide.with(getContext())
+                        .load(photo.getUrl())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(25)))
+                        .into(ivGamePhoto);
+            }
         }
     }
 }

@@ -7,43 +7,31 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="15dp"
     app:cardElevation="7dp"
-    app:cardPreventCornerOverlap="true"
+    app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FDE3BC">
+        android:background="#FDE3BC"
+        android:padding="0dp">
 
         <TextView
             android:id="@+id/tvDistanceHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvGameStatusHome"
-            android:layout_alignStart="@+id/tvGameStatusHome"
-            android:layout_alignEnd="@+id/tvGameStatusHome"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/rock_salt"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:transitionName="distance"
-            tools:text="1 mile away" />
-
-        <TextView
-            android:id="@+id/tvGameStatusHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/tvGameCapacityHome"
             android:layout_alignStart="@+id/tvGameCapacityHome"
             android:layout_alignEnd="@+id/tvGameCapacityHome"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
             android:fontFamily="@font/rock_salt"
             android:singleLine="true"
             android:textColor="#000000"
-            android:textSize="14sp"
-            android:transitionName="status"
-            tools:text="Game Started/In Progress" />
+            android:textSize="12sp"
+            android:transitionName="distance"
+            tools:text="1 mile away" />
 
         <TextView
             android:id="@+id/tvGameCapacityHome"
@@ -52,11 +40,11 @@
             android:layout_below="@+id/tvGameTypeHome"
             android:layout_alignStart="@+id/tvGameTypeHome"
             android:layout_alignEnd="@+id/tvGameTypeHome"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="0dp"
             android:fontFamily="@font/rock_salt"
             android:singleLine="true"
             android:textColor="#000000"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:transitionName="capacity"
             tools:text="Capacity: 3/8" />
 
@@ -64,56 +52,46 @@
             android:id="@+id/tvGameTypeHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvLocationNameHome"
-            android:layout_alignStart="@+id/tvLocationNameHome"
-            android:layout_alignEnd="@+id/tvLocationNameHome"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/rock_salt"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:transitionName="gameType"
-            tools:text="Game Type: King of the Court" />
-
-        <TextView
-            android:id="@+id/tvLocationNameHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/tvUsernameHome"
             android:layout_alignStart="@+id/tvUsernameHome"
             android:layout_alignEnd="@+id/tvTimeStampHome"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
             android:fontFamily="@font/rock_salt"
             android:singleLine="true"
             android:textColor="#000000"
-            android:textSize="14sp"
-            android:transitionName="location"
-            tools:text="Where: Roosevelt Gardens" />
+            android:textSize="12sp"
+            android:transitionName="gameType"
+            tools:text="Game Type: King of the Court" />
 
         <TextView
             android:id="@+id/tvUsernameHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/ivUserProfilePictureHome"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
             android:layout_toEndOf="@+id/ivUserProfilePictureHome"
             android:ellipsize="end"
             android:fontFamily="@font/rock_salt"
             android:singleLine="true"
             android:textColor="#000000"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:transitionName="username"
             tools:text="Greg's Game" />
 
         <ImageView
             android:id="@+id/ivUserProfilePictureHome"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/ivGamePhotoHome"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitXY"
             android:transitionName="profilePic"
             app:srcCompat="@drawable/ic_baseline_person_24" />
 
@@ -125,16 +103,29 @@
             android:layout_alignBottom="@+id/tvUsernameHome"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="00dp"
             android:layout_toEndOf="@+id/tvUsernameHome"
             android:fontFamily="@font/rock_salt"
             android:gravity="start|center_vertical"
             android:minWidth="50dp"
             android:singleLine="true"
             android:textColor="#ACACAC"
-            android:textSize="10sp"
+            android:textSize="8sp"
             tools:text="· 20 m" />
+
+        <ImageView
+            android:id="@+id/ivGamePhotoHome"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="-3dp"
+            android:layout_marginEnd="0dp"
+            android:scaleType="fitXY"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     </RelativeLayout>
 

@@ -3,6 +3,7 @@ package com.example.pickup.models;
 import android.util.Log;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -18,6 +19,7 @@ public class Game extends ParseObject {
     public static final String TAG = "Game";
     public static final String KEY_LOCATION = "location";
     public static final String KEY_LOCATION_NAME = "locationName";
+    public static final String KEY_LOCATION_PHOTO = "locationPhoto";
     public static final String KEY_CREATOR = "creator";
     public static final String KEY_GAME_TYPE = "gameType";
     public static final String KEY_PLAYER_COUNT = "playerCount";
@@ -51,6 +53,16 @@ public class Game extends ParseObject {
     //Set location name
     public void setLocationName(String locationName) {
         put(KEY_LOCATION_NAME, locationName);
+    }
+
+    //Get location photo
+    public ParseFile getLocationPhoto() {
+        return getParseFile("locationPhoto");
+    }
+
+    //Set location photo
+    public void setLocationPhoto(ParseFile photo) {
+        put(KEY_LOCATION_PHOTO, photo);
     }
 
     //Get creator
