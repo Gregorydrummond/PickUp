@@ -84,7 +84,7 @@
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
         app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="Game: King of the Court" />
+        tools:text="Game: Teams" />
 
     <ImageView
         android:id="@+id/ivProfilePicturePG"

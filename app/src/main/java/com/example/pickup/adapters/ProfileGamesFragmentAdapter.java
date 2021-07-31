@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
@@ -43,7 +45,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_game_profile, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_game_profile_2, parent, false);
 
         return new ViewHolder (view);
     }
@@ -86,19 +88,21 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
         TextView tvPoints;
         TextView tvWonStatus;
         boolean userIsCreator;
+        ImageView ivGamePhoto;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             //Find Components
-            ivProfilePicture = itemView.findViewById(R.id.ivProfilePicturePG);
-            tvUsername = itemView.findViewById(R.id.tvUsernamePG);
-            tvTime = itemView.findViewById(R.id.tvTimeStamp);
-            tvLocationName = itemView.findViewById(R.id.tvLocationNamePG);
-            tvGameType = itemView.findViewById(R.id.tvGameTypePG);
-            tvScore = itemView.findViewById(R.id.tvScorePG);
-            tvPoints = itemView.findViewById(R.id.tvPointsPG);
-            tvWonStatus = itemView.findViewById(R.id.tvWinLossPG);
+            ivProfilePicture = itemView.findViewById(R.id.ivUserProfilePictureCardPG);
+            ivGamePhoto = itemView.findViewById(R.id.ivGamePhotoCardPG);
+            tvUsername = itemView.findViewById(R.id.tvUsernameCardPG);
+            tvTime = itemView.findViewById(R.id.tvTimeStampCardPG);
+            tvLocationName = itemView.findViewById(R.id.tvLocationNameTypeCardPG);
+            tvGameType = itemView.findViewById(R.id.tvGameTypeCardPG);
+            tvScore = itemView.findViewById(R.id.tvFinalScoreCardPG);
+            tvPoints = itemView.findViewById(R.id.tvPointsCardPG);
+            tvWonStatus = itemView.findViewById(R.id.tvWonLossCardPG);
 
             //Add this as the itemView's OnClickListener
             itemView.setOnClickListener(this);
@@ -120,6 +124,13 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
                         .transform(new CircleCrop())
                         .into(ivProfilePicture);
             }
+            ParseFile gamePhoto = game.getLocationPhoto();
+            if(profilePicture != null) {
+                Glide.with(context)
+                        .load(gamePhoto.getUrl())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(5)))
+                        .into(ivGamePhoto);
+            }
             String textName;
             textName = userIsCreator ? "Your Game" : creator.getUsername() + "'s Game";
             tvUsername.setText(textName);
@@ -131,8 +142,8 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
             tvGameType.setText(textGameType);
 
             if(game.getHasTeams()) {
-                Team teamA = (Team) game.getTeamA().fetchIfNeeded();
-                Team teamB = (Team) game.getTeamB().fetchIfNeeded();
+                Team teamA = game.getTeamA().fetchIfNeeded();
+                Team teamB = game.getTeamB().fetchIfNeeded();
                 int teamAScore = teamA.getScore();
                 int teamBScore = teamB.getScore();
                 String textScore = teamAScore + " - " + teamBScore;
@@ -142,7 +153,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
                 tvScore.setVisibility(View.GONE);
             }
 
-            String textPoints = "You scored " + String.valueOf(gameStat.getPoints()) + " points";
+            String textPoints = "You scored " + gameStat.getPoints() + " points";
             tvPoints.setText(textPoints);
 
             String textWonStatus = gameStat.getGameWon() ? "Won" : "Loss";
