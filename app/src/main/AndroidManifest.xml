@@ -28,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PickUp">
-        <activity android:name=".activities.GameDetailsActivity"></activity>
+        <activity android:name=".activities.GameDetailsActivity" android:screenOrientation="portrait"/>
 
         <uses-library
             android:name="com.google.android.maps"
@@ -44,14 +44,15 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".activities.EnterStatsActivity" />
+        <activity android:name=".activities.EnterStatsActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".activities.Creation" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.Creation" android:screenOrientation="portrait"/>
         <activity android:name=".activities.MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activities.UserAuthentication" android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"/>
+        <activity android:name=".activities.UserAuthentication" android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
