@@ -45,3 +45,5 @@ public class DepthPageTransformer implements ViewPager2.PageTransformer {
         }
     }
 }
+
+//https://developer.android.com/training/animation/screen-slide

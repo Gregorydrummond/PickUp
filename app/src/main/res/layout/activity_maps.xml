@@ -12,35 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-<!--    <SearchView-->
-<!--        android:id="@+id/svLocation"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_marginStart="10dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        android:background="@drawable/bg_search_view"-->
-<!--        android:elevation="5dp"-->
-<!--        android:iconifiedByDefault="false"-->
-<!--        android:queryHint="Search..." />-->
-<!--    <LinearLayout-->
-<!--        android:orientation="horizontal"-->
-<!--        android:background="@color/design_default_color_on_primary"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp">-->
-
-<!--        <fragment-->
-<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
-<!--            android:id="@+id/autoComplete_fragment"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--    </LinearLayout>-->
-
 </RelativeLayout>
 
 

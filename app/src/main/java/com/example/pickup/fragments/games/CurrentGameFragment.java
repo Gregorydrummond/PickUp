@@ -27,11 +27,6 @@ import com.parse.ParseUser;
 
 import org.json.JSONException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CurrentGameFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CurrentGameFragment extends Fragment {
 
     private static final String TAG = "CurrentGameFragment";
@@ -47,19 +42,17 @@ public class CurrentGameFragment extends Fragment {
     TextView tvNoCurrentGame;
     Button btnCurrentGame;
     Button btnLeaveGame;
-    ParseUser user;
+    ParseUser user = ParseUser.getCurrentUser();;
     ParseUser creator;
     boolean userIsCreator;
     Game game;
     Team teamA;
     Team teamB;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -67,15 +60,6 @@ public class CurrentGameFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CurrentGameFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CurrentGameFragment newInstance(String param1, String param2) {
         CurrentGameFragment fragment = new CurrentGameFragment();
         Bundle args = new Bundle();
@@ -105,10 +89,6 @@ public class CurrentGameFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Get current user
-        user = ParseUser.getCurrentUser();
-
-
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivCurrentGameProfilePicture);
         tvUsername = view.findViewById(R.id.tvUsernameCG);
@@ -123,7 +103,6 @@ public class CurrentGameFragment extends Fragment {
         tvNoCurrentGame = view.findViewById(R.id.tvNoCurrentGame);
 
         game = (Game) user.getParseObject("currentGame");
-       // game = GameFragment.currentGame;
         Log.d(TAG, "onViewCreated: " + game);
 
         try {
@@ -151,38 +130,35 @@ public class CurrentGameFragment extends Fragment {
         setData();
 
         //Start/Finish/EnterStats Button
-        btnCurrentGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: Button clicked");
-                if(userIsCreator) {
-                    Log.d(TAG, "onClick: User is creator");
-                    //Creator starts game
-                    if(btnCurrentGame.getText().equals("Start Game")) {
-                        Log.i(TAG, "onClick: Creator started the game");
-                        game.setGameStarted(true);
-                        tvStatus.setText(R.string.gameInProgressMessage);
-                        btnCurrentGame.setText(R.string.endGameButtonText);
-                    }
-                    //Creator ends games
-                    else if(btnCurrentGame.getText().equals("End Game")) {
-                        Log.i(TAG, "onClick: Creator ended the game");
-                        game.setGameStarted(false);
-                        game.setGameEnded(true);
-                        tvStatus.setText(R.string.gameEndedMessage);
-                        btnCurrentGame.setText(R.string.enterStatsButtonText);
-                        Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
-                        startActivity(intent);
-                    }
+        btnCurrentGame.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: Button clicked");
+            if(userIsCreator) {
+                Log.d(TAG, "onClick: User is creator");
+                //Creator starts game
+                if(btnCurrentGame.getText().equals("Start Game")) {
+                    Log.i(TAG, "onClick: Creator started the game");
+                    game.setGameStarted(true);
+                    tvStatus.setText(R.string.gameInProgressMessage);
+                    btnCurrentGame.setText(R.string.endGameButtonText);
                 }
-                //User enters game stats
-                if(btnCurrentGame.getText().equals("Enter Stats")) {
-                    Log.i(TAG, "onClick: Creator entering stats");
+                //Creator ends games
+                else if(btnCurrentGame.getText().equals("End Game")) {
+                    Log.i(TAG, "onClick: Creator ended the game");
+                    game.setGameStarted(false);
+                    game.setGameEnded(true);
+                    tvStatus.setText(R.string.gameEndedMessage);
+                    btnCurrentGame.setText(R.string.enterStatsButtonText);
                     Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
                     startActivity(intent);
                 }
-                game.saveInBackground();
             }
+            //User enters game stats
+            if(btnCurrentGame.getText().equals("Enter Stats")) {
+                Log.i(TAG, "onClick: Creator entering stats");
+                Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
+                startActivity(intent);
+            }
+            game.saveInBackground();
         });
 
         btnLeaveGame.setOnClickListener(v -> {
@@ -209,7 +185,7 @@ public class CurrentGameFragment extends Fragment {
         if(game != null) {
             creator = game.getCreator().fetchIfNeeded();
             userIsCreator = user.getObjectId().equals(creator.getObjectId());
-            teamA = (Team) game.getTeamA().fetchIfNeeded();
+            teamA = game.getTeamA().fetchIfNeeded();
             if(game.getHasTeams()) {
                 teamB = game.getTeamB().fetchIfNeeded();
             }
@@ -272,12 +248,10 @@ public class CurrentGameFragment extends Fragment {
             btnCurrentGame.setText(R.string.startGameButtonText);
             //If user isn't the creator of the game, user cannot start game
             if(!userIsCreator) {
-                //Log.d(TAG, "onViewCreated: User isn't creator");
                 btnCurrentGame.setEnabled(false);
             }
         }
 
         tvStatus.setText(textStatus);
-        ivProfilePicture.setImageResource(R.drawable.ic_baseline_person_24);
     }
 }

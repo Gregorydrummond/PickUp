@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     Location location;
     LocationManager locationManager;
     ParseGeoPoint userLocation;
-    ParseUser user;
+    ParseUser user = ParseUser.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,36 +87,33 @@ public class MainActivity extends AppCompatActivity {
         final Fragment fragment4 = new ProfileFragment();
 
         //Handle navigation selection
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
-                switch (item.getItemId()) {
-                    case R.id.action_home:
-                        fragment = fragment1;
-                        //Get user's location
-                        saveCurrentUserLocation();
-                        Log.i(TAG, "onNavigationItemSelected: Home");
-                        break;
-                    case R.id.action_games:
-                        fragment = fragment2;
-                        Log.i(TAG, "onNavigationItemSelected: Games");
-                        break;
-                    case R.id.action_map:
-                        fragment = fragment3;
-                        Log.i(TAG, "onNavigationItemSelected: Map");
-                        break;
-                    case R.id.action_profile:
-                        fragment = fragment4;
-                        Log.i(TAG, "onNavigationItemSelected: Profile");
-                        break;
-                    default:
-                        fragment = fragment1;
-                        break;
-                }
-                fragmentManager.beginTransaction().replace(R.id.flContainerMain, fragment).commit();
-                return true;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    fragment = fragment1;
+                    //Get user's location
+                    saveCurrentUserLocation();
+                    Log.i(TAG, "onNavigationItemSelected: Home");
+                    break;
+                case R.id.action_games:
+                    fragment = fragment2;
+                    Log.i(TAG, "onNavigationItemSelected: Games");
+                    break;
+                case R.id.action_map:
+                    fragment = fragment3;
+                    Log.i(TAG, "onNavigationItemSelected: Map");
+                    break;
+                case R.id.action_profile:
+                    fragment = fragment4;
+                    Log.i(TAG, "onNavigationItemSelected: Profile");
+                    break;
+                default:
+                    fragment = fragment1;
+                    break;
             }
+            fragmentManager.beginTransaction().replace(R.id.flContainerMain, fragment).commit();
+            return true;
         });
 
         // Set default selection
@@ -134,12 +131,7 @@ public class MainActivity extends AppCompatActivity {
             if(isGPSEnabled) {
                 Log.d(TAG, "saveCurrentUserLocation: GPS enabled");
                 //Update location
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        //Log.d(TAG, "onLocationChanged: location changed " + location.toString());
-                    }
-                });
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, location -> {});
 
                 //Getting last known user's location
                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -159,8 +151,6 @@ public class MainActivity extends AppCompatActivity {
             //If location isn't null, save it to the backend
             //Initialize user's GeoPoint location
             userLocation = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
-
-            user = ParseUser.getCurrentUser();
 
             if(user != null) {
                 user.put("playerLocation", userLocation);

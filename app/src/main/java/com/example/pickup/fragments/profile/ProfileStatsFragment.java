@@ -25,15 +25,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileStatsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileStatsFragment extends Fragment {
 
     private static final String TAG = "ProfileStatsFragment";
-    public static final String KEY_STATS = "stats";
 
     List<JSONObject> stats;
     RecyclerView rvStats;
@@ -48,12 +42,10 @@ public class ProfileStatsFragment extends Fragment {
     double ppg;
     double mppg;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -61,7 +53,6 @@ public class ProfileStatsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileStatsFragment newInstance(String param1, String param2) {
         ProfileStatsFragment fragment = new ProfileStatsFragment();
         Bundle args = new Bundle();
@@ -148,18 +139,17 @@ public class ProfileStatsFragment extends Fragment {
 
     private void fetchData() throws JSONException, ParseException {
         //Get all games stats
-        ArrayList<Integer> stats = (ArrayList<Integer>) user.get(KEY_STATS);
-        JSONObject jsonAllStatsObject = new JSONObject();
-        jsonAllStatsObject.put("title", "All Games");
-        setStatsData(stats, jsonAllStatsObject);
+        //TODO: Find out why this works on emulator but not on physical device
+//        ArrayList<Integer> stats = (ArrayList<Integer>) user.get("stats");
+//        JSONObject jsonAllStatsObject = new JSONObject();
+//        jsonAllStatsObject.put("title", "All Games");
+//        setStatsData(stats, jsonAllStatsObject);
 
         //Get team stats
         ArrayList<Integer> teamsStats = (ArrayList<Integer>) user.get("teamsStats");
         JSONObject jsonTeamsStatsObject = new JSONObject();
         jsonTeamsStatsObject.put("title", "Teams");
         setStatsData(teamsStats, jsonTeamsStatsObject);
-
-
 
         //Get 3 point stats
         ArrayList<Integer> threePointShootoutStats = (ArrayList<Integer>) user.get("threePointShootoutStats");

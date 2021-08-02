@@ -78,7 +78,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     ImageView ivPhoto;
     Button btnSelectPhoto;
     Button btnTakePhoto;
-    ArrayAdapter<CharSequence> adapter;
     ActivityResultLauncher<Intent> autoCompleteResultLauncher;
     ActivityResultLauncher<Intent> selectPhotoResultLauncher;
     ActivityResultLauncher<Intent> takePhotoResultLauncher;
@@ -123,75 +122,57 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         setSupportActionBar(toolbar);
 
         //Select Photo Button
-        btnSelectPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onViewCreated: opening gallery");
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                selectPhotoResultLauncher.launch(intent);
-            }
+        btnSelectPhoto.setOnClickListener(v -> {
+            Log.i(TAG, "onViewCreated: opening gallery");
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            selectPhotoResultLauncher.launch(intent);
         });
 
         //Take Photo Button
-        btnTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onViewCreated: opening camera");
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                takePhotoResultLauncher.launch(intent);
-            }
+        btnTakePhoto.setOnClickListener(v -> {
+            Log.i(TAG, "onViewCreated: opening camera");
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePhotoResultLauncher.launch(intent);
         });
 
         //Cancel Button
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
-            }
+        btnCancel.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
         });
 
         //Create Button
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Empty input handler
-                if (etLocationName.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "Please enter a location name", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (etLocation.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (etPlayerLimit.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "Please enter a player limit", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (etScoreLimit.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "Please enter a score limit", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                createGame();
+        btnCreate.setOnClickListener(v -> {
+            //Empty input handler
+            if (etLocationName.getText().toString().isEmpty()) {
+                Toast.makeText(getBaseContext(), "Please enter a location name", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if (etLocation.getText().toString().isEmpty()) {
+                Toast.makeText(getBaseContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (etPlayerLimit.getText().toString().isEmpty()) {
+                Toast.makeText(getBaseContext(), "Please enter a player limit", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (etScoreLimit.getText().toString().isEmpty()) {
+                Toast.makeText(getBaseContext(), "Please enter a score limit", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            createGame();
         });
 
         //Select location button
-        ivSelectLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Go to map activity
-                Log.d(TAG, "onClick: Started map");
-                Intent intent = new Intent(Creation.this, MapsActivity.class);
-                intent.putExtra(KEY_LOCATION_LAT, etLocation.getText());
+        ivSelectLocation.setOnClickListener(v -> {
+            //Go to map activity
+            Log.d(TAG, "onClick: Started map");
+            Intent intent = new Intent(Creation.this, MapsActivity.class);
+            intent.putExtra(KEY_LOCATION_LAT, etLocation.getText());
 
-                autoCompleteResultLauncher.launch(intent);
-            }
+            autoCompleteResultLauncher.launch(intent);
         });
-
-        //Create launcher (startActivityForResult is deprecated)
-
 
         //Spinner setup
         //Initialize an ArrayAdapter using the string array and a default spinner layout
@@ -222,24 +203,20 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     Intent data = result.getData();
-                    //Log.d(TAG, "onActivityResult: " + data.getStringExtra(KEY_LOCATION));
                     if(result.getResultCode() == RESULT_OK) {
-                        //Set text
                         Log.d(TAG, "onActivityResult: Received data");
 
+                        //Get lat & long
                         Creation.latitude = data.getExtras().getDouble(KEY_LOCATION_LAT);
                         Creation.longitude = data.getExtras().getDouble(KEY_LOCATION_LONG);
 
                         //Call geocoding api: reverse geocoding -> use lat & long to get address
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Log.i(TAG, "run: Thread running");
-                                    getAddressFromLatLong(Creation.latitude, Creation.longitude);
-                                } catch (IOException | JSONException e) {
-                                    Log.e(TAG, "onActivityResult: Error with true way api call", e);
-                                }
+                        Thread thread = new Thread(() -> {
+                            try {
+                                Log.i(TAG, "run: Thread running");
+                                getAddressFromLatLong(Creation.latitude, Creation.longitude);
+                            } catch (IOException | JSONException e) {
+                                Log.e(TAG, "onActivityResult: Error with true way api call", e);
                             }
                         });
                         thread.start();
@@ -356,7 +333,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
             if(e == null) {
                 //Successful game creation
                 Log.i(TAG, "done: Game created");
-                //Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Creation.this, "Game created!", Toast.LENGTH_SHORT).show();
                 gameCreated = true;
                 try {
                     setUsersGameProperties();
@@ -434,10 +411,10 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     private void getAddressFromLatLong(Double latitude, Double longitude) throws IOException, JSONException {
-        String url = reverseGeocodeUrl + latitude + "%2C" + longitude + "&language=en";
+        String url = reverseGeocodeUrl + "location=" + latitude + "%2C" + longitude;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(reverseGeocodeUrl + "location=" + latitude + "%2C" + longitude)
+                .url(url)
                 .get()
                 .addHeader("x-rapidapi-key", "82c4e3dc10mshf43555d353ba554p19004fjsn847db8612dbe")
                 .addHeader("x-rapidapi-host", "trueway-geocoding.p.rapidapi.com")
@@ -460,7 +437,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                 etLocation.setText(address);
             }
         }
-        //Log.i(TAG, "getAddressFromLatLong: " + responseData);
     }
 
     private void setUsersGameProperties() throws JSONException {
@@ -495,28 +471,22 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         teamC.setGame(game);
         //Save current player
         teamC.setPlayers(user, true);
-        teamC.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e == null) {
-                    Log.i(TAG, "done: Set game and player for teamC");
-                }
-                else {
-                    Log.e(TAG, "done: Error setting game and player for teamC", e);
-                }
+        teamC.saveInBackground(e -> {
+            if(e == null) {
+                Log.i(TAG, "done: Set game and player for teamC");
+            }
+            else {
+                Log.e(TAG, "done: Error setting game and player for teamC", e);
             }
         });
 
         user.put("currentTeam", teamC);
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e == null) {
-                    Log.i(TAG, "done: Saved user");
-                }
-                else {
-                    Log.e(TAG, "done: Error saving current teamC for user.", e);
-                }
+        user.saveInBackground(e -> {
+            if(e == null) {
+                Log.i(TAG, "done: Saved user");
+            }
+            else {
+                Log.e(TAG, "done: Error saving current teamC for user.", e);
             }
         });
 
@@ -590,12 +560,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
     }
 }

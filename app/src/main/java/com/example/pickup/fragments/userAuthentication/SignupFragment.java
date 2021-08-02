@@ -22,11 +22,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignupFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SignupFragment extends Fragment {
 
     private static final String TAG = "SignupFragment";
@@ -36,12 +31,10 @@ public class SignupFragment extends Fragment {
     Button btnSignup;
 
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -49,14 +42,6 @@ public class SignupFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignupFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static SignupFragment newInstance(String param1, String param2) {
         SignupFragment fragment = new SignupFragment();
@@ -93,26 +78,23 @@ public class SignupFragment extends Fragment {
         btnSignup = view.findViewById(R.id.btnSignup);
 
         //Sign user up
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
+        btnSignup.setOnClickListener(v -> {
+            String username = etUsername.getText().toString();
+            String password = etPassword.getText().toString();
 
-                if(username.isEmpty()) {
-                    Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "onClick: Username is empty");
-                    return;
-                }
-
-                if(password.isEmpty()) {
-                    Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "onClick: Password is empty");
-                    return;
-                }
-
-                signupUser(username, password);
+            if(username.isEmpty()) {
+                Toast.makeText(getContext(), "Username required", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "onClick: Username is empty");
+                return;
             }
+
+            if(password.isEmpty()) {
+                Toast.makeText(getContext(), "Password required", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "onClick: Password is empty");
+                return;
+            }
+
+            signupUser(username, password);
         });
     }
 
@@ -123,38 +105,32 @@ public class SignupFragment extends Fragment {
         user.setPassword(password);
 
         //Sign in background
-        user.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null) {
-                    Toast.makeText(getContext(), "Issue signing up, try a different username.", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "done: Issue with signup", e);
-                }
-                else {
-                    Log.i(TAG, "done: User signed up!");
-                    Toast.makeText(getContext(), "Sign up successful", Toast.LENGTH_SHORT).show();
-                    loginUser(username, password);
-                }
+        user.signUpInBackground(e -> {
+            if(e != null) {
+                Toast.makeText(getContext(), "Issue signing up, try a different username.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "done: Issue with signup", e);
+            }
+            else {
+                Log.i(TAG, "done: User signed up!");
+                Toast.makeText(getContext(), "Sign up successful", Toast.LENGTH_SHORT).show();
+                loginUser(username, password);
             }
         });
     }
 
     private void loginUser(String username, String password) {
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                //If there's an error with the user login
-                if(e != null) {
-                    Toast.makeText(getContext(), "Incorrect password/username", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "done: Issue with login", e);
-                }
-                else {
-                    //Else navigate to the main activity if the user has signed in properly
-                    Log.i(TAG, "done: User logged in");
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
+        ParseUser.logInInBackground(username, password, (user, e) -> {
+            //If there's an error with the user login
+            if(e != null) {
+                Toast.makeText(getContext(), "Incorrect password/username", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "done: Issue with login", e);
+            }
+            else {
+                //Else navigate to the main activity if the user has signed in properly
+                Log.i(TAG, "done: User logged in");
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 

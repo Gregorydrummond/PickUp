@@ -47,15 +47,12 @@ public class UserAuthentication extends AppCompatActivity {
 
         //Tab Layout Mediator. A mediator to link a TabLayout with a ViewPager2.
         new TabLayoutMediator(tabLayout, viewPager2,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        if(position == 0) {
-                            tab.setText("Log In");
-                        }
-                        else {
-                            tab.setText("Sign up");
-                        }
+                (tab, position) -> {
+                    if(position == 0) {
+                        tab.setText("Log In");
+                    }
+                    else {
+                        tab.setText("Sign up");
                     }
                 }).attach();
     }

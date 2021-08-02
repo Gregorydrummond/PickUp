@@ -39,15 +39,9 @@ import com.parse.ParseUser;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
-    public static final int GET_FROM_GALLERY = 1;
 
     ImageView ivProfilePicture;
     TextView tvUsername;
@@ -56,8 +50,8 @@ public class ProfileFragment extends Fragment {
     FloatingActionButton fabAddPic;
     ProfileFragmentViewPageAdapter adapter;
     ParseFile photoFile;
+    ParseUser user = ParseUser.getCurrentUser();;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -70,14 +64,6 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
@@ -108,8 +94,6 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivProfilePictureProfile);
         tvUsername = view.findViewById(R.id.tvUsernameProfile);
@@ -124,78 +108,69 @@ public class ProfileFragment extends Fragment {
         viewPager2.setAdapter(adapter);
 
         //Tab Layout Mediator
-        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Games");
-                        break;
-                    case 1:
-                        tab.setText("Stats");
-                        break;
-                    default:
-                        tab.setText("Settings");
-                }
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Games");
+                    break;
+                case 1:
+                    tab.setText("Stats");
+                    break;
+                default:
+                    tab.setText("Settings");
             }
         }).attach();
 
         //Animation
         viewPager2.setPageTransformer(new ZoomOutPageTransformer());
 
-
-        // Activity result launcher. OnActivityResult method is deprecated
+        // Activity result launcher. (Coming back from gallery)
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            //doSomeOperations();
-                            Uri selectedImage = data.getData();
-                            Bitmap bitmap = null;
-                            if(Build.VERSION.SDK_INT < 28) {
-                                Log.i(TAG, "onActivityResult: build version < 28");
-                                try {
-                                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                                    Glide.with(getContext())
-                                            .load(selectedImage)
-                                            .transform(new CircleCrop())
-                                            .into(ivProfilePicture);
-                                    Log.i(TAG, "onActivityResult: set image");
-                                } catch (IOException e) {
-                                    Log.e(TAG, "onActivityResult: Error getting image", e);
-                                    return;
-                                }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        Uri selectedImage = data.getData();
+                        Bitmap bitmap = null;
+                        if(Build.VERSION.SDK_INT < 28) {
+                            Log.i(TAG, "onActivityResult: build version < 28");
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                                Glide.with(getContext())
+                                        .load(selectedImage)
+                                        .transform(new CircleCrop())
+                                        .into(ivProfilePicture);
+                                Log.i(TAG, "onActivityResult: set image");
+                            } catch (IOException e) {
+                                Log.e(TAG, "onActivityResult: Error getting image", e);
+                                return;
                             }
-                            else {
-                                Log.i(TAG, "onActivityResult: build version >= 28");
-                                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), selectedImage);
-                                try {
-                                    bitmap = ImageDecoder.decodeBitmap((ImageDecoder.Source) source);
-                                    Glide.with(getContext())
-                                            .load(selectedImage)
-                                            .transform(new CircleCrop())
-                                            .into(ivProfilePicture);
-                                    Log.i(TAG, "onActivityResult: set image");
-                                } catch (IOException e) {
-                                    Log.e(TAG, "onActivityResult: Error getting image", e);
-                                    return;
-                                }
-
-                            }
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            photoFile = new ParseFile("UserProfilePic.png", stream.toByteArray());
-                            currentUser.put("profilePicture", photoFile);
-                            currentUser.saveInBackground();
                         }
                         else {
-                            Log.i(TAG, "onActivityResult: Result code not ok");
+                            Log.i(TAG, "onActivityResult: build version >= 28");
+                            ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), selectedImage);
+                            try {
+                                bitmap = ImageDecoder.decodeBitmap((ImageDecoder.Source) source);
+                                Glide.with(getContext())
+                                        .load(selectedImage)
+                                        .transform(new CircleCrop())
+                                        .into(ivProfilePicture);
+                                Log.i(TAG, "onActivityResult: set image");
+                            } catch (IOException e) {
+                                Log.e(TAG, "onActivityResult: Error getting image", e);
+                                return;
+                            }
                         }
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        photoFile = new ParseFile("UserProfilePic.png", stream.toByteArray());
+                        user.put("profilePicture", photoFile);
+                        user.saveInBackground();
+                    }
+                    else {
+                        Log.i(TAG, "onActivityResult: Result code not ok");
                     }
                 });
 
@@ -207,13 +182,13 @@ public class ProfileFragment extends Fragment {
         });
 
         ivProfilePicture.bringToFront();
-        ParseFile profilePicture = currentUser.getParseFile("profilePicture");
+        ParseFile profilePicture = user.getParseFile("profilePicture");
         if(profilePicture != null) {
             Glide.with(getContext())
                     .load(profilePicture.getUrl())
                     .transform(new CircleCrop())
                     .into(ivProfilePicture);
         }
-        tvUsername.setText(currentUser.getUsername());
+        tvUsername.setText(user.getUsername());
     }
 }

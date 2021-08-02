@@ -1,146 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="7dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/tvPointsPG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvScorePG"
-        android:layout_alignStart="@+id/tvScorePG"
-        android:layout_alignEnd="@+id/tvScorePG"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="6dp"
-        android:fontFamily="@font/rock_salt"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="You scored 15 points" />
-
-    <TextView
-        android:id="@+id/tvWinLossPG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvPointsPG"
-        android:layout_alignStart="@+id/tvPointsPG"
-        android:layout_alignEnd="@+id/tvPointsPG"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
-        android:fontFamily="@font/rock_salt"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="Won" />
-
-    <TextView
-        android:id="@+id/tvLocationNamePG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvUsernamePG"
-        android:layout_alignStart="@+id/tvUsernamePG"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="@font/rock_salt"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="@Roosevelt Gardens" />
-
-    <TextView
-        android:id="@+id/tvScorePG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvGameTypePG"
-        android:layout_alignStart="@+id/tvGameTypePG"
-        android:layout_alignEnd="@+id/tvGameTypePG"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
-        android:fontFamily="@font/rock_salt"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="Final Score: 21 - 6" />
-
-    <TextView
-        android:id="@+id/tvGameTypePG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvLocationNamePG"
-        android:layout_alignStart="@+id/tvLocationNamePG"
-        android:layout_alignEnd="@+id/tvLocationNamePG"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/rock_salt"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="Game: Teams" />
-
-    <ImageView
-        android:id="@+id/ivProfilePicturePG"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_person_24" />
-
-    <TextView
-        android:id="@+id/tvUsernamePG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivProfilePicturePG"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/ivProfilePicturePG"
-        android:ellipsize="end"
-        android:fontFamily="@font/rock_salt"
-        android:singleLine="true"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicturePG"
-        app:layout_constraintTop_toTopOf="@+id/ivProfilePicturePG"
-        tools:text="Greg's Game" />
-
-    <View
-        android:id="@+id/viewPG"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/tvWinLossPG"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:background="#686868" />
-
-    <TextView
-        android:id="@+id/tvTimeStamp"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvUsernamePG"
-        android:layout_alignBottom="@+id/tvUsernamePG"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@+id/tvUsernamePG"
-        android:fontFamily="@font/rock_salt"
-        android:gravity="start|center_vertical"
-        android:minWidth="50dp"
-        android:singleLine="true"
-        android:textColor="#ACACAC"
-        android:textSize="10sp"
-        tools:text="· 20 m" />
+        android:background="#FDE3BC"
+        android:padding="0dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvPointsCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvFinalScoreCardPG"
+            android:layout_alignStart="@+id/tvFinalScoreCardPG"
+            android:layout_alignEnd="@+id/tvFinalScoreCardPG"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="distance"
+            tools:text="You scored 15 points" />
+
+        <TextView
+            android:id="@+id/tvWonLossCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPointsCardPG"
+            android:layout_alignStart="@+id/tvPointsCardPG"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="distance"
+            tools:text="Won" />
+
+        <TextView
+            android:id="@+id/tvFinalScoreCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvGameTypeCardPG"
+            android:layout_alignStart="@+id/tvGameTypeCardPG"
+            android:layout_alignEnd="@+id/tvGameTypeCardPG"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="capacity"
+            tools:text="Final Score: 21 - 6" />
+
+        <TextView
+            android:id="@+id/tvGameTypeCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvLocationNameTypeCardPG"
+            android:layout_alignStart="@+id/tvUsernameCardPG"
+            android:layout_alignEnd="@+id/tvTimeStampCardPG"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="gameType"
+            tools:text="Game Type: Teams" />
+
+        <TextView
+            android:id="@+id/tvLocationNameTypeCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvUsernameCardPG"
+            android:layout_alignStart="@+id/tvUsernameCardPG"
+            android:layout_alignEnd="@+id/tvTimeStampCardPG"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="gameType"
+            tools:text="@Roosevelt Gardens" />
+
+        <TextView
+            android:id="@+id/tvUsernameCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ivUserProfilePictureCardPG"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/ivUserProfilePictureCardPG"
+            android:ellipsize="end"
+            android:fontFamily="@font/rock_salt"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:transitionName="username"
+            tools:text="Greg's Game" />
+
+        <ImageView
+            android:id="@+id/ivUserProfilePictureCardPG"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/ivGamePhotoCardPG"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitXY"
+            android:transitionName="profilePic"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+
+        <TextView
+            android:id="@+id/tvTimeStampCardPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tvUsernameCardPG"
+            android:layout_alignBottom="@+id/tvUsernameCardPG"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="00dp"
+            android:layout_toEndOf="@+id/tvUsernameCardPG"
+            android:fontFamily="@font/rock_salt"
+            android:gravity="start|center_vertical"
+            android:minWidth="50dp"
+            android:singleLine="true"
+            android:textColor="#ACACAC"
+            android:textSize="6sp"
+            tools:text="· 20 m" />
+
+        <ImageView
+            android:id="@+id/ivGamePhotoCardPG"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="-3dp"
+            android:layout_marginEnd="0dp"
+            android:scaleType="fitXY"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

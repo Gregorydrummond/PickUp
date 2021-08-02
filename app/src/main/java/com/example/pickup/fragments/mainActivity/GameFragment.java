@@ -45,7 +45,6 @@ public class GameFragment extends Fragment {
     private static final String TAG = "GameFragment";
 
     private Executor executor;
-//    private BiometricPrompt biometricPrompt;
     private androidx.biometric.BiometricPrompt biometricPrompt;
     private androidx.biometric.BiometricPrompt.PromptInfo promptInfo;
     public static Game currentGame;
@@ -54,7 +53,6 @@ public class GameFragment extends Fragment {
     ViewPager2 viewPager2;
     GameFragmentViewPagerAdapter adapter;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -160,15 +158,12 @@ public class GameFragment extends Fragment {
         viewPager2.setAdapter(adapter);
 
         //Tab Layout Mediator
-        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if(position == 0) {
-                    tab.setText("Current Game");
-                }
-                else {
-                    tab.setText("Recent Games");
-                }
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            if(position == 0) {
+                tab.setText("Current Game");
+            }
+            else {
+                tab.setText("Recent Games");
             }
         }).attach();
 
@@ -183,6 +178,5 @@ public class GameFragment extends Fragment {
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error fetching current game", e);
         }
-
     }
 }

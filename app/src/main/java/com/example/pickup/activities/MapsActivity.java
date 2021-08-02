@@ -69,132 +69,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        //Initialize placeClient
-//        placesClient = Places.createClient(this);
-
-        //Components
-        //svLocation = findViewById(R.id.svLocation);
-
-//        //Query listener
-//        svLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                String location = svLocation.getQuery().toString();
-//                if(location != null || !location.isEmpty()) {
-//                    Geocoder geocoder = new Geocoder(MapsActivity.this);
-//                    try {
-//                        addressList = geocoder.getFromLocationName(location, 1);
-//                    } catch (IOException e) {
-//                        Log.e(TAG, "onQueryTextSubmit: Error with query submit", e);
-//                    }
-//                    Address address = addressList.get(0);
-//                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-//                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-//                }
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-////                //Initialize place field list
-////                List<Place.Field> fieldList = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
-////
-////                //Create Intent
-////                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(MapsActivity.this);
-//
-////                //Start activity result
-////                autoCompleteResultLauncher.launch(intent);
-//                return false;
-//            }
-//        });
-//        final AutocompleteSupportFragment autocompleteSupportFragment =
-//                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autoComplete_fragment);
-//
-//        //What fields we'll get
-//        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
-//
-//        //
-//        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-//            @Override
-//            public void onPlaceSelected(@NonNull Place place) {
-//                final LatLng latLng = place.getLatLng();
-//                Log.i(TAG, "onPlaceSelected: " + latLng.toString());
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Status status) {
-//                Log.i(TAG, "onError: Error with autocomplete");
-//            }
-//        });
-
-        //Search view listener
-//        svLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                //API call
-//                //Use the builder to create a FindAutocompletePredictionsRequest.
-//                FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-//                        .setQuery(newText)
-//                        .build();
-//                placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-//                    for(AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-//                        Log.i(TAG, "onQueryTextChange: " + prediction.getPlaceId() + ", " + prediction.getPrimaryText(null).toString());
-//                    }
-//                }).addOnFailureListener((exception) -> {
-//                    if(exception instanceof ApiException) {
-//                        ApiException apiException = (ApiException) exception;
-//                        Log.e(TAG, "onQueryTextChange: Place not found: " + apiException.getStatusCode());
-//                    }
-//                });
-//                return false;
-//            }
-//        });
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-//        Create launcher (startActivityForResult is deprecated)
-//        autoCompleteResultLauncher = registerForActivityResult(
-//                new ActivityResultContracts.StartActivityForResult(),
-//                new ActivityResultCallback<ActivityResult>() {
-//                    @Override
-//                    public void onActivityResult(ActivityResult result) {
-//                        Intent data = result.getData();
-//                        if(result.getResultCode() == RESULT_OK) {
-//                            //Get place info with the data returned
-//                            Place place = Autocomplete.getPlaceFromIntent(data);
-//                            Log.i(TAG, "onActivityResult: Place: " + place.getName() + ", " + place.getId() + ", " + place.getLatLng().toString());
-//                        }
-//                        else if(result.getResultCode() == AutocompleteActivity.RESULT_ERROR) {
-//                            //Error handling
-//                            Log.d(TAG, "onActivityResult: Error getting place. "  + Autocomplete.getStatusFromIntent(data).getStatusMessage());
-//                        }
-//                        else if(result.getResultCode() == AutocompleteActivity.RESULT_CANCELED) {
-//                            //User canceled
-//                            Log.i(TAG, "onActivityResult: User canceled search");
-//                        }
-//                        MapsActivity.super.onActivityResult(AUTOCOMPLETE_REQUEST_CODE, result.getResultCode(), data);
-//                    }
-//                }
-//        );
     }
-
-    //Launch activity for result
-//    public void openSomeActivityForResult() {
-//        // Set the fields to specify which types of place data to return after the user has made a selection.
-//        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-//
-//        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).build(this);
-//        autoCompleteResultLauncher.launch(intent);
-//    }
 
     /**
      * Manipulates the map once available.
@@ -231,25 +110,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Zooming in camera
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                googleMap.addMarker(new MarkerOptions().position(latLng).title("Your game location"));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                gameLocation = latLng;
-                Log.i(TAG, "onMapClick: Added marker at " + latLng.toString());
-                Log.d(TAG, "onStop: Sending back data");
-                //Create an intent which which will contain the results
-                Intent intent = new Intent();
+        mMap.setOnMapClickListener(latLng -> {
+            googleMap.addMarker(new MarkerOptions().position(latLng).title("Your game location"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            gameLocation = latLng;
+            Log.i(TAG, "onMapClick: Added marker at " + latLng.toString());
+            Log.d(TAG, "onStop: Sending back data");
+            //Create an intent which which will contain the results
+            Intent intent = new Intent();
 
-                //Pass the data (results of editing)
-                intent.putExtra(Creation.KEY_LOCATION_LAT, gameLocation.latitude);
-                intent.putExtra(Creation.KEY_LOCATION_LONG, gameLocation.longitude);
+            //Pass the data (results of editing)
+            intent.putExtra(Creation.KEY_LOCATION_LAT, gameLocation.latitude);
+            intent.putExtra(Creation.KEY_LOCATION_LONG, gameLocation.longitude);
 
-                //Set the result of the intent
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+            //Set the result of the intent
+            setResult(RESULT_OK, intent);
+            finish();
         });
     }
 

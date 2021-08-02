@@ -13,8 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -48,7 +46,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_game_2, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_game, parent, false);
         return new ViewHolder(view);
     }
 
@@ -86,10 +84,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
         ImageView ivProfilePicture;
         TextView tvUserName;
         TextView tvTimeStamp;
-        TextView tvLocationName;
         TextView tvGameType;
         TextView tvGameCapacity;
-        TextView tvGameStatus;
         TextView tvDistance;
         ImageView ivGamePhoto;
 
@@ -98,10 +94,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             ivProfilePicture = itemView.findViewById(R.id.ivUserProfilePictureHome);
             tvUserName = itemView.findViewById(R.id.tvUsernameHome);
             tvTimeStamp = itemView.findViewById(R.id.tvTimeStampHome);
-            //tvLocationName = itemView.findViewById(R.id.tvLocationNameHome);
             tvGameType = itemView.findViewById(R.id.tvGameTypeHome);
             tvGameCapacity = itemView.findViewById(R.id.tvGameCapacityHome);
-            //tvGameStatus = itemView.findViewById(R.id.tvGameStatusHome);
             tvDistance = itemView.findViewById(R.id.tvDistanceHome);
             ivGamePhoto = itemView.findViewById(R.id.ivGamePhotoHome);
 
@@ -119,7 +113,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 Glide.with(context)
                         .load(profilePicture.getUrl())
                         .transform(new CircleCrop())
-//                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(15)))
                         .into(ivProfilePicture);
             }
             ParseFile gamePhoto = game.getLocationPhoto();
@@ -133,24 +126,11 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             tvUserName.setText(textName);
             String textTime = "· " + game.getCreatedAtDate();
             tvTimeStamp.setText(textTime);
-            String textLocationName = "@" + game.getLocationName();
-            //tvLocationName.setText(textLocationName);
             String textGameType = "Game Type: " + game.getGameType();
             tvGameType.setText(textGameType);
             int playerCount = game.getPlayerCount();
             String textGameCapacity = "Players: " + playerCount + "/" + game.getPlayerLimit();
             tvGameCapacity.setText(textGameCapacity);
-            String textGameStatus = "Status: ";
-            if(game.getGameStarted()) {
-                textGameStatus = textGameStatus.concat("Game in progress");
-            }
-            else if(game.getGameEnded()) {
-                textGameStatus = textGameStatus.concat("Game ended");
-            }
-            else {
-                textGameStatus = textGameStatus.concat("Game not started");
-            }
-            //tvGameStatus.setText(textGameStatus);
             String textDistance = String.format("%.2f", user.getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation())) + " miles away";
             tvDistance.setText(textDistance);
         }
@@ -226,14 +206,11 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                     bottomSheetDialogBtnJoin.setEnabled(false);
                 }
 
-                bottomSheetDialogBtnJoin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i(TAG, "onClick: joining game");
-                        GameDetailsActivity.joinGame(finalGame, false);
-                        bottomSheetDialog.hide();
-                        Toast.makeText(context, "Joined game", Toast.LENGTH_SHORT).show();
-                    }
+                bottomSheetDialogBtnJoin.setOnClickListener(v -> {
+                    Log.i(TAG, "onClick: joining game");
+                    GameDetailsActivity.joinGame(finalGame, false);
+                    bottomSheetDialog.hide();
+                    Toast.makeText(context, "Joined game", Toast.LENGTH_SHORT).show();
                 });
             }
         }

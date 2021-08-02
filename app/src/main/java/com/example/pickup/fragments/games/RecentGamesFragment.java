@@ -27,16 +27,10 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RecentGamesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RecentGamesFragment extends Fragment {
 
     private static final String TAG = "RecentGamesFragment";
 
-    RecyclerView rvRecentGames;
     AnimatedRecyclerView animatedRecyclerView;
     ProfileGamesFragmentAdapter adapter;
     List<GameStat> gameStatList;
@@ -45,12 +39,10 @@ public class RecentGamesFragment extends Fragment {
     AVLoadingIndicatorView loadingIndicator;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -58,15 +50,6 @@ public class RecentGamesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RecentGamesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static RecentGamesFragment newInstance(String param1, String param2) {
         RecentGamesFragment fragment = new RecentGamesFragment();
         Bundle args = new Bundle();
@@ -95,7 +78,6 @@ public class RecentGamesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        user = ParseUser.getCurrentUser();
 
         //Find components
         animatedRecyclerView = view.findViewById(R.id.rvRecentGames);
@@ -162,7 +144,7 @@ public class RecentGamesFragment extends Fragment {
         query.setLimit(5);
 
         //Get game objects
-        query.findInBackground((FindCallback<GameStat>) (gamesStats, e) -> {
+        query.findInBackground((gamesStats, e) -> {
             if(e == null) {
                 Log.i(TAG, "done: Retrieved games stats");
                 stopLoadingAnimation();
@@ -189,11 +171,9 @@ public class RecentGamesFragment extends Fragment {
 
     void startLoadingAnimation(){
         loadingIndicator.show();
-        // or avi.smoothToShow();
     }
 
     void stopLoadingAnimation(){
         loadingIndicator.hide();
-        // or avi.smoothToHide();
     }
 }

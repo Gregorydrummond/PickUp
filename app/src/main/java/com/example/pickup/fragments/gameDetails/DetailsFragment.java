@@ -23,11 +23,6 @@ import com.example.pickup.models.Team;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DetailsFragment extends Fragment {
 
     private static final String TAG = "DetailsFragment";
@@ -39,12 +34,10 @@ public class DetailsFragment extends Fragment {
     TextView tvDistance;
     ImageView ivGamePhoto;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -52,15 +45,7 @@ public class DetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static DetailsFragment newInstance(String param1, String param2) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
@@ -116,8 +101,8 @@ public class DetailsFragment extends Fragment {
                 textGameStatus = textGameStatus.concat("Game not started");
             }
             tvStarted.setText(textGameStatus);
-            int numOfPlayers = (int) game.getPlayerCount();
-            int maxPlayers = (int) game.getPlayerLimit();
+            int numOfPlayers = game.getPlayerCount();
+            int maxPlayers = game.getPlayerLimit();
             String textPlayerCount = "Players: " + numOfPlayers + "/" + maxPlayers;
             tvPlayerCount.setText(textPlayerCount);
             String textWinBy2 = "Win By 2: " + (game.getWinByTwo() ? "Yes" : "No");

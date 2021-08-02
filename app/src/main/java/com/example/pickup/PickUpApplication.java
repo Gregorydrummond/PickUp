@@ -28,7 +28,6 @@ public class PickUpApplication extends Application {
                 .applicationId("uqufYtVKZPXH4qE8yuNlOLsCSu9vGRYbaIJ2jvDs")
                 .clientKey("vCSu87FaBUKpcnrru7KjkYLitBa0HXxN067gB1qt")
                 .server("https://pickup.b4a.io")
-//                .server("https://parseapi.back4app.com")
                 .build()
         );
 

@@ -67,18 +67,15 @@ public class HomeFragment extends Fragment {
 
     Toolbar toolbar;
     static List<Game> gamesFeed;
-    RecyclerView rvHome;
     AnimatedRecyclerView animatedRecyclerView;
     HomeFragmentAdapter adapter;
-    Button button;
-    ParseUser user;
+    ParseUser user = ParseUser.getCurrentUser();;
     TextView tvNoGames;
     Set<String> gameFilterSet = new HashSet<>();
     SwipeRefreshLayout swipeRefreshLayout;
     AVLoadingIndicatorView loadingIndicator;
     boolean queryFinished = false;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -123,7 +120,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        user = ParseUser.getCurrentUser();
 
         //Find components
         toolbar = view.findViewById(R.id.toolbar_home);
@@ -179,7 +175,7 @@ public class HomeFragment extends Fragment {
 
             SubscriptionHandling<Game> subscriptionHandling = PickUpApplication.parseLiveQueryClient.subscribe(query);
 
-            subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (SubscriptionHandling.HandleEventCallback<Game>) (query1, newGame) -> {
+            subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (query1, newGame) -> {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
                     //Notifications
@@ -366,37 +362,24 @@ public class HomeFragment extends Fragment {
                 gameFilterSet.clear();
                 gameFilterSet.add(gameFilter[which]);
                 Log.i(TAG, "onClick: Added " + gameFilter[which]);
-            }).setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.clear();
-                    queryGames();
-                    Toast.makeText(getContext(), "Filter updated", Toast.LENGTH_SHORT).show();
-                }
+            }).setPositiveButton(R.string.done, (dialog, which) -> {
+                adapter.clear();
+                queryGames();
+                Toast.makeText(getContext(), "Filter updated", Toast.LENGTH_SHORT).show();
             }).setNeutralButton(R.string.cancel, null).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        //Query Games
-//        queryGames();
-        //Log.i(TAG, "onResume: resumed");
-    }
-
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name_new_game);
             String description = getString(R.string.channel_description_new_game);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system; you can't change the importance or other notification behaviors after this
             NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -404,11 +387,9 @@ public class HomeFragment extends Fragment {
 
     void startLoadingAnimation(){
         loadingIndicator.show();
-        // or avi.smoothToShow();
     }
 
     void stopLoadingAnimation(){
         loadingIndicator.hide();
-        // or avi.smoothToHide();
     }
 }

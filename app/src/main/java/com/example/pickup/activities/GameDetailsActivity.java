@@ -37,18 +37,15 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "GameDetailsActivity";
     private static Game game;
-    private static ParseUser user;
+    private static ParseUser user = ParseUser.getCurrentUser();
     private static Button btnJoin;
 
     ImageView ivProfilePicture;
     TextView tvUsername;
     TextView tvLocationName;
-    //Button btnJoin;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     GameDetailsActivityViewPagerAdapter adapter;
-    //Game game;
-    //ParseUser user;
     ParseUser creator;
 
     @Override
@@ -56,8 +53,8 @@ public class GameDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_details);
 
+        //Unwrap game
         game = Parcels.unwrap(getIntent().getParcelableExtra(Game.class.getSimpleName()));
-        //Log.i(TAG, "onCreate: Location Name: " + game.getLocationName());
 
         //Find components
         ivProfilePicture = findViewById(R.id.ivProfilePictureGD);
@@ -73,15 +70,12 @@ public class GameDetailsActivity extends AppCompatActivity {
         //Set adapter
         viewPager2.setAdapter(adapter);
 
-        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if(position == 0) {
-                    tab.setText("Details");
-                }
-                else {
-                    tab.setText("Teams");
-                }
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            if(position == 0) {
+                tab.setText("Details");
+            }
+            else {
+                tab.setText("Teams");
             }
         }).attach();
 
@@ -96,7 +90,6 @@ public class GameDetailsActivity extends AppCompatActivity {
             Log.e(TAG, "onCreate: Error fetching creator", e);
             return;
         }
-        user = ParseUser.getCurrentUser();
 
         ParseFile profilePicture = creator.getParseFile("profilePicture");
         if(profilePicture != null) {
@@ -112,7 +105,6 @@ public class GameDetailsActivity extends AppCompatActivity {
         tvLocationName.setText(textLocationName);
 
         //Join button
-
         //Hide join button if user is the creator
         if(user.getObjectId().equals(creator.getObjectId())) {
             btnJoin.setVisibility(View.GONE);
@@ -128,12 +120,7 @@ public class GameDetailsActivity extends AppCompatActivity {
             btnJoin.setVisibility(View.GONE);
         }
 
-        btnJoin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                joinGame(game, true);
-            }
-        });
+        btnJoin.setOnClickListener(v -> joinGame(game, true));
     }
 
     public static void joinGame(Game _game, boolean onGameDetail) {
@@ -159,20 +146,17 @@ public class GameDetailsActivity extends AppCompatActivity {
             if (teamB.getSize() < teamA.getSize()) {
                 try {
                     teamB.setPlayers(user, true);
-                    teamB.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Log.i(TAG, "done: Added player to team B");
-                                _game.setPlayerCount(true);
-                                _game.saveInBackground();
-                                if(onGameDetail) {
-                                    btnJoin.setEnabled(false);
-                                }
-                            } else {
-                                Log.e(TAG, "done: Backend error saving player to team B", e);
-                                return;
+                    teamB.saveInBackground(e -> {
+                        if (e == null) {
+                            Log.i(TAG, "done: Added player to team B");
+                            _game.setPlayerCount(true);
+                            _game.saveInBackground();
+                            if(onGameDetail) {
+                                btnJoin.setEnabled(false);
                             }
+                        } else {
+                            Log.e(TAG, "done: Backend error saving player to team B", e);
+                            return;
                         }
                     });
                     user.put("currentTeam", teamB);
@@ -185,20 +169,17 @@ public class GameDetailsActivity extends AppCompatActivity {
             else {
                 try {
                     teamA.setPlayers(user, true);
-                    teamA.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Log.i(TAG, "done: Added player to team A");
-                                _game.setPlayerCount(true);
-                                _game.saveInBackground();
-                                if(onGameDetail) {
-                                    btnJoin.setEnabled(false);
-                                }
-                            } else {
-                                Log.e(TAG, "done: Backend error saving player to team A", e);
-                                return;
+                    teamA.saveInBackground(e -> {
+                        if (e == null) {
+                            Log.i(TAG, "done: Added player to team A");
+                            _game.setPlayerCount(true);
+                            _game.saveInBackground();
+                            if(onGameDetail) {
+                                btnJoin.setEnabled(false);
                             }
+                        } else {
+                            Log.e(TAG, "done: Backend error saving player to team A", e);
+                            return;
                         }
                     });
                     user.put("currentTeam", teamA);
