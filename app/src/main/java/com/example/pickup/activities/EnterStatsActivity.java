@@ -33,6 +33,7 @@ import java.util.Objects;
 public class EnterStatsActivity extends AppCompatActivity {
 
     private static final String TAG = "EnterStatsActivity";
+    public static final String ALL_STATS_ARRAY_KEY = "stats";
 
     ImageView ivProfilePicture;
     TextView tvUsername;
@@ -139,6 +140,7 @@ public class EnterStatsActivity extends AppCompatActivity {
 
                 //Get game type stats from user class (array)
                 JSONArray statsArray;
+                JSONArray allStatsArray;
                 String statsArrayKey = null;
                 switch (gameType) {
                     case "Teams":
@@ -161,29 +163,45 @@ public class EnterStatsActivity extends AppCompatActivity {
                 //Update its content
                 if(statsArrayKey != null) {
                     statsArray = user.getJSONArray(statsArrayKey);
+                    allStatsArray = user.getJSONArray(ALL_STATS_ARRAY_KEY);
                     try {
                         int gamesPlayed = statsArray.getInt(0);
+                        int totalGamesPlayed = allStatsArray.getInt(0);
                         int gamesWon = statsArray.getInt(1);
-                        int totalPointsScored = statsArray.getInt(2);
-                        int totalMaxPoints = statsArray.getInt(3);
+                        int totalGamesWon = allStatsArray.getInt(1);
+                        int pointsScored = statsArray.getInt(2);
+                        int totalPointsScored = allStatsArray.getInt(2);
+                        int maxPoints = statsArray.getInt(3);
+                        int totalMaxPoints = allStatsArray.getInt(3);
                         int mostPointsScored = statsArray.getInt(4);
+                        int mostPointsScoredAllTime = allStatsArray.getInt(4);
                         int totalXP = statsArray.getInt(5);
+                        int totalXPAllTime = allStatsArray.getInt(5);
 
                         statsArray.put(0, ++gamesPlayed);
+                        allStatsArray.put(0, ++totalGamesPlayed);
 
                         if(cbGameWon.isChecked()) {
                            statsArray.put(1, ++gamesWon);
+                           allStatsArray.put(1, ++totalGamesWon);
                         }
 
+                        pointsScored += points;
                         totalPointsScored += points;
-                        statsArray.put(2, totalPointsScored);
+                        statsArray.put(2, pointsScored);
+                        allStatsArray.put(2, totalPointsScored);
 
-                        int maxPoints = game.getScoreLimit();
-                        totalMaxPoints += maxPoints;
+                        int scoreLimit = game.getScoreLimit();
+                        maxPoints += scoreLimit;
+                        totalMaxPoints += scoreLimit;
+                        statsArray.put(3, maxPoints);
                         statsArray.put(3, totalMaxPoints);
 
                         if(points > mostPointsScored) {
                             statsArray.put(4, points);
+                        }
+                        if(points > mostPointsScoredAllTime) {
+                            allStatsArray.put(4, points);
                         }
 
                         //Make an algorithm to determine amount of xp
@@ -192,10 +210,13 @@ public class EnterStatsActivity extends AppCompatActivity {
                             xp += 30;
                         }
                         totalXP += xp;
+                        totalXPAllTime += xp;
                         statsArray.put(5, totalXP);
+                        allStatsArray.put(5, totalXPAllTime);
 
                         //Post new array to property
                         user.put(statsArrayKey, statsArray);
+                        user.put(ALL_STATS_ARRAY_KEY, allStatsArray);
 
                         Log.i(TAG, "onClick: Updated stats array");
                     } catch (JSONException e) {

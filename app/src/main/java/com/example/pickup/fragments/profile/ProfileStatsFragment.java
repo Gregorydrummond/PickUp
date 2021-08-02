@@ -5,14 +5,25 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.pickup.R;
+import com.example.pickup.adapters.ProfileStatsFragmentAdapter;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,10 +33,20 @@ import com.parse.ParseUser;
 public class ProfileStatsFragment extends Fragment {
 
     private static final String TAG = "ProfileStatsFragment";
+    public static final String KEY_STATS = "stats";
 
-    TextView tvGamesWon;
-    TextView tvGamesPlayed;
-    TextView tvTotalPoints;
+    List<JSONObject> stats;
+    RecyclerView rvStats;
+    ProfileStatsFragmentAdapter adapter;
+    ParseUser user = ParseUser.getCurrentUser();
+    int gamesPlayed;
+    int gamesWon;
+    int pointsScored;
+    int maxPoints;
+    int mostPointsScored;
+    int totalXP;
+    double ppg;
+    double mppg;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,14 +61,6 @@ public class ProfileStatsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileStatsFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ProfileStatsFragment newInstance(String param1, String param2) {
         ProfileStatsFragment fragment = new ProfileStatsFragment();
@@ -78,19 +91,95 @@ public class ProfileStatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ParseUser user = ParseUser.getCurrentUser();
-
         //Find components
-        tvGamesWon = view.findViewById(R.id.tvGamesWonPS);
-        tvGamesPlayed = view.findViewById(R.id.tvGamesPlayedPS);
-        tvTotalPoints = view.findViewById(R.id.tvTotalPointsPS);
+        rvStats = view.findViewById(R.id.rvStats);
 
-        //Set data
-        String textGamesWon = "Games Won: " + String.valueOf(user.get("gamesWon"));
-        tvGamesWon.setText(textGamesWon);
-        String textGamesPlayed = "Games Played: " + String.valueOf(user.get("gamesPlayed"));
-        tvGamesPlayed.setText(textGamesPlayed);
-        String textTotalPoints = "Total Points: " + String.valueOf(user.get("totalPoints"));
-        tvTotalPoints.setText(textTotalPoints);
+        //Initialize list
+        stats = new ArrayList<>();
+
+        //Initialize adapter
+        adapter = new ProfileStatsFragmentAdapter(stats, getContext());
+
+        //Layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        //Set layout manager
+        rvStats.setLayoutManager(layoutManager);
+
+        //Set adapter
+        rvStats.setAdapter(adapter);
+
+        //Fetch data
+        try {
+            fetchData();
+        } catch (JSONException | ParseException e) {
+            Log.e(TAG, "onViewCreated: Error fetching stats", e);
+            return;
+        }
+    }
+
+    public void setStatsData(ArrayList<Integer> jsonArray, JSONObject jsonObject) throws JSONException {
+        gamesPlayed = jsonArray.get(0);
+        gamesWon = jsonArray.get(1);
+        pointsScored = jsonArray.get(2);
+        maxPoints = jsonArray.get(3);
+        mostPointsScored = jsonArray.get(4);
+        totalXP = jsonArray.get(5);
+        if(gamesPlayed != 0) {
+            ppg = (double) pointsScored / (double) gamesPlayed;
+            mppg = (double) maxPoints / (double) gamesPlayed;
+        }
+        else {
+            ppg = 0;
+            mppg = 0;
+        }
+
+        jsonObject.put("wins", gamesWon);
+        jsonObject.put("ppg", ppg);
+        jsonObject.put("gamesPlayed", gamesPlayed);
+        jsonObject.put("mppg", mppg);
+        jsonObject.put("mostPointsScored", mostPointsScored);
+        jsonObject.put("xp", totalXP);
+
+        Log.d(TAG, "setStatsData: " + jsonObject);
+
+        stats.add(jsonObject);
+    }
+
+    private void fetchData() throws JSONException, ParseException {
+        //Get all games stats
+        ArrayList<Integer> stats = (ArrayList<Integer>) user.get(KEY_STATS);
+        JSONObject jsonAllStatsObject = new JSONObject();
+        jsonAllStatsObject.put("title", "All Games");
+        setStatsData(stats, jsonAllStatsObject);
+
+        //Get team stats
+        ArrayList<Integer> teamsStats = (ArrayList<Integer>) user.get("teamsStats");
+        JSONObject jsonTeamsStatsObject = new JSONObject();
+        jsonTeamsStatsObject.put("title", "Teams");
+        setStatsData(teamsStats, jsonTeamsStatsObject);
+
+
+
+        //Get 3 point stats
+        ArrayList<Integer> threePointShootoutStats = (ArrayList<Integer>) user.get("threePointShootoutStats");
+        JSONObject jsonThreePointShootoutStatsObject = new JSONObject();
+        jsonThreePointShootoutStatsObject.put("title", "king Of The Court");
+        setStatsData(threePointShootoutStats, jsonThreePointShootoutStatsObject);
+
+        //Get king of the courts stats
+        ArrayList<Integer> kingOfTheCourtStats = (ArrayList<Integer>) user.get("kingOfTheCourtStats");
+        JSONObject jsonKingOfTheCourtStatsObject = new JSONObject();
+        jsonKingOfTheCourtStatsObject.put("title", "3 Point Shootout");
+        setStatsData(kingOfTheCourtStats, jsonKingOfTheCourtStatsObject);
+
+        //Get 21 stats
+        ArrayList<Integer> twentyOneStats = (ArrayList<Integer>) user.get("twentyOneStats");
+        JSONObject jsonTwentyOneStatsObject = new JSONObject();
+        jsonTwentyOneStatsObject.put("title", "21");
+        setStatsData(twentyOneStats, jsonTwentyOneStatsObject);
+
+        //Update adapter
+        adapter.notifyDataSetChanged();
     }
 }
