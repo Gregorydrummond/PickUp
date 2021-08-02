@@ -77,12 +77,12 @@ public class EnterStatsActivity extends AppCompatActivity {
         try {
             game = (Game) user.getParseObject("currentGame").fetchIfNeeded();
             teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
-            //teamA = (Team) game.getTeamA().fetchIfNeeded();
             creator = game.getCreator().fetchIfNeeded();
             userIsCreator = user.getObjectId().equals(creator.getObjectId());
             Log.i(TAG, "onCreate: Fetched game");
         } catch (ParseException e) {
             Log.e(TAG, "onCreate: Error fetching game", e);
+            return;
         }
 
         ParseFile profilePicture = creator.getParseFile("profilePicture");
@@ -108,18 +108,6 @@ public class EnterStatsActivity extends AppCompatActivity {
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    //teamA = (Team) game.getTeamA().fetchIfNeeded();
-//                    //teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
-//                } catch (ParseException e) {
-//                    Log.e(TAG, "onClick: Error fetching team data", e);
-//                }
-//                try {
-//                    teamA = (Team) user.getParseObject("currentTeam").fetchIfNeeded();
-//                } catch (ParseException e) {
-//                    Log.e(TAG, "onClick: Error fetching team data", e);
-//                }
-
                 //New GameStat object
                 GameStat gameStat = new GameStat();
                 gameStat.setGame(game);
@@ -143,6 +131,95 @@ public class EnterStatsActivity extends AppCompatActivity {
                 }
                 else {
                     gameStat.setGameWon(false);
+                }
+
+                //Add stats to specific game type
+                //Get game type
+                String gameType = game.getGameType();
+
+                //Get game type stats from user class (array)
+                JSONArray statsArray;
+                String statsArrayKey = null;
+                switch (gameType) {
+                    case "Teams":
+                        statsArrayKey = "teamsStats";
+                        break;
+                    case "King of the Court":
+                        statsArrayKey = "kingOfTheCourtStats";
+                        break;
+                    case "3-Point Shootout":
+                        statsArrayKey = "threePointShootoutStats";
+                        break;
+                    case "21":
+                        statsArrayKey = "twentyOneStats";
+                        break;
+                    default:
+                        Log.i(TAG, "onClick: Error getting correct stats");
+                        break;
+                }
+                
+                //Update its content
+                if(statsArrayKey != null) {
+                    statsArray = user.getJSONArray(statsArrayKey);
+                    try {
+                        int gamesPlayed = statsArray.getInt(0);
+                        int gamesWon = statsArray.getInt(1);
+                        int totalPointsScored = statsArray.getInt(2);
+                        int totalMaxPoints = statsArray.getInt(3);
+                        int mostPointsScored = statsArray.getInt(4);
+                        int totalXP = statsArray.getInt(5);
+
+                        statsArray.put(0, ++gamesPlayed);
+
+                        if(cbGameWon.isChecked()) {
+                           statsArray.put(1, ++gamesWon);
+                        }
+
+                        totalPointsScored += points;
+                        statsArray.put(2, totalPointsScored);
+
+                        int maxPoints = game.getScoreLimit();
+                        totalMaxPoints += maxPoints;
+                        statsArray.put(3, totalMaxPoints);
+
+                        if(points > mostPointsScored) {
+                            statsArray.put(4, points);
+                        }
+
+                        //Make an algorithm to determine amount of xp
+                        int xp = points * 10;
+                        if(cbGameWon.isChecked()) {
+                            xp += 30;
+                        }
+                        totalXP += xp;
+                        statsArray.put(5, totalXP);
+
+                        //Post new array to property
+                        user.put(statsArrayKey, statsArray);
+
+                        Log.i(TAG, "onClick: Updated stats array");
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onClick: Error updating stats arrays", e);
+                    }
+                }
+
+                //Streak
+                int streak = user.getInt("currentStreak");
+                if(cbGameWon.isChecked()) {
+                    if(streak >= 0) {
+                        user.put("currentStreak", ++streak);
+                    }
+                    else {
+                        user.put("currentStreak", 1);
+                    }
+                }
+                else {
+                    if(streak <= 0) {
+                        user.put("currentStreak", --streak);
+                    }
+                    else {
+                        user.put("currentStreak", -1);
+                    }
                 }
 
                 //Team stats
