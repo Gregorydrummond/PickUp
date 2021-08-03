@@ -93,13 +93,24 @@ public class ProfileStatsFragmentAdapter extends RecyclerView.Adapter<ProfileSta
 
         public void bind(JSONObject stats) throws JSONException {
 
-            tvTitle.setText(stats.getString("title"));
-            tvGamesPlayed.setText(String.valueOf(stats.getInt("gamesPlayed")));
-            tvWins.setText(String.valueOf(stats.getInt("wins")));
-            tvPPG.setText(String.valueOf(stats.getDouble("ppg")));
-            tvMaxPPG.setText(String.valueOf(stats.getDouble("mppg")));
-            tvMostPointsScored.setText(String.valueOf(stats.getInt("mostPointsScored")));
-            tvXP.setText(String.valueOf(stats.getInt("xp")));
+            String gameType = stats.getString("gameType");
+            int points = stats.getInt("totalPoints");
+            int maxPoints = stats.getInt("maxPoints");
+            int wins = stats.getInt("gamesWon");
+            int gamePlayed = stats.getInt("gamesPlayed");
+            int mostPointsScored = stats.getInt("mostPoints");
+            int xp = stats.getInt("totalXP");
+
+            String ppg = (gamePlayed == 0) ? "0.0" : String.valueOf((double) points / (double) gamePlayed);
+            String maxPPG = (gamePlayed == 0) ? "0.0" : String.valueOf((double) maxPoints / (double) gamePlayed);
+
+            tvTitle.setText(gameType);
+            tvWins.setText(String.valueOf(wins));
+            tvPPG.setText(ppg);
+            tvGamesPlayed.setText(String.valueOf(gamePlayed));
+            tvMaxPPG.setText(maxPPG);
+            tvMostPointsScored.setText(String.valueOf(mostPointsScored));
+            tvXP.setText(String.valueOf(xp));
         }
     }
 }

@@ -109,67 +109,13 @@ public class ProfileStatsFragment extends Fragment {
         }
     }
 
-    public void setStatsData(ArrayList<Integer> jsonArray, JSONObject jsonObject) throws JSONException {
-        gamesPlayed = jsonArray.get(0);
-        gamesWon = jsonArray.get(1);
-        pointsScored = jsonArray.get(2);
-        maxPoints = jsonArray.get(3);
-        mostPointsScored = jsonArray.get(4);
-        totalXP = jsonArray.get(5);
-        if(gamesPlayed != 0) {
-            ppg = (double) pointsScored / (double) gamesPlayed;
-            mppg = (double) maxPoints / (double) gamesPlayed;
-        }
-        else {
-            ppg = 0;
-            mppg = 0;
-        }
-
-        jsonObject.put("wins", gamesWon);
-        jsonObject.put("ppg", ppg);
-        jsonObject.put("gamesPlayed", gamesPlayed);
-        jsonObject.put("mppg", mppg);
-        jsonObject.put("mostPointsScored", mostPointsScored);
-        jsonObject.put("xp", totalXP);
-
-        Log.d(TAG, "setStatsData: " + jsonObject);
-
-        stats.add(jsonObject);
-    }
-
     private void fetchData() throws JSONException, ParseException {
-        //Get all games stats
-        //TODO: Find out why this works on emulator but not on physical device
-//        ArrayList<Integer> stats = (ArrayList<Integer>) user.get("stats");
-//        JSONObject jsonAllStatsObject = new JSONObject();
-//        jsonAllStatsObject.put("title", "All Games");
-//        setStatsData(stats, jsonAllStatsObject);
-
-        //Get team stats
-        ArrayList<Integer> teamsStats = (ArrayList<Integer>) user.get("teamsStats");
-        JSONObject jsonTeamsStatsObject = new JSONObject();
-        jsonTeamsStatsObject.put("title", "Teams");
-        setStatsData(teamsStats, jsonTeamsStatsObject);
-
-        //Get 3 point stats
-        ArrayList<Integer> threePointShootoutStats = (ArrayList<Integer>) user.get("threePointShootoutStats");
-        JSONObject jsonThreePointShootoutStatsObject = new JSONObject();
-        jsonThreePointShootoutStatsObject.put("title", "king Of The Court");
-        setStatsData(threePointShootoutStats, jsonThreePointShootoutStatsObject);
-
-        //Get king of the courts stats
-        ArrayList<Integer> kingOfTheCourtStats = (ArrayList<Integer>) user.get("kingOfTheCourtStats");
-        JSONObject jsonKingOfTheCourtStatsObject = new JSONObject();
-        jsonKingOfTheCourtStatsObject.put("title", "3 Point Shootout");
-        setStatsData(kingOfTheCourtStats, jsonKingOfTheCourtStatsObject);
-
-        //Get 21 stats
-        ArrayList<Integer> twentyOneStats = (ArrayList<Integer>) user.get("twentyOneStats");
-        JSONObject jsonTwentyOneStatsObject = new JSONObject();
-        jsonTwentyOneStatsObject.put("title", "21");
-        setStatsData(twentyOneStats, jsonTwentyOneStatsObject);
-
-        //Update adapter
+        JSONArray statsArray = user.getJSONArray("stats");
+        Log.i(TAG, "fetchData: " + statsArray);
+        for(int i = 0; i < statsArray.length(); i++) {
+            JSONObject jsonObject = statsArray.getJSONObject(i);
+            stats.add(jsonObject);
+        }
         adapter.notifyDataSetChanged();
     }
 }
