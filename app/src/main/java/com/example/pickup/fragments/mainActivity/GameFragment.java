@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -105,14 +106,14 @@ public class GameFragment extends Fragment {
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
                 Log.i(TAG, "onAuthenticationFailed: Authentication Failed");
-                Toast.makeText(getActivity().getApplicationContext(), "Authentication Faile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
             }
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric security")
-                .setSubtitle("Please provide a fingerprint")
-                .setNegativeButtonText("Use account password")
+                .setTitle("Player's Security")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL | BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                .setSubtitle("Please provide authentication")
                 .build();
     }
 
