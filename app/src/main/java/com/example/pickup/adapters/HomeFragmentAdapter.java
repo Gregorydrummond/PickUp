@@ -24,7 +24,6 @@ import com.example.pickup.R;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.models.Game;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -290,13 +289,13 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             }
 
             //Percent errors
-            double pointsPE = signedPercentError(userTotalPointsOfThisType, averageMostPointsScoredOfThisType);
-            double xpPE = signedPercentError(userTotalXPOfThisType, averageXPOfThisType);
-            double gamesPlayedPE = signedPercentError(userTotalGamesPlayedOfThisType, averageGamePlayedOfThisType);
-            double gamesWonPE = signedPercentError(userTotalGamesWonOfThisType, averageGamesWonOfThisType);
-            double mostPointsScoredPE = signedPercentError(userTotalMostPointsScoredOfThisType, averageMostPointsScoredOfThisType);
-            double streakPE = signedPercentError(userStreak, averageStreakOfThisType);
-            double distancePE = signedPercentError(maxDistance - distance, maxDistance);
+            double pointsPE = percentError(userTotalPointsOfThisType, averageMostPointsScoredOfThisType);
+            double xpPE = percentError(userTotalXPOfThisType, averageXPOfThisType);
+            double gamesPlayedPE = percentError(userTotalGamesPlayedOfThisType, averageGamePlayedOfThisType);
+            double gamesWonPE = percentError(userTotalGamesWonOfThisType, averageGamesWonOfThisType);
+            double mostPointsScoredPE = percentError(userTotalMostPointsScoredOfThisType, averageMostPointsScoredOfThisType);
+            double streakPE = percentError(userStreak, averageStreakOfThisType);
+            double distancePE = percentError(maxDistance - distance, maxDistance);
 
             Log.i(TAG, "createRating:\nAverage Points: " + averagePointsOfThisType + "\n Average XP: " + averageXPOfThisType
             + "\n Average Games Played: " + averageGamePlayedOfThisType + "\n Average Games Won: " + averageGamesWonOfThisType
@@ -323,7 +322,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             tvMatchText.setText(matchText);
         }
 
-        private double signedPercentError(double actual, double expected) {
+        private double percentError(double actual, double expected) {
             if(expected == 0) {
                 return 0;
             }
