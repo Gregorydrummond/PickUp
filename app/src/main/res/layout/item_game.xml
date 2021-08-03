@@ -51,7 +51,7 @@
         <TextView
             android:id="@+id/tvGameTypeHome"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="26dp"
             android:layout_below="@+id/tvUsernameHome"
             android:layout_alignStart="@+id/tvUsernameHome"
             android:layout_alignEnd="@+id/tvTimeStampHome"
@@ -59,11 +59,14 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
             android:fontFamily="@font/rock_salt"
-            android:singleLine="true"
+            android:maxWidth="150dp"
+            android:maxLines="1"
+            android:singleLine="false"
             android:textColor="#000000"
             android:textSize="12sp"
             android:transitionName="gameType"
-            tools:text="Game Type: King of the Court" />
+            app:autoSizeTextType="uniform"
+            tools:text="3-Point Shootout" />
 
         <TextView
             android:id="@+id/tvUsernameHome"
@@ -101,10 +104,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/tvUsernameHome"
             android:layout_alignBottom="@+id/tvUsernameHome"
-            android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="00dp"
+            android:layout_marginBottom="0dp"
             android:layout_toEndOf="@+id/tvUsernameHome"
             android:fontFamily="@font/rock_salt"
             android:gravity="start|center_vertical"
@@ -126,6 +128,44 @@
             android:layout_marginEnd="0dp"
             android:scaleType="fitXY"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <ProgressBar
+            android:id="@+id/pbGameRating"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ivUserProfilePictureHome"
+            android:layout_alignBottom="@+id/ivUserProfilePictureHome"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="270dp"
+            android:layout_marginTop="00dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="-20dp"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+        <TextView
+            android:id="@+id/tvMatchText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/pbGameRating"
+            android:layout_alignTop="@+id/pbGameRating"
+            android:layout_alignBottom="@+id/pbGameRating"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:fontFamily="@font/rock_salt"
+            android:gravity="center"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:textSize="12sp"
+            tools:text="100% Match" />
 
     </RelativeLayout>
 
