@@ -34,7 +34,7 @@ public class RecentGamesFragment extends Fragment {
     AnimatedRecyclerView animatedRecyclerView;
     ProfileGamesFragmentAdapter adapter;
     List<GameStat> gameStatList;
-    ParseUser user;
+    ParseUser user = ParseUser.getCurrentUser();
     TextView tvNoRecents;
     AVLoadingIndicatorView loadingIndicator;
     SwipeRefreshLayout swipeRefreshLayout;
