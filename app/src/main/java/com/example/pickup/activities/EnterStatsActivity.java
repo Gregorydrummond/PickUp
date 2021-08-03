@@ -139,84 +139,78 @@ public class EnterStatsActivity extends AppCompatActivity {
             String gameType = game.getGameType();
 
             //Get game type stats from user class (array)
-            JSONArray statsArray;
-            JSONArray allStatsArray;
-            String statsArrayKey = null;
-            switch (gameType) {
-                case "Teams":
-                    statsArrayKey = "teamsStats";
-                    break;
-                case "King of the Court":
-                    statsArrayKey = "kingOfTheCourtStats";
-                    break;
-                case "3-Point Shootout":
-                    statsArrayKey = "threePointShootoutStats";
-                    break;
-                case "21":
-                    statsArrayKey = "twentyOneStats";
-                    break;
-                default:
-                    Log.i(TAG, "onClick: Error getting correct stats");
-                    break;
-            }
+            JSONArray statsArray = user.getJSONArray("stats");
+            JSONObject allStatsJSONObject;
+            JSONObject gameStatsJSONObject = null;
+            int position = 1;
 
             //Update its content
-            if(statsArrayKey != null) {
-                statsArray = user.getJSONArray(statsArrayKey);
-                allStatsArray = user.getJSONArray(ALL_STATS_ARRAY_KEY);
+            if(statsArray != null) {
                 try {
-                    int gamesPlayed = statsArray.getInt(0);
-                    int totalGamesPlayed = allStatsArray.getInt(0);
-                    int gamesWon = statsArray.getInt(1);
-                    int totalGamesWon = allStatsArray.getInt(1);
-                    int pointsScored = statsArray.getInt(2);
-                    int totalPointsScored = allStatsArray.getInt(2);
-                    int maxPoints = statsArray.getInt(3);
-                    int totalMaxPoints = allStatsArray.getInt(3);
-                    int mostPointsScored = statsArray.getInt(4);
-                    int mostPointsScoredAllTime = allStatsArray.getInt(4);
-                    int totalXP = statsArray.getInt(5);
-                    int totalXPAllTime = allStatsArray.getInt(5);
-
-                    statsArray.put(0, ++gamesPlayed);
-                    allStatsArray.put(0, ++totalGamesPlayed);
-
-                    if(cbGameWon.isChecked()) {
-                       statsArray.put(1, ++gamesWon);
-                       allStatsArray.put(1, ++totalGamesWon);
+                    allStatsJSONObject = statsArray.getJSONObject(0);
+                    Log.i(TAG, "onCreate: All stats: " + allStatsJSONObject.toString());
+                    for(int i = 1; i < statsArray.length(); i++) {
+                        gameStatsJSONObject = statsArray.getJSONObject(i);
+                        String statsGameType = gameStatsJSONObject.getString("gameType");
+                        if(statsGameType.equals(gameType)) {
+                            position = i;
+                            Log.i(TAG, "onCreate: Game object: " + gameStatsJSONObject.toString());
+                            break;
+                        }
                     }
 
+                    int allGamesWon = allStatsJSONObject.getInt("gamesWon");
+                    int allGamesPlayed = allStatsJSONObject.getInt("gamesPlayed");
+                    int allPointsScored = allStatsJSONObject.getInt("totalPoints");
+                    int allMaxPoints = allStatsJSONObject.getInt("maxPoints");
+                    int allMostPointsScored = allStatsJSONObject.getInt("mostPoints");
+                    int allTotalXP = allStatsJSONObject.getInt("totalXP");
+
+
+                    int gamesWon = gameStatsJSONObject.getInt("gamesWon");
+                    int gamesPlayed = gameStatsJSONObject.getInt("gamesPlayed");
+                    int pointsScored = gameStatsJSONObject.getInt("totalPoints");
+                    int maxPoints = gameStatsJSONObject.getInt("maxPoints");
+                    int mostPointsScored = gameStatsJSONObject.getInt("mostPoints");
+                    int totalXP = gameStatsJSONObject.getInt("totalXP");
+
+                    if(cbGameWon.isChecked()) {
+                        allStatsJSONObject.put("gamesWon", ++allGamesWon);
+                        gameStatsJSONObject.put("gamesWon", ++gamesWon);
+                    }
+
+                    allStatsJSONObject.put("gamesPlayed", ++allGamesPlayed);
+                    gameStatsJSONObject.put("gamesPlayed", ++gamesPlayed);
+
+                    allPointsScored += points;
+                    allStatsJSONObject.put("totalPoints", allPointsScored);
                     pointsScored += points;
-                    totalPointsScored += points;
-                    statsArray.put(2, pointsScored);
-                    allStatsArray.put(2, totalPointsScored);
+                    gameStatsJSONObject.put("totalPoints", pointsScored);
 
                     int scoreLimit = game.getScoreLimit();
+                    allMaxPoints += scoreLimit;
+                    allStatsJSONObject.put("maxPoints", allMaxPoints);
                     maxPoints += scoreLimit;
-                    totalMaxPoints += scoreLimit;
-                    statsArray.put(3, maxPoints);
-                    statsArray.put(3, totalMaxPoints);
+                    gameStatsJSONObject.put("maxPoints", maxPoints);
 
+                    if(points > allMostPointsScored) {
+                        allStatsJSONObject.put("mostPoints", points);
+                    }
                     if(points > mostPointsScored) {
-                        statsArray.put(4, points);
-                    }
-                    if(points > mostPointsScoredAllTime) {
-                        allStatsArray.put(4, points);
+                        gameStatsJSONObject.put("mostPoints", points);
                     }
 
-                    //Make an algorithm to determine amount of xp
-                    int xp = points * 10;
-                    if(cbGameWon.isChecked()) {
-                        xp += 30;
-                    }
+                    int xp = cbGameWon.isChecked() ? (points * 15) : (points * 10);
+
+                    allTotalXP += xp;
+                    allStatsJSONObject.put("totalXP", allTotalXP);
                     totalXP += xp;
-                    totalXPAllTime += xp;
-                    statsArray.put(5, totalXP);
-                    allStatsArray.put(5, totalXPAllTime);
+                    gameStatsJSONObject.put("totalXP", totalXP);
 
                     //Post new array to property
-                    user.put(statsArrayKey, statsArray);
-                    user.put(ALL_STATS_ARRAY_KEY, allStatsArray);
+                    statsArray.put(0, allStatsJSONObject);
+                    statsArray.put(position, gameStatsJSONObject);
+                    user.put("stats", statsArray);
 
                     Log.i(TAG, "onClick: Updated stats array");
                 } catch (JSONException e) {
