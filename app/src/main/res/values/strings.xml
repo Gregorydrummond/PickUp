@@ -19,6 +19,7 @@
     <string name="channel_description_new_game">Notification channel for new games</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="fab_profile_description">Add profile picture</string>
     <string-array name="game_filter">
         <item>All</item>
         <item>Teams</item>

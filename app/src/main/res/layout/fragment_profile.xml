@@ -8,6 +8,23 @@
     tools:context=".fragments.mainActivity.ProfileFragment">
 
 
+    <TextView
+        android:id="@+id/tvLevelProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvUsernameProfile"
+        android:layout_alignStart="@+id/tvUsernameProfile"
+        android:layout_alignEnd="@+id/tvUsernameProfile"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/rock_salt"
+        android:singleLine="true"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        tools:text="Lvl 17" />
+
     <ImageView
         android:id="@+id/ivProfilePictureProfile"
         android:layout_width="100dp"
@@ -24,26 +41,27 @@
         android:id="@+id/tvUsernameProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfilePictureProfile"
-        android:layout_alignStart="@+id/ivProfilePictureProfile"
+        android:layout_alignTop="@+id/ivProfilePictureProfile"
         android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/ivProfilePictureProfile"
         android:ellipsize="end"
         android:fontFamily="@font/rock_salt"
         android:singleLine="true"
-        android:text="Username"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Username" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvUsernameProfile"
+        android:layout_below="@+id/ivProfilePictureProfile"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="25dp"
-        android:background="#FFEFD8"/>
+        android:layout_marginTop="20dp"
+        android:background="#FFEFD8" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2_profile"
@@ -62,7 +80,21 @@
         android:layout_marginStart="79dp"
         android:layout_marginTop="79dp"
         android:clickable="true"
-        android:src="@drawable/ic_baseline_add_circle_24" />
+        android:foreground="@drawable/ic_baseline_add_circle_24"
+        app:backgroundTint="#FFEFD8" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLevelProfile"
+        android:layout_alignStart="@+id/tvLevelProfile"
+        android:layout_alignEnd="@+id/tvUsernameProfile"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="00dp"
+        android:progress="45"
+        android:progressTint="#FF9800" />
 
 </RelativeLayout>

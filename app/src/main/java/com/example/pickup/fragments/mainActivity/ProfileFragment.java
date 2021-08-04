@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -22,11 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.example.pickup.pageTransformers.DepthPageTransformer;
 import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileFragmentViewPageAdapter;
 import com.example.pickup.pageTransformers.ZoomOutPageTransformer;
@@ -35,6 +33,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,12 +47,14 @@ public class ProfileFragment extends Fragment {
 
     ImageView ivProfilePicture;
     TextView tvUsername;
+    TextView tvLevel;
+    ProgressBar progressBar;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     FloatingActionButton fabAddPic;
     ProfileFragmentViewPageAdapter adapter;
     ParseFile photoFile;
-    ParseUser user = ParseUser.getCurrentUser();;
+    ParseUser user = ParseUser.getCurrentUser();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -100,6 +104,14 @@ public class ProfileFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout_profile);
         viewPager2 = view.findViewById(R.id.viewPager2_profile);
         fabAddPic = view.findViewById(R.id.fabAddPP);
+        tvLevel = view.findViewById(R.id.tvLevelProfile);
+        progressBar = view.findViewById(R.id.progressBar);
+
+        try {
+            setPlayerLevel();
+        } catch (JSONException e) {
+            Log.e(TAG, "onViewCreated: Error setting player level", e);
+        }
 
         //Initialize adapter
         adapter = new ProfileFragmentViewPageAdapter(getActivity());
@@ -190,5 +202,30 @@ public class ProfileFragment extends Fragment {
                     .into(ivProfilePicture);
         }
         tvUsername.setText(user.getUsername());
+    }
+
+    private void setPlayerLevel() throws JSONException {
+        //Get user's xp
+        JSONArray statsArray = user.getJSONArray("stats");
+        JSONObject allStatsObject = statsArray.getJSONObject(0);
+        int xp = allStatsObject.getInt("totalXP");
+
+        //Calculate Level
+        int level = (int) Math.pow((xp / 50.0), (5.0/7.0));
+        Log.i(TAG, "setPlayerLevel: Level " + level);
+
+        //Progress to next level
+        int nextLevel = level + 1;
+        double neededXPForCurrentLevel = 50 * Math.pow(level, 1.4);
+        double neededXPForNextLevel = 50 * Math.pow(nextLevel, 1.4);
+        double neededXPToGetToNextLevel = neededXPForNextLevel - neededXPForCurrentLevel;
+        double xpProgress = xp - neededXPForCurrentLevel;
+        double progress = (xpProgress / neededXPToGetToNextLevel) * 100;
+        Log.i(TAG, "setPlayerLevel: Player's progress to next level: " + progress + "%");
+
+        //Set progress bar
+        progressBar.setProgress((int) Math.floor(progress));
+        String textLevel = "Lvl " + level;
+        tvLevel.setText(textLevel);
     }
 }
