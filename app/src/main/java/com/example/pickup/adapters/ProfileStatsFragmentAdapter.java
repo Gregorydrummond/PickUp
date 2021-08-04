@@ -101,7 +101,7 @@ public class ProfileStatsFragmentAdapter extends RecyclerView.Adapter<ProfileSta
             int mostPointsScored = stats.getInt("mostPoints");
             int xp = stats.getInt("totalXP");
 
-            String ppg = (gamePlayed == 0) ? "0.0" : String.valueOf((double) points / (double) gamePlayed);
+            String ppg = (gamePlayed == 0) ? "0.0" : String.format("%.1f", (double) points / (double) gamePlayed);
             String maxPPG = (gamePlayed == 0) ? "0.0" : String.valueOf((double) maxPoints / (double) gamePlayed);
 
             tvTitle.setText(gameType);
