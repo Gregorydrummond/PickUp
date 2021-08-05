@@ -153,7 +153,7 @@ public class ProfileGamesFragmentAdapter extends RecyclerView.Adapter<ProfileGam
                 tvScore.setVisibility(View.GONE);
             }
 
-            String textPoints = "You scored " + gameStat.getPoints() + " points";
+            String textPoints = "You scored " + gameStat.getPoints() + ((gameStat.getPoints() == 1) ? " point" :" points");
             tvPoints.setText(textPoints);
 
             String textWonStatus = gameStat.getGameWon() ? "Won" : "Loss";
