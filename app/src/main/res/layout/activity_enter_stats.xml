@@ -191,7 +191,7 @@
         android:layout_alignStart="@+id/view"
         android:layout_alignEnd="@+id/view"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="#E18804"
         android:fontFamily="@font/rock_salt"
         android:text="Finish" />

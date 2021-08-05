@@ -37,7 +37,7 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "GameDetailsActivity";
     private static Game game;
-    private static ParseUser user = ParseUser.getCurrentUser();
+    private static ParseUser user;
     private static Button btnJoin;
 
     ImageView ivProfilePicture;
@@ -52,6 +52,8 @@ public class GameDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_details);
+
+        user = ParseUser.getCurrentUser();
 
         //Unwrap game
         game = Parcels.unwrap(getIntent().getParcelableExtra(Game.class.getSimpleName()));
@@ -111,13 +113,19 @@ public class GameDetailsActivity extends AppCompatActivity {
         }
 
         //Hide join button if user is already in a game
-        if(user.getParseObject("currentGame") != null) {
+        Game currentGame = (Game) user.getParseObject("currentGame");
+        if(currentGame != null) {
             btnJoin.setVisibility(View.GONE);
+            Log.d(TAG, "onCreate: Hiding join button, current game is not null. Game Location: " + currentGame.getLocationName());
+        }
+        else {
+            btnJoin.setVisibility(View.VISIBLE);
         }
 
         //Hide join button if game is at capacity
         if(game.getPlayerCount() == game.getPlayerLimit()) {
             btnJoin.setVisibility(View.GONE);
+            Log.d(TAG, "onCreate: Hiding join button, game is full");
         }
 
         btnJoin.setOnClickListener(v -> joinGame(game, true));

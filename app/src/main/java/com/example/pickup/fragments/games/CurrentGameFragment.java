@@ -154,7 +154,7 @@ public class CurrentGameFragment extends Fragment {
             }
             //User enters game stats
             if(btnCurrentGame.getText().equals("Enter Stats")) {
-                Log.i(TAG, "onClick: Creator entering stats");
+                Log.i(TAG, "onClick: Player entering stats");
                 Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
                 startActivity(intent);
             }
@@ -196,11 +196,15 @@ public class CurrentGameFragment extends Fragment {
         if(game == null) {
             Log.d(TAG, "setData: No current game");
             btnCurrentGame.setVisibility(View.GONE);
+            btnLeaveGame.setVisibility(View.GONE);
             tvNoCurrentGame.setVisibility(View.VISIBLE);
             return;
         }
         else {
             btnCurrentGame.setVisibility(View.VISIBLE);
+            if(userIsCreator) {
+                btnLeaveGame.setVisibility(View.GONE);
+            }
             tvNoCurrentGame.setVisibility(View.GONE);
         }
 
@@ -231,24 +235,30 @@ public class CurrentGameFragment extends Fragment {
         String textWinBy2 = "Win By 2: " + (game.getWinByTwo() ? "Yes" : "No");
         tvWinBy2.setText(textWinBy2);
         String textStatus;
+
         if(game.getGameStarted()) {
             textStatus = "Game in progress";
             btnCurrentGame.setText(R.string.endGameButtonText);
+            //Hide leave button while game is in progress
+            btnLeaveGame.setVisibility(View.GONE);
             //If user isn't the creator of the game, user cannot end game
             if(!userIsCreator) {
-                btnCurrentGame.setEnabled(false);
+                btnCurrentGame.setVisibility(View.GONE);
             }
         }
         else if(game.getGameEnded()) {
             textStatus = "Game ended";
             btnCurrentGame.setText(R.string.enterStatsButtonText);
+            //Hide leave button if game has ended
+            btnLeaveGame.setVisibility(View.GONE);
         }
         else {
             textStatus = "Game not started";
             btnCurrentGame.setText(R.string.startGameButtonText);
             //If user isn't the creator of the game, user cannot start game
             if(!userIsCreator) {
-                btnCurrentGame.setEnabled(false);
+                btnCurrentGame.setVisibility(View.GONE);
+                btnLeaveGame.setVisibility(View.GONE);
             }
         }
 
