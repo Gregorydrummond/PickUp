@@ -2,25 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ivLogoUA"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFEFD8"
     tools:context=".activities.UserAuthentication">
-
-    <TextView
-        android:id="@+id/tvAppName"
-        android:layout_width="228dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="100dp"
-        android:fontFamily="@font/rock_salt"
-        android:text="PickUp"
-        android:textAllCaps="false"
-        android:textColor="#000000"
-        android:textSize="48sp"
-        android:textStyle="bold|italic" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout_userAuthentication"
@@ -42,6 +28,36 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tvAppName"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="0dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="181dp"
+        android:layout_below="@+id/tabLayout_userAuthentication"
+        android:layout_alignBottom="@+id/tvAppName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-50dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/tvAppName"
+        app:srcCompat="@drawable/basketball_small_icon_removebg_preview" />
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="299dp"
+        android:layout_height="174dp"
+        android:layout_below="@+id/tabLayout_userAuthentication"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/rock_salt"
+        android:gravity="center"
+        android:text="PickUp"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textSize="60sp"
+        android:textStyle="bold|italic" />
 
 </RelativeLayout>
