@@ -68,6 +68,8 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     EditText etLocationName;
     EditText etLocation;
     Spinner spinnerGameType;
+    EditText etTeamAName;
+    EditText etTeamBName;
     EditText etPlayerLimit;
     EditText etScoreLimit;
     CheckBox cbWinBy2;
@@ -83,7 +85,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
     ActivityResultLauncher<Intent> takePhotoResultLauncher;
     static double latitude;
     static double longitude;
-    ParseUser user = ParseUser.getCurrentUser();
+    ParseUser user;
     Game game;
     Team teamA, teamB, teamC;
     boolean gameCreated = false, teamACreated = false, teamBCreated = false, teamCCreated = false;
@@ -95,11 +97,15 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation);
 
+        user = ParseUser.getCurrentUser();
+
         //Find components
         toolbar = findViewById(R.id.tbCreation);
         etLocationName = findViewById(R.id.etLocationNameCreation);
         etLocation = findViewById(R.id.etLocationCreation);
         spinnerGameType = findViewById(R.id.spinnerGameTypeCreation);
+        etTeamAName = findViewById(R.id.etTeamAName);
+        etTeamBName = findViewById(R.id.etTeamBName);
         etPlayerLimit = findViewById(R.id.etPlayerLimitCreation);
         etScoreLimit = findViewById(R.id.etScoreLimitCreation);
         cbWinBy2 = findViewById(R.id.cbWinBy2Creation);
@@ -510,6 +516,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
         teamB.setGame(game);
+        teamB.setName(etTeamBName.getText().toString());
         teamB.saveInBackground(e -> {
             if(e == null) {
                 Log.i(TAG, "done: Set game for teamB");
@@ -522,6 +529,7 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         //save current user to team A
         try {
             teamA.setGame(game);
+            teamA.setName(etTeamAName.getText().toString());
             teamA.setPlayers(user, true);
             teamA.saveInBackground(e -> {
                 if(e == null) {
@@ -556,6 +564,14 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(!spinnerGameType.getSelectedItem().toString().equals("Teams")) {
+            etTeamAName.setVisibility(View.GONE);
+            etTeamBName.setVisibility(View.GONE);
+        }
+        else {
+            etTeamAName.setVisibility(View.VISIBLE);
+            etTeamBName.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

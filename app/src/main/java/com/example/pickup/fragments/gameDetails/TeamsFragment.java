@@ -152,6 +152,8 @@ public class TeamsFragment extends Fragment {
         Team teamA = (Team) game.getTeamA();
         Log.d(TAG, "setTeams: " + teamA);
         teamA.fetchIfNeeded();
+        //Set name
+        tvTeamA.setText(teamA.getName());
         //Get array
         JSONArray jsonPlayerArrayA = teamA.getJSONArray("players");
         //Add each player object
@@ -165,6 +167,8 @@ public class TeamsFragment extends Fragment {
             adapterB.clear();
             Team teamB = (Team) game.getTeamB();
             teamB.fetchIfNeeded();
+            //Set name
+            tvTeamB.setText(teamB.getName());
             JSONArray jsonPlayerArrayB = teamB.getJSONArray("players");
             for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
                 teamListB.add(jsonPlayerArrayB.getJSONObject(i));
