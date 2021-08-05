@@ -181,7 +181,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
             //Get user's data
             JSONArray usersStats = user.getJSONArray("stats");
-            int userTotalPointsOfThisType = 0, userTotalXPOfThisType = 0, userTotalGamesPlayedOfThisType = 0, userTotalGamesWonOfThisType = 0, userTotalMostPointsScoredOfThisType = 0;
+            int userTotalPointsOfThisType = 0, userTotalXPOfThisType = 0, userTotalGamesPlayedOfThisType = 0, userTotalGamesWonOfThisType = 0, userTotalMostPointsScoredOfThisType = 0, userPointsPerGamesOfThisType = 0;
             int userStreak = user.getInt("currentStreak");
 
             //User stats data
@@ -213,6 +213,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 }
             }
 
+            userPointsPerGamesOfThisType = (userTotalGamesPlayedOfThisType == 0) ? 0 : userTotalPointsOfThisType / userTotalGamesPlayedOfThisType;
+
             //Get players' data
             double playerCount = (double) game.getPlayerCount();
             int totalXP = 0, totalXPOfThisType = 0, totalPoints = 0, totalPointsOfThisType = 0, totalGamesPlayed = 0, totalGamesPlayedOfThisType = 0;
@@ -220,7 +222,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             double distance = user.getParseGeoPoint("playerLocation").distanceInMilesTo(game.getLocation());
             double maxDistance = user.getDouble("maxDistance");
             int streak = 0;
-            double averagePointsOfThisType = 0, averageXPOfThisType = 0, averageGamePlayedOfThisType = 0, averageGamesWonOfThisType = 0, averageMostPointsScoredOfThisType = 0, averageStreakOfThisType = 0;
+            double averagePointsOfThisType = 0, averageXPOfThisType = 0, averageGamePlayedOfThisType = 0, averageGamesWonOfThisType = 0, averageMostPointsScoredOfThisType = 0, averageStreakOfThisType = 0, averagePointsPerGameOfThisType = 0;
 
             //Streaks
             for(ParseUser player : players) {
@@ -230,26 +232,32 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             //Stats data
             for(int i = 0; i < statArray.size(); i++) {
                 JSONArray jsonArray = statArray.get(i);
-                JSONObject allStatsObject = jsonArray.getJSONObject(0);
-
-                //Total Points
-                int points = allStatsObject.getInt("totalPoints");
-                totalPoints += points;
-
-                //Total XP
-                int xp = allStatsObject.getInt("totalXP");
-                totalXP += xp;
-
-                //Total games played
-                int gamesPlayed = allStatsObject.getInt("gamesPlayed");
-                totalGamesPlayed += gamesPlayed;
-
-                //Total games won
-                int gamesWon = allStatsObject.getInt("gamesWon");
-                totalGamesWon += gamesWon;
+                Log.d(TAG, "createRating: " + jsonArray);
 
                 //Specific game types
                 for (int j = 0; j < jsonArray.length(); j++) {
+                    JSONObject allStatsObject = jsonArray.getJSONObject(j);
+                    if (allStatsObject.getString("gameType").equals("All")) {
+
+                        //Total Points
+                        int points = allStatsObject.getInt("totalPoints");
+                        totalPoints += points;
+
+                        //Total XP
+                        int xp = allStatsObject.getInt("totalXP");
+                        totalXP += xp;
+
+                        //Total games played
+                        int gamesPlayed = allStatsObject.getInt("gamesPlayed");
+                        totalGamesPlayed += gamesPlayed;
+
+                        //Total games won
+                        int gamesWon = allStatsObject.getInt("gamesWon");
+                        totalGamesWon += gamesWon;
+
+                        continue;
+                    }
+
                     JSONObject specificGameTypeStatsObject = jsonArray.getJSONObject(j);
 
                     if(specificGameTypeStatsObject.getString("gameType").equals(gameType)) {
@@ -283,6 +291,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 averagePointsOfThisType = totalPointsOfThisType / playerCount;
                 averageXPOfThisType = totalXPOfThisType / playerCount;
                 averageGamePlayedOfThisType = totalGamesPlayedOfThisType / playerCount;
+                averagePointsPerGameOfThisType = averagePointsOfThisType / averageGamePlayedOfThisType;
                 averageGamesWonOfThisType = totalGamesWonOfThisType / playerCount;
                 averageMostPointsScoredOfThisType = totalMostPointsScoredOfThisType / playerCount;
                 averageStreakOfThisType = streak / playerCount;
@@ -290,6 +299,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
             //Percent errors
             double pointsPE = percentError(userTotalPointsOfThisType, averageMostPointsScoredOfThisType);
+            double ppgPE = percentError(userPointsPerGamesOfThisType, averagePointsPerGameOfThisType);
             double xpPE = percentError(userTotalXPOfThisType, averageXPOfThisType);
             double gamesPlayedPE = percentError(userTotalGamesPlayedOfThisType, averageGamePlayedOfThisType);
             double gamesWonPE = percentError(userTotalGamesWonOfThisType, averageGamesWonOfThisType);
@@ -297,18 +307,25 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             double streakPE = percentError(userStreak, averageStreakOfThisType);
             double distancePE = percentError(maxDistance - distance, maxDistance);
 
-            Log.i(TAG, "createRating:\nAverage Points: " + averagePointsOfThisType + "\n Average XP: " + averageXPOfThisType
-            + "\n Average Games Played: " + averageGamePlayedOfThisType + "\n Average Games Won: " + averageGamesWonOfThisType
-            + "\n Average Most Points Scored: " + averageMostPointsScoredOfThisType + "\n Average Streak: " + averageStreakOfThisType);
+            Log.i(TAG, "createRating: Game type: " + gameType);
+            Log.i(TAG, "createRating:\n User Points: " + userTotalPointsOfThisType + "\n User Points Per Game: " + userPointsPerGamesOfThisType
+                    + "\n User XP: " + userTotalXPOfThisType + "\n User Games Played: " + userTotalGamesPlayedOfThisType
+                    + "\n User Games Won: " + userTotalGamesWonOfThisType + "\n User Most Points Scored: " + userTotalMostPointsScoredOfThisType
+                    + "\n User Streak: " + userStreak);
 
-            Log.i(TAG, "createRating:\nPoints PE: " + pointsPE + "\nXP PE: " + xpPE
-                    + "\nGames Played PE: " + gamesPlayedPE + "\nGames Won PE: " + gamesWonPE
+            Log.i(TAG, "createRating:\n Average Points: " + averagePointsOfThisType + "\n Average Points Per Game: " + averagePointsPerGameOfThisType
+                    + "\n Average XP: " + averageXPOfThisType + "\n Average Games Played: " + averageGamePlayedOfThisType
+                    + "\n Average Games Won: " + averageGamesWonOfThisType + "\n Average Most Points Scored: " + averageMostPointsScoredOfThisType
+                    + "\n Average Streak: " + averageStreakOfThisType);
+
+            Log.i(TAG, "createRating:\nPoints PE: " + pointsPE + "\nPoints Per Game PE: " + ppgPE
+                    + "\nXP PE: " + xpPE + "\nGames Played PE: " + gamesPlayedPE + "\nGames Won PE: " + gamesWonPE
                     + "\nMost Points Scored PE: " + mostPointsScoredPE + "\nStreak PE: " + streakPE
                     + "\nDistance PE: " + distancePE);
 
             //Calculate Ratings
-            double weightedPESum = (0.25 * pointsPE) + (0.25 * distancePE) + (0.20 * xpPE) + (0.15 * gamesWonPE) + (0.05 * gamesPlayedPE) + (0.05 * streakPE) + (0.05 * mostPointsScoredPE);
-            double peSum = pointsPE + xpPE + gamesWonPE + gamesPlayedPE + streakPE + distancePE + mostPointsScoredPE;
+            double weightedPESum = (0.40 * pointsPE) + (0.05 * distancePE) + (0.40 * ppgPE) + (0.25 * xpPE) + (0.10 * gamesWonPE) + (0.05 * gamesPlayedPE) + (0.05 * streakPE) + (0.05 * mostPointsScoredPE);
+            double peSum = pointsPE + ppgPE + xpPE + gamesWonPE + gamesPlayedPE + streakPE + distancePE + mostPointsScoredPE;
             double weightedPEAverage = (weightedPESum/peSum) * 100;
             double rating = 100 - weightedPEAverage;
 
@@ -322,11 +339,14 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             tvMatchText.setText(matchText);
         }
 
-        private double percentError(double actual, double expected) {
-            if(expected == 0) {
+        private double percentError(double expected, double actual) {
+            if(actual == 0 && expected == 0) {
                 return 0;
             }
-            return Math.abs(1 - (Math.abs((actual - expected) / expected )) * 100);
+            if(actual == 0) {
+                return 100;
+            }
+            return Math.min(100, (Math.abs((actual - expected) / expected ) * 100));
         }
 
         @Override
@@ -401,10 +421,20 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 }
 
                 bottomSheetDialogBtnJoin.setOnClickListener(v -> {
-                    Log.i(TAG, "onClick: joining game");
-                    GameDetailsActivity.joinGame(finalGame, false);
-                    bottomSheetDialog.hide();
-                    Toast.makeText(context, "Joined game", Toast.LENGTH_SHORT).show();
+                    if(user.getParseObject("currentGame") != null) {
+                        bottomSheetDialogBtnJoin.setEnabled(false);
+                        Toast.makeText(context, "Already in a game", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(finalGame.getPlayerCount() == finalGame.getPlayerLimit()) {
+                        bottomSheetDialogBtnJoin.setEnabled(false);
+                        Toast.makeText(context, "Game is full", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Log.i(TAG, "onClick: joining game");
+                        GameDetailsActivity.joinGame(finalGame, false);
+                        bottomSheetDialog.hide();
+                        Toast.makeText(context, "Joined game", Toast.LENGTH_SHORT).show();
+                    }
                 });
             }
         }
