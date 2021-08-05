@@ -48,6 +48,7 @@ public class ProfileFragment extends Fragment {
     ImageView ivProfilePicture;
     TextView tvUsername;
     TextView tvLevel;
+    TextView tvExp;
     ProgressBar progressBar;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
@@ -106,6 +107,7 @@ public class ProfileFragment extends Fragment {
         fabAddPic = view.findViewById(R.id.fabAddPP);
         tvLevel = view.findViewById(R.id.tvLevelProfile);
         progressBar = view.findViewById(R.id.progressBar);
+        tvExp = view.findViewById(R.id.tvEXP);
 
         try {
             setPlayerLevel();
@@ -227,5 +229,9 @@ public class ProfileFragment extends Fragment {
         progressBar.setProgress((int) Math.floor(progress));
         String textLevel = "Lvl " + level;
         tvLevel.setText(textLevel);
+
+        //Set exp text
+        String textExp = xp + "/" + (int) neededXPForNextLevel;
+        tvExp.setText(textExp);
     }
 }
