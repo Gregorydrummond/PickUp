@@ -150,19 +150,23 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         //Create Button
         btnCreate.setOnClickListener(v -> {
             //Empty input handler
-            if (etLocationName.getText().toString().isEmpty()) {
-                Toast.makeText(getBaseContext(), "Please enter a location name", Toast.LENGTH_SHORT).show();
-                return;
-            }
             if (etLocation.getText().toString().isEmpty()) {
                 Toast.makeText(getBaseContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (etPlayerLimit.getText().toString().isEmpty()) {
+            if(etLocationName.getText().toString().isEmpty()) {
+                Toast.makeText(getBaseContext(), "Please enter a location name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(spinnerGameType.getSelectedItem().toString().equals("Teams") && (etTeamAName.getText().toString().isEmpty() || etTeamBName.getText().toString().isEmpty())) {
+                Toast.makeText(getBaseContext(), "Please enter a name for both teams", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(etPlayerLimit.getText().toString().isEmpty()) {
                 Toast.makeText(getBaseContext(), "Please enter a player limit", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (etScoreLimit.getText().toString().isEmpty()) {
+            if(etScoreLimit.getText().toString().isEmpty()) {
                 Toast.makeText(getBaseContext(), "Please enter a score limit", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -328,10 +332,12 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
         game.setPlayerCount(true);
 
         //Saving the location image
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        photoFile = new ParseFile("GameImage.png", stream.toByteArray());
-        game.setLocationPhoto(photoFile);
+        if(bitmap != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            photoFile = new ParseFile("GameImage.png", stream.toByteArray());
+            game.setLocationPhoto(photoFile);
+        }
 
 
         //Save game in background
