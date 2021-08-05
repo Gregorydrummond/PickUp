@@ -32,7 +32,7 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
     Button btnSignOut;
     Button btnSave;
     ArrayAdapter<CharSequence> adapter;
-    ParseUser user = ParseUser.getCurrentUser();;
+    ParseUser user;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,6 +75,8 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        user = ParseUser.getCurrentUser();
+
         //Find components
         btnSignOut = view.findViewById(R.id.btnSignout);
         etMaxDistance = view.findViewById(R.id.etMaxDistancePS);
@@ -93,6 +95,10 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
 
         //Set on item selected listener
         spinnerGameTypeFilter.setOnItemSelectedListener(this);
+
+        //Set distance with what the user has already
+        int maxDistance = user.getInt("maxDistance");
+        etMaxDistance.setText(String.valueOf(maxDistance));
 
         //On save button click
         btnSave.setOnClickListener(v -> {
