@@ -43,6 +43,7 @@ public class TeamsFragment extends Fragment {
     RecyclerView rvTeamB;
     TeamsFragmentAdapter adapterA, adapterB;
     Game game;
+    Team teamA, teamB;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,6 +100,16 @@ public class TeamsFragment extends Fragment {
         //Get data from activity
         GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
         game = gameDetailsActivity.getGame();
+        try {
+            game.fetchIfNeeded();
+        } catch (ParseException e) {
+            Log.e(TAG, "onViewCreated: Error fetching game", e);
+        }
+
+        teamA = (Team) game.getTeamA();
+        if(game.getHasTeams()) {
+            teamB = (Team) game.getTeamB();
+        }
 
         //Find components
         tvTeamA = view.findViewById(R.id.tvTeamA);
@@ -149,29 +160,31 @@ public class TeamsFragment extends Fragment {
         adapterA.clear();
 
         //Find teams that belong to the game;
-        Team teamA = (Team) game.getTeamA();
         Log.d(TAG, "setTeams: " + teamA);
-        teamA.fetchIfNeeded();
-        //Set name
-        tvTeamA.setText(teamA.getName());
-        //Get array
-        JSONArray jsonPlayerArrayA = teamA.getJSONArray("players");
-        //Add each player object
-        for(int i = 0; i < jsonPlayerArrayA.length(); i++) {
-            teamListA.add(jsonPlayerArrayA.getJSONObject(i));
-            Log.i(TAG, "setTeams: Players for Team A" + i);
+        if(teamA != null) {
+            teamA.fetchIfNeeded();
+            //Set name
+            tvTeamA.setText(teamA.getName());
+            //Get array
+            JSONArray jsonPlayerArrayA = teamA.getJSONArray("players");
+            //Add each player object
+            for (int i = 0; i < jsonPlayerArrayA.length(); i++) {
+                teamListA.add(jsonPlayerArrayA.getJSONObject(i));
+                Log.i(TAG, "setTeams: Players for Team A" + i);
+            }
         }
 
         if(game.getHasTeams()) {
             teamListB.clear();
             adapterB.clear();
-            Team teamB = (Team) game.getTeamB();
-            teamB.fetchIfNeeded();
-            //Set name
-            tvTeamB.setText(teamB.getName());
-            JSONArray jsonPlayerArrayB = teamB.getJSONArray("players");
-            for(int i = 0; i < jsonPlayerArrayB.length(); i++) {
-                teamListB.add(jsonPlayerArrayB.getJSONObject(i));
+            if(teamB != null) {
+                teamB.fetchIfNeeded();
+                //Set name
+                tvTeamB.setText(teamB.getName());
+                JSONArray jsonPlayerArrayB = teamB.getJSONArray("players");
+                for (int i = 0; i < jsonPlayerArrayB.length(); i++) {
+                    teamListB.add(jsonPlayerArrayB.getJSONObject(i));
+                }
             }
         }
     }

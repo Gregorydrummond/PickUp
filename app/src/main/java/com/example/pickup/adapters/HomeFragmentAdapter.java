@@ -292,7 +292,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 averagePointsOfThisType = totalPointsOfThisType / playerCount;
                 averageXPOfThisType = totalXPOfThisType / playerCount;
                 averageGamePlayedOfThisType = totalGamesPlayedOfThisType / playerCount;
-                averagePointsPerGameOfThisType = averagePointsOfThisType / averageGamePlayedOfThisType;
+                averagePointsPerGameOfThisType = (double) totalPointsOfThisType / totalGamesPlayedOfThisType;
                 averageGamesWonOfThisType = totalGamesWonOfThisType / playerCount;
                 averageMostPointsScoredOfThisType = totalMostPointsScoredOfThisType / playerCount;
                 averageStreakOfThisType = streak / playerCount;
@@ -347,7 +347,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             if(actual == 0) {
                 return 100;
             }
-            Log.i(TAG, "percentError: " + Math.abs((actual - expected) / expected ) * 100 + "%");
             return Math.min(100, (Math.abs((actual - expected) / expected )) * 100);
         }
 

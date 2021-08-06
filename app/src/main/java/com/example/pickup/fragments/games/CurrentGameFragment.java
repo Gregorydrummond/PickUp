@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -42,7 +43,7 @@ public class CurrentGameFragment extends Fragment {
     TextView tvNoCurrentGame;
     Button btnCurrentGame;
     Button btnLeaveGame;
-    ParseUser user = ParseUser.getCurrentUser();;
+    ParseUser user;
     ParseUser creator;
     boolean userIsCreator;
     Game game;
@@ -88,6 +89,8 @@ public class CurrentGameFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        user = ParseUser.getCurrentUser();
 
         //Find components
         ivProfilePicture = view.findViewById(R.id.ivCurrentGameProfilePicture);
@@ -178,6 +181,8 @@ public class CurrentGameFragment extends Fragment {
             game.setPlayerCount(false);
             game.saveInBackground();
             user.saveInBackground();
+            Toast.makeText(getContext(), "Left Game", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
         });
     }
 
@@ -258,7 +263,7 @@ public class CurrentGameFragment extends Fragment {
             //If user isn't the creator of the game, user cannot start game
             if(!userIsCreator) {
                 btnCurrentGame.setVisibility(View.GONE);
-                btnLeaveGame.setVisibility(View.GONE);
+                btnLeaveGame.setVisibility(View.VISIBLE);
             }
         }
 

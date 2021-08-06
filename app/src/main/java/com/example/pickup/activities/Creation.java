@@ -378,6 +378,8 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                 if(e == null) {
                     Log.i(TAG, "done: Team A created");
                     teamACreated = true;
+                    user.put("currentTeam", teamA);
+                    user.saveInBackground();
                     if(gameCreated && teamBCreated) {
                         setTeams();
                     }
@@ -407,6 +409,8 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                 if(e == null) {
                     Log.i(TAG, "done: Team C created");
                     teamCCreated = true;
+                    user.put("currentTeam", teamC);
+                    user.saveInBackground();
                     try {
                         if(gameCreated) {
                             setTeam();
@@ -492,16 +496,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
             }
         });
 
-        user.put("currentTeam", teamC);
-        user.saveInBackground(e -> {
-            if(e == null) {
-                Log.i(TAG, "done: Saved user");
-            }
-            else {
-                Log.e(TAG, "done: Error saving current teamC for user.", e);
-            }
-        });
-
         Log.i(TAG, "onClick: Closing creation screen");
         finish();
         overridePendingTransition(R.anim.slide_from_top,R.anim.slide_in_top);
@@ -545,8 +539,6 @@ public class Creation extends AppCompatActivity implements AdapterView.OnItemSel
                     Log.e(TAG, "done: Error setting game and player for teamA", e);
                 }
             });
-            user.put("currentTeam", teamA);
-            user.saveInBackground();
         } catch (JSONException e) {
             Log.e(TAG, "onClick: Error saving player to team. Current team not set", e);
         }

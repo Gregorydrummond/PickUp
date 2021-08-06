@@ -115,6 +115,11 @@ public class GameDetailsActivity extends AppCompatActivity {
         //Hide join button if user is already in a game
         Game currentGame = (Game) user.getParseObject("currentGame");
         if(currentGame != null) {
+            try {
+                currentGame.fetchIfNeeded();
+            } catch (ParseException e) {
+                Log.e(TAG, "onCreate: Error fetching current game", e);
+            }
             btnJoin.setVisibility(View.GONE);
             Log.d(TAG, "onCreate: Hiding join button, current game is not null. Game Location: " + currentGame.getLocationName());
         }

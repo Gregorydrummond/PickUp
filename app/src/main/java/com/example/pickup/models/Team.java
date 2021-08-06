@@ -105,6 +105,7 @@ public class Team extends ParseObject {
             }
             put(KEY_PLAYERS, jsonPlayerArray);
             setSize(false);
+            this.saveInBackground();
         }
     }
 }

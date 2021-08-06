@@ -74,7 +74,7 @@ public class MapsFragment extends Fragment{
                                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
                 }
                 else {
-                    Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_basketball_map_marker_icon);
+                    Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_map_marker3);
                     googleMap.addMarker(
                             new MarkerOptions()
                                     .position(gameLocation)
