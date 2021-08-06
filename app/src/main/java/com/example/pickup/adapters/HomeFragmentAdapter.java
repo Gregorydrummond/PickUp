@@ -127,7 +127,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                         .into(ivProfilePicture);
             }
             ParseFile gamePhoto = game.getLocationPhoto();
-            if(profilePicture != null) {
+            if(gamePhoto != null) {
                 Glide.with(context)
                         .load(gamePhoto.getUrl())
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(5)))
@@ -181,7 +181,8 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
 
             //Get user's data
             JSONArray usersStats = user.getJSONArray("stats");
-            int userTotalPointsOfThisType = 0, userTotalXPOfThisType = 0, userTotalGamesPlayedOfThisType = 0, userTotalGamesWonOfThisType = 0, userTotalMostPointsScoredOfThisType = 0, userPointsPerGamesOfThisType = 0;
+            int userTotalPointsOfThisType = 0, userTotalXPOfThisType = 0, userTotalGamesPlayedOfThisType = 0, userTotalGamesWonOfThisType = 0, userTotalMostPointsScoredOfThisType = 0;
+            double userPointsPerGamesOfThisType = 0;
             int userStreak = user.getInt("currentStreak");
 
             //User stats data
@@ -213,7 +214,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 }
             }
 
-            userPointsPerGamesOfThisType = (userTotalGamesPlayedOfThisType == 0) ? 0 : userTotalPointsOfThisType / userTotalGamesPlayedOfThisType;
+            userPointsPerGamesOfThisType = (userTotalGamesPlayedOfThisType == 0) ? 0 : (double) userTotalPointsOfThisType / userTotalGamesPlayedOfThisType;
 
             //Get players' data
             double playerCount = (double) game.getPlayerCount();
@@ -298,14 +299,14 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             }
 
             //Percent errors
-            double pointsPE = percentError(userTotalPointsOfThisType, averageMostPointsScoredOfThisType);
+            double pointsPE = percentError(userTotalPointsOfThisType, averagePointsOfThisType);
             double ppgPE = percentError(userPointsPerGamesOfThisType, averagePointsPerGameOfThisType);
             double xpPE = percentError(userTotalXPOfThisType, averageXPOfThisType);
             double gamesPlayedPE = percentError(userTotalGamesPlayedOfThisType, averageGamePlayedOfThisType);
             double gamesWonPE = percentError(userTotalGamesWonOfThisType, averageGamesWonOfThisType);
             double mostPointsScoredPE = percentError(userTotalMostPointsScoredOfThisType, averageMostPointsScoredOfThisType);
             double streakPE = percentError(userStreak, averageStreakOfThisType);
-            double distancePE = percentError(maxDistance - distance, maxDistance);
+            double distancePE = percentError(maxDistance,maxDistance - distance);
 
             Log.i(TAG, "createRating: Game type: " + gameType);
             Log.i(TAG, "createRating:\n User Points: " + userTotalPointsOfThisType + "\n User Points Per Game: " + userPointsPerGamesOfThisType
@@ -324,9 +325,9 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                     + "\nDistance PE: " + distancePE);
 
             //Calculate Ratings
-            double weightedPESum = (0.40 * pointsPE) + (0.05 * distancePE) + (0.40 * ppgPE) + (0.25 * xpPE) + (0.10 * gamesWonPE) + (0.05 * gamesPlayedPE) + (0.05 * streakPE) + (0.05 * mostPointsScoredPE);
+            double weightedPESum = (0.70 * pointsPE) + (0.90 * distancePE) + (0.90 * ppgPE) + (0.50 * xpPE) + (0.75 * gamesWonPE) + (0.20 * gamesPlayedPE) + (0.10 * streakPE) + (0.10 * mostPointsScoredPE);
             double peSum = pointsPE + ppgPE + xpPE + gamesWonPE + gamesPlayedPE + streakPE + distancePE + mostPointsScoredPE;
-            double weightedPEAverage = (weightedPESum/peSum) * 100;
+            double weightedPEAverage = (weightedPESum/8);
             double rating = 100 - weightedPEAverage;
 
             Log.d(TAG, "createRating: Weighted Average of PE: " + weightedPEAverage);
@@ -339,14 +340,15 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             tvMatchText.setText(matchText);
         }
 
-        private double percentError(double expected, double actual) {
+        private double percentError(double actual, double expected) {
             if(actual == 0 && expected == 0) {
                 return 0;
             }
             if(actual == 0) {
                 return 100;
             }
-            return Math.min(100, (Math.abs((actual - expected) / expected ) * 100));
+            Log.i(TAG, "percentError: " + Math.abs((actual - expected) / expected ) * 100 + "%");
+            return Math.min(100, (Math.abs((actual - expected) / expected )) * 100);
         }
 
         @Override
