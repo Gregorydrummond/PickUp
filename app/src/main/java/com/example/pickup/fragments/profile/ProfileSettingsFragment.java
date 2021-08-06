@@ -97,7 +97,7 @@ public class ProfileSettingsFragment extends Fragment implements AdapterView.OnI
         spinnerGameTypeFilter.setOnItemSelectedListener(this);
 
         //Set distance with what the user has already
-        int maxDistance = user.getInt("maxDistance");
+        double maxDistance = user.getInt("maxDistance");
         etMaxDistance.setText(String.valueOf(maxDistance));
 
         //On save button click
