@@ -120,6 +120,18 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Set game
+        currentGame = (Game) ParseUser.getCurrentUser().getParseObject("currentGame");
+        try {
+            if(currentGame != null) {
+                currentGame.fetchIfNeeded();
+            }
+            else {
+                Log.d(TAG, "onCreateView: game is null");
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "onViewCreated: Error fetching current game", e);
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game, container, false);
     }
@@ -170,14 +182,5 @@ public class GameFragment extends Fragment {
 
         //Animation
         viewPager2.setPageTransformer(new DepthPageTransformer());
-
-        currentGame = (Game) ParseUser.getCurrentUser().getParseObject("currentGame");
-        try {
-            if(currentGame != null) {
-                currentGame.fetchIfNeeded();
-            }
-        } catch (ParseException e) {
-            Log.e(TAG, "onViewCreated: Error fetching current game", e);
-        }
     }
 }

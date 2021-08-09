@@ -292,7 +292,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
                 averagePointsOfThisType = totalPointsOfThisType / playerCount;
                 averageXPOfThisType = totalXPOfThisType / playerCount;
                 averageGamePlayedOfThisType = totalGamesPlayedOfThisType / playerCount;
-                averagePointsPerGameOfThisType = (double) totalPointsOfThisType / totalGamesPlayedOfThisType;
+                averagePointsPerGameOfThisType = (totalGamesPlayedOfThisType == 0) ? 0 : (double) totalPointsOfThisType / totalGamesPlayedOfThisType;
                 averageGamesWonOfThisType = totalGamesWonOfThisType / playerCount;
                 averageMostPointsScoredOfThisType = totalMostPointsScoredOfThisType / playerCount;
                 averageStreakOfThisType = streak / playerCount;

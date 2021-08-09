@@ -231,7 +231,7 @@ public class ProfileFragment extends Fragment {
         tvLevel.setText(textLevel);
 
         //Set exp text
-        String textExp = xp + "/" + (int) neededXPForNextLevel;
+        String textExp = (int) xpProgress + "/" + (int) neededXPToGetToNextLevel;
         tvExp.setText(textExp);
     }
 }

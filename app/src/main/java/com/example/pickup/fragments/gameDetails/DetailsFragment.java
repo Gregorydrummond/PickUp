@@ -117,6 +117,9 @@ public class DetailsFragment extends Fragment {
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(25)))
                         .into(ivGamePhoto);
             }
+            else {
+                ivGamePhoto.setVisibility(View.GONE);
+            }
         }
     }
 }

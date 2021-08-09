@@ -1,10 +1,20 @@
 package com.example.pickup.fragments.games;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +26,34 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.example.pickup.PickUpApplication;
 import com.example.pickup.R;
+import com.example.pickup.activities.Creation;
 import com.example.pickup.activities.EnterStatsActivity;
 import com.example.pickup.activities.GameDetailsActivity;
 import com.example.pickup.fragments.mainActivity.GameFragment;
+import com.example.pickup.fragments.mainActivity.HomeFragment;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.livequery.SubscriptionHandling;
 
 import org.json.JSONException;
+import org.parceler.Parcels;
+
+import java.util.List;
 
 public class CurrentGameFragment extends Fragment {
 
     private static final String TAG = "CurrentGameFragment";
+    private static final String CHANNEL_ID_STARTED = "Game Started Channel";
+    private static final String CHANNEL_ID_FINISHED = "Game Ended Channel";
+
+    NotificationCompat.Builder builder;
+    public static final int notificationId = 3;
 
     ImageView ivProfilePicture;
     TextView tvLocationName;
@@ -43,12 +66,13 @@ public class CurrentGameFragment extends Fragment {
     TextView tvNoCurrentGame;
     Button btnCurrentGame;
     Button btnLeaveGame;
+    Game game;
     ParseUser user;
     ParseUser creator;
     boolean userIsCreator;
-    Game game;
     Team teamA;
     Team teamB;
+    public static int playerCount = 0;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -105,8 +129,9 @@ public class CurrentGameFragment extends Fragment {
         btnLeaveGame = view.findViewById(R.id.btnLeaveGame);
         tvNoCurrentGame = view.findViewById(R.id.tvNoCurrentGame);
 
-        game = (Game) user.getParseObject("currentGame");
-        Log.d(TAG, "onViewCreated: " + game);
+        //game = (Game) user.getParseObject("currentGame");
+        game = GameFragment.currentGame;
+
 
         try {
             if(game != null) {
@@ -119,6 +144,7 @@ public class CurrentGameFragment extends Fragment {
             else {
                 btnCurrentGame.setVisibility(View.GONE);
                 btnLeaveGame.setVisibility(View.GONE);
+                ivProfilePicture.setVisibility(View.GONE);
                 tvNoCurrentGame.setVisibility(View.VISIBLE);
             }
         } catch (ParseException e) {
@@ -128,6 +154,9 @@ public class CurrentGameFragment extends Fragment {
             tvNoCurrentGame.setVisibility(View.VISIBLE);
             return;
         }
+
+        //Set query
+        setLiveQuery();
 
         //Set data
         setData();
@@ -151,8 +180,6 @@ public class CurrentGameFragment extends Fragment {
                     game.setGameEnded(true);
                     tvStatus.setText(R.string.gameEndedMessage);
                     btnCurrentGame.setText(R.string.enterStatsButtonText);
-                    Intent intent = new Intent(getActivity(), EnterStatsActivity.class);
-                    startActivity(intent);
                 }
             }
             //User enters game stats
@@ -179,11 +206,122 @@ public class CurrentGameFragment extends Fragment {
             }
             user.remove("currentTeam");
             game.setPlayerCount(false);
+            game.setPlayerJoined(false);
             game.saveInBackground();
             user.saveInBackground();
             Toast.makeText(getContext(), "Left Game", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         });
+    }
+
+    private void setLiveQuery() {
+        if(PickUpApplication.parseLiveQueryClient != null) {
+            //New Games
+            ParseQuery<Game> query = new ParseQuery("Game");
+
+            //Include creator info
+            query.include(Game.KEY_CREATOR);
+
+            //Order from closest to farthest
+            query.whereNear("location", user.getParseGeoPoint("playerLocation"));
+
+            //Query base on user's settings
+            query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
+            String gameType = user.getString("gameFilter");
+            assert gameType != null;
+            if(!gameType.equals("All")) {
+                query.whereEqualTo("gameType", user.getString("gameFilter"));
+            }
+
+            SubscriptionHandling<Game> subscriptionHandling = PickUpApplication.parseLiveQueryClient.subscribe(query);
+
+            subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, (query1, updatedGame) -> {
+                if(updatedGame.getGameStarted()) {
+                    Log.d(TAG, "setLiveQuery: Game Started");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        if(user.getParseObject("currentGame") != null) {
+                            if (updatedGame.getObjectId().equals(user.getParseObject("currentGame").getObjectId())) {
+                                game = updatedGame;
+                                setData();
+                            }
+                        }
+                        //Notifications
+                        //Create a channel and set the importance
+                        createNotificationChannel(0);
+
+                        //Create an explicit intent for notifications
+                        Intent intent = new Intent(getContext(), GameDetailsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(updatedGame));
+                        intent.setAction(Long.toString(System.currentTimeMillis()));
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+
+                        try {
+                            //Creator info
+                            ParseUser creator = updatedGame.getCreator().fetchIfNeeded();
+                            if (!creator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                //Set notification content
+                                builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID_STARTED)
+                                        .setSmallIcon(R.drawable.ic_basketball_small_icon)
+                                        .setContentTitle(creator.getUsername() + "'s game started @ " + updatedGame.getLocationName())
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setContentIntent(pendingIntent)
+                                        .setAutoCancel(true);
+
+                                //Show notification
+                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+                                notificationManager.notify(notificationId, builder.build());
+                            }
+                        } catch (ParseException e) {
+                            Log.e(TAG, "onViewCreated: Error fetching creator info for notification", e);
+                        }
+                    });
+                }
+                else if(updatedGame.getGameEnded()) {
+                    Log.d(TAG, "setLiveQuery: Game Ended");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        if(user.getParseObject("currentGame") != null) {
+                            if (updatedGame.getObjectId().equals(user.getParseObject("currentGame").getObjectId())) {
+                                game = updatedGame;
+                                setData();
+                            }
+                        }
+                        //Notifications
+                        //Create a channel and set the importance
+                        createNotificationChannel(1);
+
+                        //Create an explicit intent for notifications
+                        Intent intent = new Intent(getContext(), GameDetailsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(updatedGame));
+                        intent.setAction(Long.toString(System.currentTimeMillis()));
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+
+                        try {
+                            //Creator info
+                            ParseUser creator = updatedGame.getCreator().fetchIfNeeded();
+                            if (!creator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                //Set notification content
+                                builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID_FINISHED)
+                                        .setSmallIcon(R.drawable.ic_basketball_small_icon)
+                                        .setContentTitle(creator.getUsername() + "'s game ended")
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setContentIntent(pendingIntent)
+                                        .setAutoCancel(true);
+
+                                //Show notification
+                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+                                notificationManager.notify(notificationId, builder.build());
+                            }
+                        } catch (ParseException e) {
+                            Log.e(TAG, "onViewCreated: Error fetching creator info for notification", e);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void getGameData() throws ParseException {
@@ -197,7 +335,7 @@ public class CurrentGameFragment extends Fragment {
         }
     }
 
-    private void setData() {
+    public void setData() {
         if(game == null) {
             Log.d(TAG, "setData: No current game");
             btnCurrentGame.setVisibility(View.GONE);
@@ -215,7 +353,7 @@ public class CurrentGameFragment extends Fragment {
 
         ParseFile profilePicture = creator.getParseFile("profilePicture");
         if(profilePicture != null) {
-            Glide.with(getContext())
+            Glide.with(PickUpApplication.getAppContext())
                     .load(profilePicture.getUrl())
                     .transform(new CircleCrop())
                     .into(ivProfilePicture);
@@ -268,5 +406,36 @@ public class CurrentGameFragment extends Fragment {
         }
 
         tvStatus.setText(textStatus);
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        game = (Game) user.getParseObject("currentGame");
+        setData();
+    }
+
+    private void createNotificationChannel(int code) {
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //CharSequence name = getContext().getString(R.string.channel_name_new_game);
+            String description = getString(R.string.channel_description_new_game);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel;
+            switch(code) {
+                case 1 :
+                    channel = new NotificationChannel(CHANNEL_ID_FINISHED, "GameEndedChannel", importance);
+                    break;
+                default:
+                    channel = new NotificationChannel(CHANNEL_ID_STARTED, "GameStartedChannel", importance);
+                    break;
+            }
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

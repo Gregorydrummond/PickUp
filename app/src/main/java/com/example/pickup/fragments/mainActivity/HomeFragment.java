@@ -151,67 +151,6 @@ public class HomeFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        //Live queries
-        if (PickUpApplication.parseLiveQueryClient != null) {
-            Log.i(TAG, "onCreate: parseLiveQueryClient isn't null");
-            ParseQuery<Game> query = new ParseQuery("Game");
-
-            //Include creator info
-            query.include(Game.KEY_CREATOR);
-            query.include(Game.KEY_TEAM_A);
-            query.include(Game.KEY_TEAM_B);
-            query.whereEqualTo("gameEnded", false);
-
-            //Order from closest to farthest
-            query.whereNear("location", user.getParseGeoPoint("playerLocation"));
-
-            //Query base on user's settings
-            query.whereWithinMiles("location", user.getParseGeoPoint("playerLocation"), user.getDouble("maxDistance"));
-            String gameType = user.getString("gameFilter");
-            assert gameType != null;
-            if(!gameType.equals("All")) {
-                query.whereEqualTo("gameType", user.getString("gameFilter"));
-            }
-
-            SubscriptionHandling<Game> subscriptionHandling = PickUpApplication.parseLiveQueryClient.subscribe(query);
-
-            subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (query1, newGame) -> {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    //Notifications
-                    //Create a channel and set the importance
-                    createNotificationChannel();
-
-                    //Create an explicit intent for notifications
-                    Intent intent = new Intent(getContext(), GameDetailsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(Game.class.getSimpleName(), Parcels.wrap(newGame));
-                    intent.setAction(Long.toString(System.currentTimeMillis()));
-                    PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
-
-                    try {
-                        //Creator info
-                        ParseUser creator = newGame.getCreator().fetchIfNeeded();
-                        if(!creator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                            //Set notification content
-                            builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_basketball_small_icon)
-                                    .setContentTitle("New game by " + creator.getUsername())
-                                    .setContentText("New " + newGame.getGameType().toLowerCase() + " game in your area. Join before it fills up!")
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                    .setContentIntent(pendingIntent)
-                                    .setAutoCancel(true);
-
-                            //Show notification
-                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-                            notificationManager.notify(notificationId, builder.build());
-                        }
-                    } catch (ParseException e) {
-                        Log.e(TAG, "onViewCreated: Error fetching creator info for notification", e);
-                    }
-                });
-            });
-        }
 
         //Remove title from toolbar
         toolbar.setTitle("");

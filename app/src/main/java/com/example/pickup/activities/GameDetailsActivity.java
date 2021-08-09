@@ -133,6 +133,11 @@ public class GameDetailsActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: Hiding join button, game is full");
         }
 
+        //Hide join button if the game is done
+        if(game.getGameEnded()) {
+            btnJoin.setVisibility(View.GONE);
+        }
+
         btnJoin.setOnClickListener(v -> joinGame(game, true));
     }
 
@@ -163,6 +168,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                         if (e == null) {
                             Log.i(TAG, "done: Added player to team B");
                             _game.setPlayerCount(true);
+                            _game.setPlayerJoined(true);
                             _game.saveInBackground();
                             if(onGameDetail) {
                                 btnJoin.setEnabled(false);
@@ -186,6 +192,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                         if (e == null) {
                             Log.i(TAG, "done: Added player to team A");
                             _game.setPlayerCount(true);
+                            _game.setPlayerJoined(true);
                             _game.saveInBackground();
                             if(onGameDetail) {
                                 btnJoin.setEnabled(false);
@@ -210,6 +217,7 @@ public class GameDetailsActivity extends AppCompatActivity {
                     if (e == null) {
                         Log.i(TAG, "done: Added player to single team A");
                         _game.setPlayerCount(true);
+                        _game.setPlayerJoined(true);
                         _game.saveInBackground();
                         if (onGameDetail) {
                             btnJoin.setEnabled(false);

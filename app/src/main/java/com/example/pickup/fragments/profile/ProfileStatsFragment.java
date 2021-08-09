@@ -8,15 +8,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.pickup.PickUpApplication;
 import com.example.pickup.R;
 import com.example.pickup.adapters.ProfileStatsFragmentAdapter;
+import com.example.pickup.models.Game;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.livequery.SubscriptionHandling;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,15 +38,7 @@ public class ProfileStatsFragment extends Fragment {
     List<JSONObject> stats;
     RecyclerView rvStats;
     ProfileStatsFragmentAdapter adapter;
-    ParseUser user = ParseUser.getCurrentUser();
-    int gamesPlayed;
-    int gamesWon;
-    int pointsScored;
-    int maxPoints;
-    int mostPointsScored;
-    int totalXP;
-    double ppg;
-    double mppg;
+    ParseUser user;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -81,6 +79,8 @@ public class ProfileStatsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        user = ParseUser.getCurrentUser();
 
         //Find components
         rvStats = view.findViewById(R.id.rvStats);

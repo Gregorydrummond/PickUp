@@ -31,6 +31,7 @@ public class Game extends ParseObject {
     public static final String KEY_HAS_TEAMS = "hasTeams";
     public static final String KEY_TEAM_A = "teamA";
     public static final String KEY_TEAM_B = "teamB";
+    public static final String KEY_PLAYER_JOINED = "playerJoined";
 
     //Constructor
     public Game() {}
@@ -180,6 +181,18 @@ public class Game extends ParseObject {
     public void setTeamB(ParseObject teamB) {
         put(KEY_TEAM_B, teamB);
     }
+
+    //Get player joined
+    public boolean getPlayerJoined() {
+        return getBoolean(KEY_PLAYER_JOINED);
+    }
+
+    //Set player joined
+    public void setPlayerJoined(boolean playerJoined) {
+        put(KEY_PLAYER_JOINED, playerJoined);
+    }
+
+
 
     //Get createdAt
     public String getCreatedAtDate() {
