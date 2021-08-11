@@ -37,7 +37,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-//import devlight.io.library.ArcProgressStackView;
 
 public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapter.ViewHolder> {
 

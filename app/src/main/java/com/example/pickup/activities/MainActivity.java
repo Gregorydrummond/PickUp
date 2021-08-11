@@ -7,41 +7,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 // Android Dependencies
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
-// Google Maps Dependencies
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 // Parse Dependencies
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseQuery;
-
-// Java dependencies
-import java.util.List;
 
 import com.example.pickup.R;
 import com.example.pickup.fragments.mainActivity.GameFragment;
@@ -49,7 +26,6 @@ import com.example.pickup.fragments.mainActivity.HomeFragment;
 import com.example.pickup.fragments.mainActivity.MapsFragment;
 import com.example.pickup.fragments.mainActivity.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 

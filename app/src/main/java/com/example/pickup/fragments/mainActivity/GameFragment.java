@@ -3,20 +3,14 @@ package com.example.pickup.fragments.mainActivity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,12 +18,9 @@ import android.widget.Toast;
 import com.example.pickup.R;
 import com.example.pickup.activities.MainActivity;
 import com.example.pickup.adapters.GameFragmentViewPagerAdapter;
-import com.example.pickup.fragments.games.CurrentGameFragment;
-import com.example.pickup.fragments.games.RecentGamesFragment;
+
 import com.example.pickup.models.Game;
 import com.example.pickup.pageTransformers.DepthPageTransformer;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
@@ -120,6 +111,14 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_game, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         //Set game
         currentGame = (Game) ParseUser.getCurrentUser().getParseObject("currentGame");
         try {
@@ -132,13 +131,6 @@ public class GameFragment extends Fragment {
         } catch (ParseException e) {
             Log.e(TAG, "onViewCreated: Error fetching current game", e);
         }
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         // Create an executor that executes tasks in the main thread.
         Executor mainExecutor = ContextCompat.getMainExecutor(getContext());
