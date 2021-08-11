@@ -1,5 +1,6 @@
 package com.example.pickup.fragments.games;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,10 +32,12 @@ import com.example.pickup.R;
 import com.example.pickup.activities.Creation;
 import com.example.pickup.activities.EnterStatsActivity;
 import com.example.pickup.activities.GameDetailsActivity;
+import com.example.pickup.activities.MainActivity;
 import com.example.pickup.fragments.mainActivity.GameFragment;
 import com.example.pickup.fragments.mainActivity.HomeFragment;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -55,7 +58,7 @@ public class CurrentGameFragment extends Fragment {
     NotificationCompat.Builder builder;
     public static final int notificationId = 3;
 
-    ImageView ivProfilePicture;
+    public static ImageView ivProfilePicture;
     TextView tvLocationName;
     TextView tvGameType;
     TextView tvTeams;
@@ -66,13 +69,12 @@ public class CurrentGameFragment extends Fragment {
     TextView tvNoCurrentGame;
     Button btnCurrentGame;
     Button btnLeaveGame;
-    Game game;
+    public static Game game;
     ParseUser user;
     ParseUser creator;
     boolean userIsCreator;
     Team teamA;
     Team teamB;
-    public static int playerCount = 0;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -129,9 +131,7 @@ public class CurrentGameFragment extends Fragment {
         btnLeaveGame = view.findViewById(R.id.btnLeaveGame);
         tvNoCurrentGame = view.findViewById(R.id.tvNoCurrentGame);
 
-        //game = (Game) user.getParseObject("currentGame");
         game = GameFragment.currentGame;
-
 
         try {
             if(game != null) {
@@ -210,7 +210,7 @@ public class CurrentGameFragment extends Fragment {
             game.saveInBackground();
             user.saveInBackground();
             Toast.makeText(getContext(), "Left Game", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+            MainActivity.bottomNavigationView.setSelectedItemId(R.id.action_home);
         });
     }
 
@@ -242,6 +242,7 @@ public class CurrentGameFragment extends Fragment {
                     handler.post(() -> {
                         if(user.getParseObject("currentGame") != null) {
                             if (updatedGame.getObjectId().equals(user.getParseObject("currentGame").getObjectId())) {
+                                GameFragment.currentGame = updatedGame;
                                 game = updatedGame;
                                 setData();
                             }
@@ -284,6 +285,7 @@ public class CurrentGameFragment extends Fragment {
                     handler.post(() -> {
                         if(user.getParseObject("currentGame") != null) {
                             if (updatedGame.getObjectId().equals(user.getParseObject("currentGame").getObjectId())) {
+                                GameFragment.currentGame = updatedGame;
                                 game = updatedGame;
                                 setData();
                             }
@@ -406,15 +408,6 @@ public class CurrentGameFragment extends Fragment {
         }
 
         tvStatus.setText(textStatus);
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        game = (Game) user.getParseObject("currentGame");
-        setData();
     }
 
     private void createNotificationChannel(int code) {
