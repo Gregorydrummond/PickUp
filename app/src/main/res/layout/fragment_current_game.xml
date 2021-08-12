@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFEFD8">
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="#FFEFD8">-->
 
     <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFEFD8"
         tools:context=".fragments.games.CurrentGameFragment">
 
 
-        <Button
-            android:id="@+id/btnLeaveGame"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btnCG"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="35dp"
-            android:layout_marginBottom="0dp"
-            android:backgroundTint="#E18804"
-            android:fontFamily="@font/rock_salt"
-            android:text="Leave Game" />
+    <Button
+        android:id="@+id/btnLeaveGame"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
+        android:text="Leave Game" />
 
         <TextView
             android:id="@+id/tvWinBy2CG"
@@ -55,17 +55,17 @@
             android:textSize="16sp"
             tools:text="Players: 4/10" />
 
-        <TextView
-            android:id="@+id/tvStartedCG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvWinBy2CG"
-            android:layout_alignStart="@+id/tvWinBy2CG"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/rock_salt"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            tools:text="Game Started" />
+    <TextView
+        android:id="@+id/tvStartedCG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvWinBy2CG"
+        android:layout_alignStart="@+id/tvWinBy2CG"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/rock_salt"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        tools:text="Game Started" />
 
         <TextView
             android:id="@+id/tvLocationNameCG"
@@ -134,20 +134,20 @@
             android:textSize="16sp"
             tools:text="TeamA vs TeamB" />
 
-        <Button
-            android:id="@+id/btnCG"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvStartedCG"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="35dp"
-            android:backgroundTint="#E18804"
-            android:fontFamily="@font/rock_salt"
-            android:text="@string/startGameButtonText" />
+    <Button
+        android:id="@+id/btnCG"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#E18804"
+        android:fontFamily="@font/rock_salt"
+        android:text="@string/startGameButtonText" />
 
         <TextView
             android:id="@+id/tvNoCurrentGame"
@@ -161,4 +161,4 @@
 
     </RelativeLayout>
 
-</ScrollView>
+<!--</ScrollView>-->

@@ -232,7 +232,6 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter<HomeFragmentAdapte
             //Stats data
             for(int i = 0; i < statArray.size(); i++) {
                 JSONArray jsonArray = statArray.get(i);
-                Log.d(TAG, "createRating: " + jsonArray);
 
                 //Specific game types
                 for (int j = 0; j < jsonArray.length(); j++) {
