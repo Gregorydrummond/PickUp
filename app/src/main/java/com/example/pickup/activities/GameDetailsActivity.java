@@ -1,10 +1,8 @@
 package com.example.pickup.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.AutomaticZenRule;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.pickup.R;
 import com.example.pickup.adapters.GameDetailsActivityViewPagerAdapter;
+import com.example.pickup.fragments.gameDetails.DetailsFragment;
 import com.example.pickup.models.Game;
 import com.example.pickup.models.Team;
 import com.example.pickup.pageTransformers.DepthPageTransformer;
@@ -26,7 +25,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +45,7 @@ public class GameDetailsActivity extends AppCompatActivity {
     ViewPager2 viewPager2;
     GameDetailsActivityViewPagerAdapter adapter;
     ParseUser creator;
+    Game currentGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +137,11 @@ public class GameDetailsActivity extends AppCompatActivity {
             btnJoin.setVisibility(View.GONE);
         }
 
-        btnJoin.setOnClickListener(v -> joinGame(game, true));
+
+        btnJoin.setOnClickListener(v -> {
+            joinGame(game, true);
+            updateCapacity();
+        });
     }
 
     public static void joinGame(Game _game, boolean onGameDetail) {
@@ -256,6 +259,13 @@ public class GameDetailsActivity extends AppCompatActivity {
 
         if (onGameDetail) {
             Toast.makeText(btnJoin.getContext(), "Joined game", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateCapacity() {
+        DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager().findFragmentByTag("f" + 0);
+        if (detailsFragment != null) {
+            detailsFragment.updateCapacity();
         }
     }
 

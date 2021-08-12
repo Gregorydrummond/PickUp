@@ -33,6 +33,7 @@ public class DetailsFragment extends Fragment {
     TextView tvWinBy2;
     TextView tvDistance;
     ImageView ivGamePhoto;
+    Game game;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -85,7 +86,7 @@ public class DetailsFragment extends Fragment {
 
         //Get data from activity
         GameDetailsActivity gameDetailsActivity = (GameDetailsActivity) getActivity();
-        Game game = gameDetailsActivity.getGame();
+        game = gameDetailsActivity.getGame();
 
         if(game != null) {
             String textGameType = "Game Type: " + game.getGameType();
@@ -121,5 +122,12 @@ public class DetailsFragment extends Fragment {
                 ivGamePhoto.setVisibility(View.GONE);
             }
         }
+    }
+
+    public void updateCapacity() {
+        int numOfPlayers = game.getPlayerCount() + 1;
+        int maxPlayers = game.getPlayerLimit();
+        String textPlayerCount = "Players: " + numOfPlayers + "/" + maxPlayers;
+        tvPlayerCount.setText(textPlayerCount);
     }
 }
